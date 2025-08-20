@@ -25,6 +25,9 @@ const SortAscIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3 18h6v-2H3v2zM3
 const SortDescIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3 6h6v2H3V6zm0 7h12v2H3v-2zm0 7h18v-2H3v2z" className={className} />;
 const ChevronDownIcon = ({ className = 'w-4 h-4' }) => <Icon path="M12 15.25a1 1 0 01-.7-.29l-4-4a1 1 0 111.4-1.42L12 12.84l3.3-3.3a1 1 0 111.4 1.42l-4 4a1 1 0 01-.7.29z" className={className} />;
 const ChevronRightIcon = ({ className = 'w-4 h-4' }) => <Icon path="M10.75 16.4a.99.99 0 01-.7-.29.99.99 0 010-1.41L13.16 12l-3.1-3.1a.99.99 0 010-1.41 1 1 0 011.41 0l3.8 3.8a.99.99 0 010 1.41l-3.8 3.8a1 1 0 01-.71.29z" className={className} />;
+const SendIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" className={className} />;
+const MoreIcon = ({ className = 'w-5 h-5' }) => <Icon path="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" className={className} />;
+
 
 // Header component for the top navigation bar
 const Header = () => (
@@ -521,7 +524,7 @@ const ListView = () => {
     const [minScore, setMinScore] = useState(0);
     const [selectedTags, setSelectedTags] = useState({});
     const [viewMode, setViewMode] = useState('grid');
-    const [sortLevels, setSortLevels] = useState([{ key: 'name', direction: 'ascending', specificTag: 'none' }]);
+    const [sortLevels, setSortLevels] = useState([{ key: 'rating', direction: 'descending', specificTag: 'none' }]);
     
     const sortOptions = [
         { value: 'name', label: 'Name', type: 'value' },
@@ -682,9 +685,200 @@ const PlaceholderView = ({ title }) => (
     </div>
 );
 
+// --- Assistant View Component ---
+const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
+    const [input, setInput] = useState('');
+    const [editingChatId, setEditingChatId] = useState(null);
+    const [editingTitle, setEditingTitle] = useState('');
+    const [menuOpen, setMenuOpen] = useState(null);
+    const messagesEndRef = useRef(null);
+    const menuRef = useRef(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
+    useEffect(scrollToBottom, [chats, activeChatId]);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setMenuOpen(null);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, [menuRef]);
+    
+    const handleNewChat = () => {
+        const newChatId = `chat-${Date.now()}`;
+        setChats(prev => ({
+            ...prev,
+            [newChatId]: {
+                title: 'New Chat',
+                messages: [{ sender: 'assistant', text: "Hi! How can I help you find a Discord server today?" }]
+            }
+        }));
+        setActiveChatId(newChatId);
+    };
+
+    const handleSendMessage = () => {
+        if (input.trim() === '' || !activeChatId) return;
+
+        const updatedChats = { ...chats };
+        const activeChat = updatedChats[activeChatId];
+
+        activeChat.messages.push({ sender: 'user', text: input });
+
+        if (activeChat.messages.length === 2) { // First user message
+            activeChat.title = input.substring(0, 25) + (input.length > 25 ? '...' : '');
+        }
+
+        setInput('');
+        setChats(updatedChats);
+
+        // Mock RAG response
+        setTimeout(() => {
+            const response = `Based on your interest in "${input}", I recommend checking out the "EleutherAI" and "Cohere for AI" servers. They are both very active research communities.`;
+            const finalChats = { ...updatedChats };
+            finalChats[activeChatId].messages.push({ sender: 'assistant', text: response });
+            setChats(finalChats);
+        }, 1000);
+    };
+
+    const handleDeleteChat = (chatIdToDelete) => {
+        const updatedChats = { ...chats };
+        delete updatedChats[chatIdToDelete];
+        setChats(updatedChats);
+
+        if (activeChatId === chatIdToDelete) {
+            const remainingChatIds = Object.keys(updatedChats);
+            setActiveChatId(remainingChatIds.length > 0 ? remainingChatIds[0] : null);
+        }
+        
+        setMenuOpen(null);
+    };
+
+    const handleRename = (chatId, newTitle) => {
+        if (newTitle.trim() === '') return;
+        const updatedChats = { ...chats };
+        updatedChats[chatId].title = newTitle;
+        setChats(updatedChats);
+        setEditingChatId(null);
+    };
+
+    const activeChat = activeChatId ? chats[activeChatId] : null;
+
+    return (
+        <div className="flex h-[calc(100vh-12rem)]">
+            {/* Sidebar */}
+            <div className="w-1/4 bg-gray-100 border-r rounded-l-lg flex flex-col">
+                <div className="p-2">
+                    <button 
+                        onClick={handleNewChat}
+                        className="w-full px-3 py-2 bg-white text-gray-800 rounded-md text-sm font-semibold hover:bg-gray-200 transition-colors border"
+                    >
+                        + New Chat
+                    </button>
+                </div>
+                <div className="flex-grow overflow-y-auto p-2 space-y-1">
+                    {Object.keys(chats).reverse().map(chatId => (
+                        <div key={chatId} className="relative group">
+                            <button 
+                                onClick={() => setActiveChatId(chatId)}
+                                className={`w-full text-left px-3 py-2 rounded-md text-sm truncate ${activeChatId === chatId ? 'bg-indigo-100 text-indigo-800' : 'hover:bg-gray-200'}`}
+                            >
+                                {editingChatId === chatId ? (
+                                    <input
+                                        type="text"
+                                        value={editingTitle}
+                                        onChange={(e) => setEditingTitle(e.target.value)}
+                                        onBlur={() => handleRename(chatId, editingTitle)}
+                                        onKeyPress={(e) => e.key === 'Enter' && handleRename(chatId, editingTitle)}
+                                        className="bg-transparent w-full focus:outline-none"
+                                        autoFocus
+                                    />
+                                ) : (
+                                    chats[chatId].title
+                                )}
+                            </button>
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button onClick={() => setMenuOpen(menuOpen === chatId ? null : chatId)}>
+                                    <MoreIcon className="w-5 h-5 text-gray-500"/>
+                                </button>
+                                {menuOpen === chatId && (
+                                    <div ref={menuRef} className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
+                                        <button 
+                                            onClick={() => { setEditingChatId(chatId); setEditingTitle(chats[chatId].title); setMenuOpen(null); }}
+                                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Rename
+                                        </button>
+                                        <button 
+                                            onClick={() => handleDeleteChat(chatId)}
+                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                                        >
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+
+            {/* Chat Window */}
+            <div className="w-3/4 bg-white rounded-r-lg flex flex-col">
+                 {activeChat ? (
+                    <>
+                        <div className="p-6 flex-grow overflow-y-auto flex flex-col space-y-4">
+                            {activeChat.messages.map((msg, index) => (
+                                <div key={index} className={`flex items-end gap-2 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
+                                    {msg.sender === 'assistant' && <div className="w-8 h-8 rounded-full bg-indigo-500 flex-shrink-0"></div>}
+                                    <div className={`px-4 py-2 rounded-lg max-w-lg ${msg.sender === 'user' ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
+                                        {msg.text}
+                                    </div>
+                                </div>
+                            ))}
+                            <div ref={messagesEndRef} />
+                        </div>
+                        <div className="p-4 border-t flex">
+                            <input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                                placeholder="e.g., 'Find me a server for AI safety research'"
+                                className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            />
+                            <button onClick={handleSendMessage} className="px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700 transition-colors">
+                                <SendIcon />
+                            </button>
+                        </div>
+                    </>
+                 ) : (
+                    <div className="flex flex-col items-center justify-center h-full">
+                        <h2 className="text-2xl font-bold text-gray-500">Welcome to the Assistant</h2>
+                        <p className="text-gray-400 mt-2">Start a new chat to find a server.</p>
+                    </div>
+                 )}
+            </div>
+        </div>
+    );
+};
+
+
 // Main App component
 export default function App() {
   const [activeTab, setActiveTab] = useState('Server Explorer');
+  const [chats, setChats] = useState({
+      'initial-chat': {
+          title: 'New Chat',
+          messages: [{ sender: 'assistant', text: "Hi! How can I help you find a Discord server today?" }]
+      }
+  });
+  const [activeChatId, setActiveChatId] = useState('initial-chat');
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -698,6 +892,8 @@ export default function App() {
             return <PlaceholderView title="XY Plot" />;
         case 'Weighted Cluster':
             return <PlaceholderView title="Weighted Cluster" />;
+        case 'Assistant':
+            return <AssistantView chats={chats} setChats={setChats} activeChatId={activeChatId} setActiveChatId={setActiveChatId} />;
         default:
             return <ListView />;
     }
@@ -715,6 +911,7 @@ export default function App() {
             <Tab label="t-SNE Cluster" isActive={activeTab === 't-SNE Cluster'} onClick={() => setActiveTab('t-SNE Cluster')} />
             <Tab label="XY Plot" isActive={activeTab === 'XY Plot'} onClick={() => setActiveTab('XY Plot')} />
             <Tab label="Weighted Cluster" isActive={activeTab === 'Weighted Cluster'} onClick={() => setActiveTab('Weighted Cluster')} />
+            <Tab label="Assistant" isActive={activeTab === 'Assistant'} onClick={() => setActiveTab('Assistant')} />
           </nav>
         </div>
 
