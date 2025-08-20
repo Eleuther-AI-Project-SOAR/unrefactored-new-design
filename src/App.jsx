@@ -381,6 +381,7 @@ const ViewSwitcher = ({ view, setView }) => (
 const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
     const [openDropdown, setOpenDropdown] = useState(false);
     const [activeSubmenu, setActiveSubmenu] = useState(null);
+    const [showAddLevelMenu, setShowAddLevelMenu] = useState(false);
     const wrapperRef = useRef(null);
 
     useEffect(() => {
@@ -388,6 +389,7 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
             if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
                 setOpenDropdown(false);
                 setActiveSubmenu(null);
+                setShowAddLevelMenu(false);
             }
         }
         document.addEventListener("mousedown", handleClickOutside);
@@ -412,14 +414,27 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
         setOpenDropdown(false);
     };
 
-    const addLevel = () => {
-        setSortLevels([...sortLevels, { key: 'name', direction: 'ascending', specificTag: 'none' }]);
+    const addLevel = (sortOption) => {
+        const newLevel = {
+            key: sortOption.value,
+            direction: 'ascending',
+            specificTag: 'none'
+        };
+        setSortLevels([...sortLevels, newLevel]);
+        setShowAddLevelMenu(false);
     };
 
     const removeLevel = (index) => {
         setSortLevels(sortLevels.filter((_, i) => i !== index));
     };
     
+    const availableSortOptions = sortOptions.filter(option => {
+        if (option.type === 'value') {
+            return !sortLevels.some(level => level.key === option.value);
+        }
+        return true;
+    });
+
     return (
         <div className="relative" ref={wrapperRef}>
             <button onClick={() => setOpenDropdown(!openDropdown)} className="flex items-center space-x-2 p-2 border rounded-md bg-white text-sm">
@@ -427,17 +442,21 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
                 <ChevronDownIcon />
             </button>
             {openDropdown && (
-                <div className="absolute top-full mt-1 w-72 bg-white border rounded-md shadow-lg z-10 p-2 space-y-2">
+                <div className="absolute top-full mt-1 w-72 bg-white border rounded-md shadow-lg z-50 p-2 space-y-2">
                     {sortLevels.map((level, index) => {
                         const selectedOption = sortOptions.find(opt => opt.value === level.key);
                         return (
-                            <div key={index} className="flex items-center justify-between" onMouseLeave={() => setActiveSubmenu(null)}>
+                            <div key={index} className="flex items-center justify-between">
                                 {sortLevels.length > 1 && (
                                     <button onClick={() => removeLevel(index)} className="p-2 text-gray-400 hover:text-red-600">
                                         <CloseIcon className="w-4 h-4" />
                                     </button>
                                 )}
-                                <div className="relative flex-grow" onMouseEnter={() => setActiveSubmenu(index)}>
+                                <div 
+                                    className="relative flex-grow" 
+                                    onMouseEnter={() => setActiveSubmenu(index)} 
+                                    onMouseLeave={() => setActiveSubmenu(null)}
+                                >
                                     <button 
                                         className="w-full text-left p-2 hover:bg-gray-100 rounded-md flex justify-between items-center"
                                     >
@@ -465,9 +484,28 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
                         );
                     })}
                     <div className="border-t pt-2">
-                        <button onClick={addLevel} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 w-full text-left p-2">
-                            + Add Sort Level
-                        </button>
+                        <div className="relative">
+                            <button
+                                onClick={() => setShowAddLevelMenu(!showAddLevelMenu)}
+                                className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 w-full text-left p-2 disabled:text-gray-400 disabled:cursor-not-allowed"
+                                disabled={availableSortOptions.length === 0}
+                            >
+                                + Add Sort Level
+                            </button>
+                            {showAddLevelMenu && (
+                                <div className="absolute top-full mt-1 w-48 bg-white border rounded-md shadow-lg z-20">
+                                    {availableSortOptions.map(option => (
+                                        <button
+                                            key={option.value}
+                                            onClick={() => addLevel(option)}
+                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                                        >
+                                            {option.label}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
@@ -646,11 +684,11 @@ const PlaceholderView = ({ title }) => (
 
 // Main App component
 export default function App() {
-  const [activeTab, setActiveTab] = useState('List View');
+  const [activeTab, setActiveTab] = useState('Server Explorer');
 
   const renderActiveTab = () => {
     switch (activeTab) {
-        case 'List View':
+        case 'Server Explorer':
             return <ListView />;
         case 'Dendogram':
             return <PlaceholderView title="Dendogram" />;
@@ -672,7 +710,7 @@ export default function App() {
         {/* Tab Navigation */}
         <div className="border-b border-gray-200">
           <nav className="-mb-px flex space-x-2" aria-label="Tabs">
-            <Tab label="List View" isActive={activeTab === 'List View'} onClick={() => setActiveTab('List View')} />
+            <Tab label="Server Explorer" isActive={activeTab === 'Server Explorer'} onClick={() => setActiveTab('Server Explorer')} />
             <Tab label="Dendogram" isActive={activeTab === 'Dendogram'} onClick={() => setActiveTab('Dendogram')} />
             <Tab label="t-SNE Cluster" isActive={activeTab === 't-SNE Cluster'} onClick={() => setActiveTab('t-SNE Cluster')} />
             <Tab label="XY Plot" isActive={activeTab === 'XY Plot'} onClick={() => setActiveTab('XY Plot')} />
