@@ -27,6 +27,8 @@ const ChevronDownIcon = ({ className = 'w-4 h-4' }) => <Icon path="M12 15.25a1 1
 const ChevronRightIcon = ({ className = 'w-4 h-4' }) => <Icon path="M10.75 16.4a.99.99 0 01-.7-.29.99.99 0 010-1.41L13.16 12l-3.1-3.1a.99.99 0 010-1.41 1 1 0 011.41 0l3.8 3.8a.99.99 0 010 1.41l-3.8 3.8a1 1 0 01-.71.29z" className={className} />;
 const SendIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" className={className} />;
 const MoreIcon = ({ className = 'w-5 h-5' }) => <Icon path="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" className={className} />;
+const FolderIcon = ({ className = 'w-5 h-5' }) => <Icon path="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" className={className} />;
+const FileIcon = ({ className = 'w-5 h-5' }) => <Icon path="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" className={className} />;
 
 
 // Header component for the top navigation bar
@@ -42,7 +44,6 @@ const Header = () => (
             <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</a>
             <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About</a>
             <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Funding</a>
-            <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Projects</a>
           </div>
         </nav>
       </div>
@@ -869,6 +870,133 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
 };
 
 
+// --- Dendogram View Component ---
+const DendogramView = () => {
+    const [expandedFolders, setExpandedFolders] = useState({});
+    const [selectedNode, setSelectedNode] = useState(null);
+    const [expandedServer, setExpandedServer] = useState(null);
+
+    const servers = [
+        { name: 'EleutherAI', rating: 8.1, tag: 'Research', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Lots of resources; community projects to do and very active community.', features: ['Reading Group', 'Paper Channel', 'VC events/Office Hours', 'Jobs Board'] },
+        { name: 'Cohere for AI', rating: 8.1, tag: 'Research', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Pretty good. Lots of stuff to do for various skill levels.', features: ['Reading Group', 'Paper Channel', 'VC events/Office Hours'] },
+        { name: 'AI Safety Camp', rating: 7.8, tag: 'Alignment', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Focused on AI safety research and education with regular workshops.', features: ['Reading Group', 'Paper Channel', 'VC events/Office Hours', 'Jobs Board'] },
+        { name: 'GPU Collective', rating: 7.2, tag: 'GPU', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'Community for sharing GPU resources and optimization techniques.', features: ['VC events/Office Hours', 'Jobs Board'] },
+        { name: 'LLM Builders', rating: 9.1, tag: 'LLM', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'For developers and researchers working on Large Language Models.', features: ['Paper Channel', 'Jobs Board'] },
+    ];
+    
+    // Mock dendogram data structure
+    const dendogramData = {
+        id: 'root',
+        name: 'All Servers',
+        servers: servers,
+        children: [
+            {
+                id: 'cluster1',
+                name: 'Research & Alignment',
+                servers: [servers[0], servers[1], servers[2]],
+                children: [
+                    { id: 'server1', name: 'EleutherAI', isLeaf: true, server: servers[0] },
+                    { id: 'server2', name: 'Cohere for AI', isLeaf: true, server: servers[1] },
+                    { id: 'server3', name: 'AI Safety Camp', isLeaf: true, server: servers[2] },
+                ]
+            },
+            {
+                id: 'cluster2',
+                name: 'Development & Tools',
+                servers: [servers[3], servers[4]],
+                children: [
+                     { id: 'server4', name: 'GPU Collective', isLeaf: true, server: servers[3] },
+                     { id: 'server5', name: 'LLM Builders', isLeaf: true, server: servers[4] },
+                ]
+            }
+        ]
+    };
+    
+    useEffect(() => {
+        setSelectedNode(dendogramData);
+    }, []);
+
+    const toggleFolder = (folderId) => {
+        setExpandedFolders(prev => ({...prev, [folderId]: !prev[folderId]}));
+    }
+
+    const Folder = ({ node, depth = 0 }) => (
+        <div>
+            <div className={`flex items-center space-x-2 py-1 rounded-md ${selectedNode?.id === node.id ? 'bg-indigo-100' : ''}`}>
+                <div style={{ paddingLeft: `${depth * 1.5}rem` }} className="flex items-center space-x-2 flex-grow">
+                    <button onClick={() => !node.isLeaf && toggleFolder(node.id)} className="w-5">
+                        {!node.isLeaf && (
+                            expandedFolders[node.id] ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />
+                        )}
+                    </button>
+                    <button onClick={() => setSelectedNode(node)} className="flex items-center space-x-2">
+                        {node.isLeaf ? <FileIcon className="w-5 h-5 text-gray-500" /> : <FolderIcon className="w-5 h-5 text-gray-500" />}
+                        <span className="text-sm font-medium">{node.name}</span>
+                    </button>
+                </div>
+            </div>
+            {expandedFolders[node.id] && !node.isLeaf && (
+                <div>
+                    {node.children.map(child => <Folder key={child.id} node={child} depth={depth + 1} />)}
+                </div>
+            )}
+        </div>
+    );
+    
+    const serversToShow = selectedNode?.isLeaf ? [selectedNode.server] : selectedNode?.servers;
+
+    return (
+        <div className="flex">
+            <div className="w-1/3 border-r pr-4">
+                <h3 className="text-lg font-semibold mb-2">Server Clusters</h3>
+                <Folder node={dendogramData} />
+            </div>
+            <div className="w-2/3 pl-4">
+                <h3 className="text-lg font-semibold mb-2">Servers in: <span className="font-normal">{selectedNode?.name}</span></h3>
+                <div className="space-y-2">
+                    <div className="p-2 flex items-center border-b font-bold text-sm text-gray-600">
+                        <div className="w-1/5">Score</div>
+                        <div className="w-2/5">Name</div>
+                        <div className="w-1/5">Type</div>
+                        <div className="w-1/5">Link</div>
+                        <div className="w-10"></div>
+                    </div>
+                    {serversToShow?.map(server => (
+                        <div key={server.name} className="border rounded-md">
+                            <div className="p-2 flex items-center">
+                                <div className="w-1/5 font-medium text-sm">{server.rating}</div>
+                                <div className="w-2/5 font-medium text-sm">{server.name}</div>
+                                <div className="w-1/5 text-sm">{server.tag}</div>
+                                <div className="w-1/5 text-sm"><a href="#" className="text-indigo-600 hover:underline">link</a></div>
+                                <div className="w-10 flex justify-center">
+                                    <button onClick={() => setExpandedServer(expandedServer === server.name ? null : server.name)}>
+                                        {expandedServer === server.name ? <MinusIcon className="w-5 h-5 text-gray-500" /> : <PlusIcon className="w-5 h-5 text-gray-500" />}
+                                    </button>
+                                </div>
+                            </div>
+                            {expandedServer === server.name && (
+                                <div className="p-4 border-t bg-gray-50 space-y-4">
+                                    <div className="flex">
+                                        <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600">Description:</p>
+                                        <p className="text-sm text-gray-600">{server.description}</p>
+                                    </div>
+                                    <div className="flex">
+                                        <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600">Tags:</p>
+                                        <div className="flex flex-wrap gap-2">
+                                            {server.features.map(tag => <FilterTag key={tag} tag={tag} isSelected={false} onClick={() => {}} />)}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 // Main App component
 export default function App() {
   const [activeTab, setActiveTab] = useState('Server Explorer');
@@ -885,7 +1013,7 @@ export default function App() {
         case 'Server Explorer':
             return <ListView />;
         case 'Dendogram':
-            return <PlaceholderView title="Dendogram" />;
+            return <DendogramView />;
         case 't-SNE Cluster':
             return <PlaceholderView title="t-SNE Cluster" />;
         case 'XY Plot':
