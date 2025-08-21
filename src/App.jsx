@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 
 // Helper component for SVG icons
 const Icon = ({ path, className = 'w-6 h-6' }) => (
@@ -872,66 +872,199 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
 
 // --- Dendogram View Component ---
 const DendogramView = () => {
+    // State for the interactive dendogram
     const [expandedFolders, setExpandedFolders] = useState({});
     const [selectedNode, setSelectedNode] = useState(null);
     const [expandedServer, setExpandedServer] = useState(null);
+    const [dendogramData, setDendogramData] = useState(null);
 
-    const servers = [
-        { name: 'EleutherAI', rating: 8.1, tag: 'Research', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Lots of resources; community projects to do and very active community.', features: ['Reading Group', 'Paper Channel', 'VC events/Office Hours', 'Jobs Board'] },
-        { name: 'Cohere for AI', rating: 8.1, tag: 'Research', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Pretty good. Lots of stuff to do for various skill levels.', features: ['Reading Group', 'Paper Channel', 'VC events/Office Hours'] },
-        { name: 'AI Safety Camp', rating: 7.8, tag: 'Alignment', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Focused on AI safety research and education with regular workshops.', features: ['Reading Group', 'Paper Channel', 'VC events/Office Hours', 'Jobs Board'] },
-        { name: 'GPU Collective', rating: 7.2, tag: 'GPU', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'Community for sharing GPU resources and optimization techniques.', features: ['VC events/Office Hours', 'Jobs Board'] },
-        { name: 'LLM Builders', rating: 9.1, tag: 'LLM', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'For developers and researchers working on Large Language Models.', features: ['Paper Channel', 'Jobs Board'] },
-    ];
+    // State for clustering options
+    const [clusterFeatures, setClusterFeatures] = useState({
+        'Server Type': true,
+        'Activity Level': false,
+        'Language': false,
+        'Location': false,
+        'Others': false,
+    });
+    const [includeScore, setIncludeScore] = useState(false);
     
-    // Mock dendogram data structure
-    const dendogramData = {
-        id: 'root',
-        name: 'All Servers',
-        servers: servers,
-        children: [
-            {
-                id: 'cluster1',
-                name: 'Research & Alignment',
-                servers: [servers[0], servers[1], servers[2]],
-                children: [
-                    { id: 'server1', name: 'EleutherAI', isLeaf: true, server: servers[0] },
-                    { id: 'server2', name: 'Cohere for AI', isLeaf: true, server: servers[1] },
-                    { id: 'server3', name: 'AI Safety Camp', isLeaf: true, server: servers[2] },
-                ]
-            },
-            {
-                id: 'cluster2',
-                name: 'Development & Tools',
-                servers: [servers[3], servers[4]],
-                children: [
-                     { id: 'server4', name: 'GPU Collective', isLeaf: true, server: servers[3] },
-                     { id: 'server5', name: 'LLM Builders', isLeaf: true, server: servers[4] },
-                ]
+    // State for applied clustering options
+    const [appliedClusterFeatures, setAppliedClusterFeatures] = useState(clusterFeatures);
+    const [appliedIncludeScore, setAppliedIncludeScore] = useState(includeScore);
+
+
+    // Expanded dummy data for more interesting clusters
+    const servers = useMemo(() => [
+        { name: 'EleutherAI', rating: 8.1, tag: 'Research', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Community for large-scale AI research.', features: ['Reading Group', 'Paper Channel'] },
+        { name: 'Cohere for AI', rating: 8.1, tag: 'Research', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Non-profit research lab from Cohere.', features: ['Paper Channel', 'Jobs Board'] },
+        { name: 'AI Safety Camp', rating: 7.8, tag: 'Alignment', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'AI safety research and workshops.', features: ['Reading Group', 'Paper Channel'] },
+        { name: 'The Alignment Problem', rating: 9.2, tag: 'Alignment', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Dedicated to solving the AI alignment problem.', features: ['Reading Group', 'Paper Channel'] },
+        { name: 'GPU Collective', rating: 7.2, tag: 'GPU', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'Sharing GPU resources.', features: ['Jobs Board'] },
+        { name: 'LLM Builders', rating: 9.1, tag: 'LLM', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'For developers working on Large Language Models.', features: ['Paper Channel', 'Jobs Board'] },
+        { name: 'LLM Fine-Tuning', rating: 8.8, tag: 'LLM', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Techniques for fine-tuning LLMs.', features: ['Paper Channel'] },
+        { name: 'Seoul AI Hub', rating: 6.9, tag: 'General', activityLevel: 'Active', language: 'Korean', location: 'Discord', description: 'Korean-speaking AI community.', features: ['Reading Group', 'Jobs Board'] },
+        { name: 'Korean AI Tech', rating: 7.3, tag: 'General', activityLevel: 'Active', language: 'Korean', location: 'Discord', description: 'A Korean-speaking community for all AI topics.', features: ['Reading Group', 'Paper Channel'] },
+        { name: 'Hackathon Heroes', rating: 8.6, tag: 'Hackathons', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Team up for AI hackathons.', features: ['Jobs Board'] },
+        { name: 'Deep AI 10', rating: 8.7, tag: 'Hackathons', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Weekly hackathons and coding challenges.', features: ['VC events/Office Hours', 'Jobs Board'] },
+        { name: 'Robotics & Automation', rating: 8.5, tag: 'Robotics', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Building and programming intelligent robots.', features: ['Jobs Board'] },
+        { name: 'Autonomous Agents', rating: 9.0, tag: 'Robotics', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Developing autonomous AI agents.', features: ['Jobs Board'] },
+        { name: 'AI Startup Incubator', rating: 8.0, tag: 'Entrepreneurship', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Connect with AI entrepreneurs.', features: ['VC events/Office Hours', 'Jobs Board'] },
+        { name: 'Startup Founders AI', rating: 8.7, tag: 'Entrepreneurship', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'A community for founders of AI startups.', features: ['VC events/Office Hours'] },
+        { name: 'Casual Coders', rating: 6.5, tag: 'Casual', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'A friendly place to chat about code.', features: ['Reading Group'] },
+        { name: 'Machine Learning Cafe', rating: 7.4, tag: 'Casual', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'A relaxed space for ML enthusiasts.', features: ['Reading Group'] },
+        { name: 'Research Paper Club', rating: 8.6, tag: 'Research', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Weekly discussions of new AI research papers.', features: ['Reading Group', 'Paper Channel'] },
+        { name: 'AI Ethics Discussion', rating: 8.2, tag: 'Alignment', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Debating the ethical implications of AI.', features: ['Reading Group'] },
+        { name: 'IRL AI Meetup Group', rating: 8.8, tag: 'Conference', activityLevel: 'Active', language: 'English', location: 'Irl', description: 'Organizing in-person AI meetups.', features: ['VC events/Office Hours'] },
+        { name: 'Corporate AI Solutions', rating: 8.4, tag: 'Company', activityLevel: 'Active', language: 'English', location: 'Slack', description: 'AI implementation in large companies.', features: ['Jobs Board'] },
+    ], []);
+
+    // This function simulates hierarchical clustering by recursively grouping servers.
+    const generateDendogram = useCallback((serversToCluster, featureOptions, sortByScore) => {
+        // Recursive helper function to group servers
+        const groupServers = (servers, keys, parentId = 'root') => {
+            if (keys.length === 0 || servers.length === 0) {
+                // Base case: If no more keys, or no servers, create leaf nodes
+                let finalServers = [...servers];
+                if (sortByScore) {
+                    finalServers.sort((a, b) => b.rating - a.rating);
+                }
+                return finalServers.map((server, i) => ({
+                    id: `${parentId}-${server.name.replace(/\s+/g, '')}-${i}`, // Ensure unique ID for leaves
+                    name: server.name,
+                    isLeaf: true,
+                    server: server,
+                    servers: [server]
+                }));
             }
-        ]
-    };
-    
-    useEffect(() => {
-        setSelectedNode(dendogramData);
+
+            const [currentKey, ...restKeys] = keys;
+            
+            // Group servers by the current feature key
+            const grouped = servers.reduce((acc, server) => {
+                const value = server[currentKey] || 'N/A';
+                if (!acc[value]) {
+                    acc[value] = [];
+                }
+                acc[value].push(server);
+                return acc;
+            }, {});
+
+            // Recursively process each group
+            return Object.entries(grouped).map(([groupName, serversInGroup]) => {
+                const nodeId = `${parentId}-${currentKey}-${groupName.replace(/\s+/g, '')}`;
+                const children = groupServers(serversInGroup, restKeys, nodeId);
+                return {
+                    id: nodeId,
+                    name: `${groupName}`,
+                    servers: serversInGroup,
+                    children: children,
+                };
+            });
+        };
+        
+        const featureMap = {
+            'Server Type': 'tag',
+            'Activity Level': 'activityLevel',
+            'Language': 'language',
+            'Location': 'location',
+        };
+
+        const activeFeatureKeys = Object.entries(featureOptions)
+            .filter(([, isActive]) => isActive)
+            .map(([name]) => featureMap[name])
+            .filter(Boolean);
+        
+        if (activeFeatureKeys.length === 0) {
+             return {
+                id: 'root',
+                name: 'All Servers',
+                servers: serversToCluster,
+                children: serversToCluster.map((s, i) => ({ id: `${s.name}-${i}`, name: s.name, isLeaf: true, server: s, servers: [s] }))
+            };
+        }
+
+        const rootChildren = groupServers(serversToCluster, activeFeatureKeys, 'root');
+
+        return {
+            id: 'root',
+            name: 'All Servers',
+            servers: serversToCluster,
+            children: rootChildren,
+        };
     }, []);
 
-    const toggleFolder = (folderId) => {
-        setExpandedFolders(prev => ({...prev, [folderId]: !prev[folderId]}));
-    }
+    // Generate dendogram when component mounts or when options change
+    useEffect(() => {
+        const data = generateDendogram(servers, appliedClusterFeatures, appliedIncludeScore);
+        setDendogramData(data);
+        setSelectedNode(data);
+        setExpandedFolders({root: true}); // Auto-expand the root
+    }, [servers, generateDendogram, appliedClusterFeatures, appliedIncludeScore]);
 
+    const handleUpdateClusters = () => {
+        setAppliedClusterFeatures(clusterFeatures);
+        setAppliedIncludeScore(includeScore);
+    };
+    
+    const getAllDescendantIds = (node) => {
+        let ids = [];
+        if (node.children && !node.isLeaf) {
+            node.children.forEach(child => {
+                if (!child.isLeaf) {
+                    ids.push(child.id);
+                    ids = ids.concat(getAllDescendantIds(child));
+                }
+            });
+        }
+        return ids;
+    };
+
+    const toggleFolder = (node) => {
+        const isFirstLevel = dendogramData && dendogramData.children.some(child => child.id === node.id);
+
+        setExpandedFolders(prev => {
+            const newExpanded = {...prev};
+            const isCurrentlyExpanded = !!newExpanded[node.id];
+            
+            const descendantIds = getAllDescendantIds(node);
+
+            if (isCurrentlyExpanded) {
+                delete newExpanded[node.id];
+                if (isFirstLevel) {
+                    descendantIds.forEach(id => delete newExpanded[id]);
+                }
+            } else {
+                newExpanded[node.id] = true;
+                if (isFirstLevel) {
+                    descendantIds.forEach(id => {
+                        newExpanded[id] = true;
+                    });
+                }
+            }
+            return newExpanded;
+        });
+    };
+    
+    const handleFeatureChange = (featureName) => {
+        setClusterFeatures(prev => ({
+            ...prev,
+            [featureName]: !prev[featureName]
+        }));
+    };
+
+    // Recursive component to render the folder tree
     const Folder = ({ node, depth = 0 }) => (
         <div>
-            <div className={`flex items-center space-x-2 py-1 rounded-md ${selectedNode?.id === node.id ? 'bg-indigo-100' : ''}`}>
+            <div className={`flex items-center space-x-2 py-1 rounded-md transition-colors ${selectedNode?.id === node.id ? 'bg-indigo-100' : 'hover:bg-gray-100'}`}>
                 <div style={{ paddingLeft: `${depth * 1.5}rem` }} className="flex items-center space-x-2 flex-grow">
-                    <button onClick={() => !node.isLeaf && toggleFolder(node.id)} className="w-5">
+                    <button onClick={() => !node.isLeaf && toggleFolder(node)} className="w-5 h-5 flex items-center justify-center text-gray-500">
                         {!node.isLeaf && (
                             expandedFolders[node.id] ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />
                         )}
                     </button>
-                    <button onClick={() => setSelectedNode(node)} className="flex items-center space-x-2">
-                        {node.isLeaf ? <FileIcon className="w-5 h-5 text-gray-500" /> : <FolderIcon className="w-5 h-5 text-gray-500" />}
-                        <span className="text-sm font-medium">{node.name}</span>
+                    <button onClick={() => setSelectedNode(node)} className="flex items-center space-x-2 text-left">
+                        {node.isLeaf ? <FileIcon className="w-5 h-5 text-gray-500 flex-shrink-0" /> : <FolderIcon className="w-5 h-5 text-yellow-500 flex-shrink-0" />}
+                        <span className="text-sm font-medium">{node.name} {!node.isLeaf && `(${node.servers.length})`}</span>
                     </button>
                 </div>
             </div>
@@ -943,55 +1076,236 @@ const DendogramView = () => {
         </div>
     );
     
-    const serversToShow = selectedNode?.isLeaf ? [selectedNode.server] : selectedNode?.servers;
+    const serversToShow = useMemo(() => {
+        const serverList = selectedNode?.isLeaf ? [selectedNode.server] : selectedNode?.servers;
+        if (!serverList) return [];
+
+        if (appliedIncludeScore) {
+            return [...serverList].sort((a, b) => b.rating - a.rating);
+        }
+        return serverList;
+    }, [selectedNode, appliedIncludeScore]);
+
 
     return (
-        <div className="flex">
-            <div className="w-1/3 border-r pr-4">
-                <h3 className="text-lg font-semibold mb-2">Server Clusters</h3>
-                <Folder node={dendogramData} />
+        <div>
+            <div className="text-center mb-4">
+                <h2 className="text-2xl font-bold">Server Similarity Dendogram</h2>
+                <p className="text-gray-600">Hierarchical clustering based on your selected attributes</p>
             </div>
-            <div className="w-2/3 pl-4">
-                <h3 className="text-lg font-semibold mb-2">Servers in: <span className="font-normal">{selectedNode?.name}</span></h3>
-                <div className="space-y-2">
-                    <div className="p-2 flex items-center border-b font-bold text-sm text-gray-600">
-                        <div className="w-1/5">Score</div>
-                        <div className="w-2/5">Name</div>
-                        <div className="w-1/5">Type</div>
-                        <div className="w-1/5">Link</div>
-                        <div className="w-10"></div>
-                    </div>
-                    {serversToShow?.map(server => (
-                        <div key={server.name} className="border rounded-md">
-                            <div className="p-2 flex items-center">
-                                <div className="w-1/5 font-medium text-sm">{server.rating}</div>
-                                <div className="w-2/5 font-medium text-sm">{server.name}</div>
-                                <div className="w-1/5 text-sm">{server.tag}</div>
-                                <div className="w-1/5 text-sm"><a href="#" className="text-indigo-600 hover:underline">link</a></div>
-                                <div className="w-10 flex justify-center">
-                                    <button onClick={() => setExpandedServer(expandedServer === server.name ? null : server.name)}>
-                                        {expandedServer === server.name ? <MinusIcon className="w-5 h-5 text-gray-500" /> : <PlusIcon className="w-5 h-5 text-gray-500" />}
-                                    </button>
-                                </div>
-                            </div>
-                            {expandedServer === server.name && (
-                                <div className="p-4 border-t bg-gray-50 space-y-4">
-                                    <div className="flex">
-                                        <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600">Description:</p>
-                                        <p className="text-sm text-gray-600">{server.description}</p>
-                                    </div>
-                                    <div className="flex">
-                                        <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600">Tags:</p>
-                                        <div className="flex flex-wrap gap-2">
-                                            {server.features.map(tag => <FilterTag key={tag} tag={tag} isSelected={false} onClick={() => {}} />)}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+
+            {/* Clustering Options Panel */}
+            <div className="max-w-5xl mx-auto">
+                <div className="bg-white p-4 rounded-lg shadow-md mb-6 border">
+                    <h3 className="text-lg font-semibold mb-3">Clustering Options</h3>
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                        <div className="font-medium">Cluster By:</div>
+                        {Object.keys(clusterFeatures).map(feature => (
+                            <label key={feature} className="flex items-center space-x-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={clusterFeatures[feature]}
+                                    onChange={() => handleFeatureChange(feature)}
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <span className="text-sm">{feature}</span>
+                            </label>
+                        ))}
+                        <div className="border-l pl-6 flex items-center gap-x-6">
+                             <label className="flex items-center space-x-2 cursor-pointer">
+                                <input
+                                    type="checkbox"
+                                    checked={includeScore}
+                                    onChange={() => setIncludeScore(prev => !prev)}
+                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                />
+                                <span className="text-sm font-medium">Sort by Score</span>
+                            </label>
+                            <button 
+                                onClick={handleUpdateClusters}
+                                className="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors"
+                            >
+                                Update Clusters
+                            </button>
                         </div>
-                    ))}
+                    </div>
                 </div>
             </div>
+            
+            <div className="flex flex-col md:flex-row gap-6">
+                <div className="w-full md:w-1/3">
+                    <div>
+                        <p className="text-sm text-gray-500">Click {'>'} to expand clusters.</p>
+                        <p className="text-sm text-gray-500 mb-2">Click a folder or file name to view details on the right.</p>
+                    </div>
+                    <h3 className="text-lg font-semibold mb-2 mt-2">Server Clusters</h3>
+                    <div className="border rounded-lg p-2 bg-white shadow-sm overflow-auto">
+                        {dendogramData && <Folder node={dendogramData} depth={0} />}
+                    </div>
+                </div>
+                <div className="w-full md:w-2/3">
+                    <h3 className="text-lg font-semibold mb-2 mt-10">Servers in: <span className="font-normal text-indigo-600">{selectedNode?.name}</span></h3>
+                    <div className="space-y-2">
+                        <div className="p-2 flex items-center border-b font-bold text-sm text-gray-600 bg-gray-50 rounded-t-lg">
+                            <div className="w-1/6">Score</div>
+                            <div className="w-2/6">Name</div>
+                            <div className="w-2/6">Type</div>
+                            <div className="w-1/6">Link</div>
+                            <div className="w-10"></div>
+                        </div>
+                        {serversToShow?.map(server => (
+                            <div key={server.name} className="border rounded-md bg-white">
+                                <div className="p-2 flex items-center">
+                                    <div className="w-1/6 font-medium text-sm">{server.rating}</div>
+                                    <div className="w-2/6 font-medium text-sm">{server.name}</div>
+                                    <div className="w-2/6 text-sm">{server.tag}</div>
+                                    <div className="w-1/6 text-sm"><a href="#" className="text-indigo-600 hover:underline">link</a></div>
+                                    <div className="w-10 flex justify-center">
+                                        <button onClick={() => setExpandedServer(expandedServer === server.name ? null : server.name)}>
+                                            {expandedServer === server.name ? <MinusIcon className="w-5 h-5 text-gray-500" /> : <PlusIcon className="w-5 h-5 text-gray-500" />}
+                                        </button>
+                                    </div>
+                                </div>
+                                {expandedServer === server.name && (
+                                    <div className="p-4 border-t bg-gray-50 space-y-4">
+                                        <div className="flex">
+                                            <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600">Description:</p>
+                                            <p className="text-sm text-gray-600">{server.description}</p>
+                                        </div>
+                                        <div className="flex">
+                                            <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600">Features:</p>
+                                            <div className="flex flex-wrap gap-2">
+                                                {server.features.map(tag => <FilterTag key={tag} tag={tag} isSelected={false} onClick={() => {}} />)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// --- t-SNE Cluster View Component ---
+const TSNEView = () => {
+    const canvasRef = useRef(null);
+    const containerRef = useRef(null);
+    const [view, setView] = useState({ scale: 1, offsetX: 0, offsetY: 0 });
+    const isDragging = useRef(false);
+    const dragStart = useRef({ x: 0, y: 0 });
+
+    const draw = (ctx, scale, offsetX, offsetY) => {
+        const canvas = ctx.canvas;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.save();
+        ctx.translate(offsetX, offsetY);
+        ctx.scale(scale, scale);
+
+        // --- Draw Grid ---
+        const gridSize = 50;
+        const gridColor = '#e0e0e0';
+        ctx.strokeStyle = gridColor;
+        ctx.lineWidth = 1 / scale;
+
+        const startX = Math.floor(-offsetX / scale / gridSize) * gridSize;
+        const startY = Math.floor(-offsetY / scale / gridSize) * gridSize;
+        const endX = startX + canvas.width / scale;
+        const endY = startY + canvas.height / scale;
+
+        for (let x = startX; x <= endX; x += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(x, startY);
+            ctx.lineTo(x, endY);
+            ctx.stroke();
+        }
+        for (let y = startY; y <= endY; y += gridSize) {
+            ctx.beginPath();
+            ctx.moveTo(startX, y);
+            ctx.lineTo(endX, y);
+            ctx.stroke();
+        }
+        
+        ctx.restore();
+    };
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const container = containerRef.current;
+        const ctx = canvas.getContext('2d');
+
+        const resizeCanvas = () => {
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+            draw(ctx, view.scale, view.offsetX, view.offsetY);
+        };
+
+        const handleWheel = (e) => {
+            e.preventDefault();
+            const zoomFactor = 1.1;
+            let newScale = e.deltaY > 0 ? view.scale / zoomFactor : view.scale * zoomFactor;
+            
+            // Clamp the scale to a wider range
+            newScale = Math.max(0.1, Math.min(newScale, 10));
+
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+
+            const newOffsetX = mouseX - (mouseX - view.offsetX) * (newScale / view.scale);
+            const newOffsetY = mouseY - (mouseY - view.offsetY) * (newScale / view.scale);
+
+            setView({ scale: newScale, offsetX: newOffsetX, offsetY: newOffsetY });
+        };
+
+        const handleMouseDown = (e) => {
+            isDragging.current = true;
+            dragStart.current = { x: e.clientX - view.offsetX, y: e.clientY - view.offsetY };
+            canvas.style.cursor = 'grabbing';
+        };
+
+        const handleMouseUp = () => {
+            isDragging.current = false;
+            canvas.style.cursor = 'grab';
+        };
+
+        const handleMouseMove = (e) => {
+            if (!isDragging.current) return;
+            const newOffsetX = e.clientX - dragStart.current.x;
+            const newOffsetY = e.clientY - dragStart.current.y;
+            setView(prev => ({ ...prev, offsetX: newOffsetX, offsetY: newOffsetY }));
+        };
+
+        canvas.addEventListener('wheel', handleWheel);
+        canvas.addEventListener('mousedown', handleMouseDown);
+        window.addEventListener('mouseup', handleMouseUp);
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('resize', resizeCanvas);
+
+        resizeCanvas();
+        canvas.style.cursor = 'grab';
+
+        return () => {
+            canvas.removeEventListener('wheel', handleWheel);
+            canvas.removeEventListener('mousedown', handleMouseDown);
+            window.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('resize', resizeCanvas);
+        };
+    }, []);
+
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        draw(ctx, view.scale, view.offsetX, view.offsetY);
+    }, [view]);
+
+    return (
+        <div ref={containerRef} className="w-full h-full bg-white">
+            <canvas ref={canvasRef} />
         </div>
     );
 };
@@ -999,7 +1313,7 @@ const DendogramView = () => {
 
 // Main App component
 export default function App() {
-  const [activeTab, setActiveTab] = useState('Server Explorer');
+  const [activeTab, setActiveTab] = useState('Dendogram');
   const [chats, setChats] = useState({
       'initial-chat': {
           title: 'New Chat',
@@ -1015,7 +1329,7 @@ export default function App() {
         case 'Dendogram':
             return <DendogramView />;
         case 't-SNE Cluster':
-            return <PlaceholderView title="t-SNE Cluster" />;
+            return <TSNEView />;
         case 'XY Plot':
             return <PlaceholderView title="XY Plot" />;
         case 'Weighted Cluster':
@@ -1028,11 +1342,11 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 font-sans">
+    <div className="h-screen bg-gray-100 font-sans flex flex-col">
       <Header />
-      <main className="px-4 sm:px-6 lg:px-8 py-6">
+      <main className="flex-1 flex flex-col">
         {/* Tab Navigation */}
-        <div className="border-b border-gray-200">
+        <div className="px-4 sm:px-6 lg:px-8 pt-6 border-b border-gray-200">
           <nav className="-mb-px flex space-x-2" aria-label="Tabs">
             <Tab label="Server Explorer" isActive={activeTab === 'Server Explorer'} onClick={() => setActiveTab('Server Explorer')} />
             <Tab label="Dendogram" isActive={activeTab === 'Dendogram'} onClick={() => setActiveTab('Dendogram')} />
@@ -1044,7 +1358,7 @@ export default function App() {
         </div>
 
         {/* Main Content Container */}
-        <div className="mt-4 bg-gray-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner">
+        <div className={activeTab === 't-SNE Cluster' ? 'flex-1 relative' : 'mt-4 bg-gray-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner'}>
            {renderActiveTab()}
         </div>
       </main>
