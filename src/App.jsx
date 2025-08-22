@@ -32,7 +32,7 @@ const FileIcon = ({ className = 'w-5 h-5' }) => <Icon path="M6 2c-1.1 0-1.99.9-1
 
 
 // Header component for the top navigation bar
-const Header = () => (
+const Header = ({ setActiveTab }) => (
   <header className="bg-gray-100 text-gray-800">
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between h-16">
@@ -41,9 +41,9 @@ const Header = () => (
         </div>
         <nav className="hidden md:block">
           <div className="ml-10 flex items-baseline space-x-4">
-            <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-            <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About</a>
-            <a href="#" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Funding</a>
+            <button onClick={() => setActiveTab('Server Explorer')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</button>
+            <button onClick={() => setActiveTab('About')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About</button>
+            <button onClick={() => alert('Funding page coming soon!')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Funding</button>
           </div>
         </nav>
       </div>
@@ -201,7 +201,7 @@ const ServerCard = ({ server, onViewClick }) => {
     const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800';
 
     return (
-        <div onClick={() => onViewClick(server)} className="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 h-full cursor-pointer">
+        <div className="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 h-full">
             {/* Top section of the card */}
             <div className="flex-grow">
                 <h3 className="text-xl font-bold text-blue-600 hover:underline">{server.name}</h3>
@@ -237,12 +237,12 @@ const ServerCard = ({ server, onViewClick }) => {
                         );
                     })}
                 </div>
-                <div className="border-t mt-4 pt-4 flex items-center justify-between">
+                <div className="mt-6 flex items-center justify-between">
                      <div className="flex items-center gap-2">
-                        <button onClick={(e) => { e.stopPropagation(); onViewClick(server); }} className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm font-semibold hover:bg-gray-300 transition-colors">
+                        <button onClick={() => onViewClick(server)} className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm font-semibold hover:bg-gray-300 transition-colors">
                             View
                         </button>
-                        <button onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors">
+                        <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors">
                             Join
                             <ExternalLinkIcon />
                         </button>
@@ -320,7 +320,7 @@ const ServerModal = ({ server, onClose }) => {
 
 // --- View Components ---
 const GridView = ({ servers, onViewClick }) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
         {servers.map(server => <ServerCard key={server.name} server={server} onViewClick={onViewClick} />)}
     </div>
 );
@@ -415,7 +415,6 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
         }
         setSortLevels(newLevels);
         setActiveSubmenu(null);
-        setOpenDropdown(false);
     };
 
     const addLevel = (sortOption) => {
@@ -450,7 +449,7 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
                     {sortLevels.map((level, index) => {
                         const selectedOption = sortOptions.find(opt => opt.value === level.key);
                         return (
-                            <div key={index} className="flex items-center justify-between">
+                            <div key={index} className="flex items-center justify-between group">
                                 {sortLevels.length > 1 && (
                                     <button onClick={() => removeLevel(index)} className="p-2 text-gray-400 hover:text-red-600">
                                         <CloseIcon className="w-4 h-4" />
@@ -468,7 +467,7 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
                                         <ChevronRightIcon />
                                     </button>
                                     {activeSubmenu === index && (
-                                        <div className="absolute left-full top-0 ml-1 w-48 bg-white border rounded-md shadow-lg">
+                                        <div className="absolute left-full -top-px w-48 bg-white border rounded-md shadow-lg">
                                             {selectedOption.type === 'value' ? (
                                                 <>
                                                     <button onClick={() => handleLevelChange(index, 'direction', 'ascending')} className="block w-full text-left px-4 py-2 hover:bg-gray-100">Ascending</button>
@@ -678,11 +677,44 @@ const ListView = () => {
     );
 };
 
+// --- About Page View ---
+const AboutView = () => (
+    <div className="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold text-gray-800 mb-4">About the AI Discord Directory</h2>
+        <div className="space-y-4 text-gray-600">
+            <p>
+                Welcome to the AI Discord Directory, your central hub for discovering and exploring communities focused on Artificial Intelligence. In the rapidly expanding world of AI, finding the right community to learn, collaborate, and stay up-to-date can be a challenge. Our mission is to simplify that process.
+            </p>
+            <p>
+                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large language models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits your interests.
+            </p>
+            <h3 className="text-2xl font-semibold text-gray-700 pt-4">Our Goal</h3>
+            <p>
+                Our primary goal is to foster a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
+            </p>
+            <ul className="list-disc list-inside space-y-2 pl-4">
+                <li>Help individuals find relevant communities to enhance their learning and career growth.</li>
+                <li>Enable collaboration between different groups and individuals on exciting projects.</li>
+                <li>Provide a platform for server owners to reach a wider audience of AI enthusiasts.</li>
+                <li>Offer powerful filtering and visualization tools to help you understand the landscape of AI communities.</li>
+            </ul>
+            <h3 className="text-2xl font-semibold text-gray-700 pt-4">How It Works</h3>
+            <p>
+                We gather information on various AI-focused communities and organize it in a structured way. Each server is evaluated based on several factors, including activity level, primary focus, and available resources like paper channels or job boards. Our unique scoring system helps you quickly identify high-quality and active communities.
+            </p>
+            <p>
+                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram d t-SNE Cluster views—to explore the relationships between different communities and find the perfect one for you.
+            </p>
+        </div>
+    </div>
+);
+
+
 // --- Placeholder Views for New Tabs ---
 const PlaceholderView = ({ title }) => (
     <div className="flex flex-col items-center justify-center h-96 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-gray-500">{title}</h2>
-        <p className="text-gray-400 mt-2">This is where the {title.toLowerCase()} visualization will go.</p>
+        <p className="text-gray-400 mt-2">This is where the {title.toLowerCase()} visualizationill go.</p>
     </div>
 );
 
@@ -1328,7 +1360,7 @@ const TSNEView = () => {
 
 // Main App component
 export default function App() {
-  const [activeTab, setActiveTab] = useState('Folder Dendogram');
+  const [activeTab, setActiveTab] = useState('Server Explorer');
   const [chats, setChats] = useState({
       'initial-chat': {
           title: 'New Chat',
@@ -1351,6 +1383,8 @@ export default function App() {
             return <PlaceholderView title="Weighted Cluster" />;
         case 'Assistant':
             return <AssistantView chats={chats} setChats={setChats} activeChatId={activeChatId} setActiveChatId={setActiveChatId} />;
+        case 'About':
+            return <AboutView />;
         default:
             return <ListView />;
     }
@@ -1358,7 +1392,7 @@ export default function App() {
 
   return (
     <div className="h-screen bg-gray-100 font-sans flex flex-col">
-      <Header />
+      <Header setActiveTab={setActiveTab} />
       <main className="flex-1 flex flex-col">
         {/* Tab Navigation */}
         <div className="px-4 sm:px-6 lg:px-8 pt-6 border-b border-gray-200">
