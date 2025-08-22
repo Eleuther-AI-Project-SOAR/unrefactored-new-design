@@ -717,7 +717,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
             ...prev,
             [newChatId]: {
                 title: 'New Chat',
-                messages: [{ sender: 'assistant', text: "Hi! How can I help you find a Discord server today?" }]
+                messages: []
             }
         }));
         setActiveChatId(newChatId);
@@ -731,7 +731,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
 
         activeChat.messages.push({ sender: 'user', text: input });
 
-        if (activeChat.messages.length === 2) { // First user message
+        if (activeChat.messages.length === 1) { // First user message
             activeChat.title = input.substring(0, 25) + (input.length > 25 ? '...' : '');
         }
 
@@ -830,38 +830,53 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
             </div>
 
             {/* Chat Window */}
-            <div className="w-3/4 bg-white rounded-r-lg flex flex-col">
-                 {activeChat ? (
+            <div className="w-3/4 bg-white rounded-r-lg flex flex-col relative">
+                 {activeChat && activeChat.messages.length > 0 ? (
                     <>
-                        <div className="p-6 flex-grow overflow-y-auto flex flex-col space-y-4">
-                            {activeChat.messages.map((msg, index) => (
-                                <div key={index} className={`flex items-end gap-2 ${msg.sender === 'user' ? 'justify-end' : ''}`}>
-                                    {msg.sender === 'assistant' && <div className="w-8 h-8 rounded-full bg-indigo-500 flex-shrink-0"></div>}
-                                    <div className={`px-4 py-2 rounded-lg max-w-lg ${msg.sender === 'user' ? 'bg-indigo-500 text-white' : 'bg-gray-200 text-gray-800'}`}>
-                                        {msg.text}
+                        <div className="flex-grow overflow-y-auto p-6">
+                            <div className="max-w-4xl mx-auto">
+                                {activeChat.messages.map((msg, index) => (
+                                    <div key={index} className={`flex items-start gap-4 mb-4 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                        <div className={`px-4 py-2 rounded-lg max-w-lg ${msg.sender === 'user' ? 'bg-indigo-500 text-white' : 'bg-transparent text-gray-800 select-text'}`}>
+                                            {msg.text}
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                             <div ref={messagesEndRef} />
                         </div>
-                        <div className="p-4 border-t flex">
-                            <input
+                        <div className="p-4 bg-white">
+                             <div className="max-w-4xl mx-auto flex">
+                                <input
+                                    type="text"
+                                    value={input}
+                                    onChange={(e) => setInput(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                                    placeholder="e.g., 'Find me a server for AI safety research'"
+                                    className="flex-grow px-4 py-3 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
+                                />
+                                <button onClick={handleSendMessage} className="px-4 py-3 bg-indigo-600 text-white rounded-r-full hover:bg-indigo-700 transition-colors shadow-sm">
+                                    <SendIcon />
+                                </button>
+                            </div>
+                        </div>
+                    </>
+                 ) : (
+                    <div className="flex flex-col items-center justify-center h-full">
+                        <h2 className="text-2xl font-bold text-gray-500 mb-4">Tell me what you are looking for?</h2>
+                        <div className="w-full max-w-xl flex">
+                             <input
                                 type="text"
                                 value={input}
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                                 placeholder="e.g., 'Find me a server for AI safety research'"
-                                className="flex-grow px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                className="flex-grow px-4 py-3 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
                             />
-                            <button onClick={handleSendMessage} className="px-4 py-2 bg-indigo-600 text-white rounded-r-md hover:bg-indigo-700 transition-colors">
+                            <button onClick={handleSendMessage} className="px-4 py-3 bg-indigo-600 text-white rounded-r-full hover:bg-indigo-700 transition-colors shadow-sm">
                                 <SendIcon />
                             </button>
                         </div>
-                    </>
-                 ) : (
-                    <div className="flex flex-col items-center justify-center h-full">
-                        <h2 className="text-2xl font-bold text-gray-500">Welcome to the Assistant</h2>
-                        <p className="text-gray-400 mt-2">Start a new chat to find a server.</p>
                     </div>
                  )}
             </div>
@@ -1088,7 +1103,7 @@ const DendogramView = () => {
 
 
     return (
-        <div>
+        <div className="max-w-7xl mx-auto">
             <div className="text-center mb-4">
                 <h2 className="text-2xl font-bold">Server Similarity Dendogram</h2>
                 <p className="text-gray-600">Hierarchical clustering based on your selected attributes</p>
@@ -1313,11 +1328,11 @@ const TSNEView = () => {
 
 // Main App component
 export default function App() {
-  const [activeTab, setActiveTab] = useState('Dendogram');
+  const [activeTab, setActiveTab] = useState('Folder Dendogram');
   const [chats, setChats] = useState({
       'initial-chat': {
           title: 'New Chat',
-          messages: [{ sender: 'assistant', text: "Hi! How can I help you find a Discord server today?" }]
+          messages: []
       }
   });
   const [activeChatId, setActiveChatId] = useState('initial-chat');
@@ -1326,7 +1341,7 @@ export default function App() {
     switch (activeTab) {
         case 'Server Explorer':
             return <ListView />;
-        case 'Dendogram':
+        case 'Folder Dendogram':
             return <DendogramView />;
         case 't-SNE Cluster':
             return <TSNEView />;
@@ -1349,7 +1364,7 @@ export default function App() {
         <div className="px-4 sm:px-6 lg:px-8 pt-6 border-b border-gray-200">
           <nav className="-mb-px flex space-x-2" aria-label="Tabs">
             <Tab label="Server Explorer" isActive={activeTab === 'Server Explorer'} onClick={() => setActiveTab('Server Explorer')} />
-            <Tab label="Dendogram" isActive={activeTab === 'Dendogram'} onClick={() => setActiveTab('Dendogram')} />
+            <Tab label="Folder Dendogram" isActive={activeTab === 'Folder Dendogram'} onClick={() => setActiveTab('Folder Dendogram')} />
             <Tab label="t-SNE Cluster" isActive={activeTab === 't-SNE Cluster'} onClick={() => setActiveTab('t-SNE Cluster')} />
             <Tab label="XY Plot" isActive={activeTab === 'XY Plot'} onClick={() => setActiveTab('XY Plot')} />
             <Tab label="Weighted Cluster" isActive={activeTab === 'Weighted Cluster'} onClick={() => setActiveTab('Weighted Cluster')} />
