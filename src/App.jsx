@@ -1,4 +1,5 @@
-import React, { useState, useMemo, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
+import * as d3 from 'd3';
 
 // Helper component for SVG icons
 const Icon = ({ path, className = 'w-6 h-6' }) => (
@@ -21,15 +22,13 @@ const PlusIcon = ({ className = 'w-5 h-5' }) => <Icon path="M11 5h2v6h6v2h-6v6h-
 const CloseIcon = ({ className = 'w-6 h-6' }) => <Icon path="M6.28 6.28a.75.75 0 00-1.06 1.06L10.94 12l-5.72 5.72a.75.75 0 101.06 1.06L12 13.06l5.72 5.72a.75.75 0 101.06-1.06L13.06 12l5.72-5.72a.75.75 0 00-1.06-1.06L12 10.94 6.28 6.28z" className={className} />;
 const GridIcon = ({ className = 'w-5 h-5' }) => <Icon path="M2 2h9v9H2V2zm11 0h9v9h-9V2zM2 13h9v9H2v-9zm11 0h9v9h-9v-9z" className={className} />;
 const ListIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h18v2H3v-2z" className={className} />;
-const SortAscIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3 18h6v-2H3v2zM3 6v2h18V6H3zm0 7h12v-2H3v2z" className={className} />;
-const SortDescIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3 6h6v2H3V6zm0 7h12v2H3v-2zm0 7h18v-2H3v2z" className={className} />;
 const ChevronDownIcon = ({ className = 'w-4 h-4' }) => <Icon path="M12 15.25a1 1 0 01-.7-.29l-4-4a1 1 0 111.4-1.42L12 12.84l3.3-3.3a1 1 0 111.4 1.42l-4 4a1 1 0 01-.7.29z" className={className} />;
-const ChevronRightIcon = ({ className = 'w-4 h-4' }) => <Icon path="M10.75 16.4a.99.99 0 01-.7-.29.99.99 0 010-1.41L13.16 12l-3.1-3.1a.99.99 0 010-1.41 1 1 0 011.41 0l3.8 3.8a.99.99 0 010 1.41l-3.8 3.8a1 1 0 01-.71.29z" className={className} />;
+const ChevronRightIcon = ({ className = 'w-5 h-5' }) => <Icon path="M10.75 16.4a.99.99 0 01-.7-.29.99.99 0 010-1.41L13.16 12l-3.1-3.1a.99.99 0 010-1.41 1 1 0 011.41 0l3.8 3.8a.99.99 0 010 1.41l-3.8 3.8a1 1 0 01-.71.29z" className={className} />;
+const ChevronLeftIcon = ({ className = 'w-5 h-5' }) => <Icon path="M13.25 16.4a1 1 0 01-.71-.29l-3.8-3.8a.99.99 0 010-1.41l3.8-3.8a1 1 0 011.41 1.41L10.84 12l3.1 3.1a.99.99 0 010 1.41 1 1 0 01-.7.29z" className={className} />;
 const SendIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" className={className} />;
 const MoreIcon = ({ className = 'w-5 h-5' }) => <Icon path="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" className={className} />;
 const FolderIcon = ({ className = 'w-5 h-5' }) => <Icon path="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" className={className} />;
 const FileIcon = ({ className = 'w-5 h-5' }) => <Icon path="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" className={className} />;
-
 
 // Header component for the top navigation bar
 const Header = ({ setActiveTab }) => (
@@ -410,7 +409,12 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
                 newLevels[index].specificTag = 'none';
                 newLevels[index].direction = 'ascending';
             } else {
-                 newLevels[index].specificTag = 'none';
+                newLevels[index].direction = 'none';
+                if (selectedOption.tags && selectedOption.tags.length > 0) {
+                    newLevels[index].specificTag = selectedOption.tags[0];
+                } else {
+                    newLevels[index].specificTag = 'none';
+                }
             }
         }
         setSortLevels(newLevels);
@@ -420,8 +424,8 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
     const addLevel = (sortOption) => {
         const newLevel = {
             key: sortOption.value,
-            direction: 'ascending',
-            specificTag: 'none'
+            direction: sortOption.type === 'value' ? 'ascending' : 'none',
+            specificTag: sortOption.type === 'tag' && sortOption.tags && sortOption.tags.length > 0 ? sortOption.tags[0] : 'none'
         };
         setSortLevels([...sortLevels, newLevel]);
         setShowAddLevelMenu(false);
@@ -450,11 +454,9 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
                         const selectedOption = sortOptions.find(opt => opt.value === level.key);
                         return (
                             <div key={index} className="flex items-center justify-between group">
-                                {sortLevels.length > 1 && (
-                                    <button onClick={() => removeLevel(index)} className="p-2 text-gray-400 hover:text-red-600">
-                                        <CloseIcon className="w-4 h-4" />
-                                    </button>
-                                )}
+                                <button onClick={() => removeLevel(index)} className="p-2 text-gray-400 hover:text-red-600">
+                                    <CloseIcon className="w-4 h-4" />
+                                </button>
                                 <div 
                                     className="relative flex-grow" 
                                     onMouseEnter={() => setActiveSubmenu(index)} 
@@ -463,7 +465,7 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
                                     <button 
                                         className="w-full text-left p-2 hover:bg-gray-100 rounded-md flex justify-between items-center"
                                     >
-                                        <span>{selectedOption.label}: {level.specificTag !== 'none' ? level.specificTag : level.direction}</span>
+                                        <span>{selectedOption.label}: {selectedOption.type === 'tag' ? level.specificTag : level.direction}</span>
                                         <ChevronRightIcon />
                                     </button>
                                     {activeSubmenu === index && (
@@ -686,11 +688,11 @@ const AboutView = () => (
                 Welcome to the AI Discord Directory, your central hub for discovering and exploring communities focused on Artificial Intelligence. In the rapidly expanding world of AI, finding the right community to learn, collaborate, and stay up-to-date can be a challenge. Our mission is to simplify that process.
             </p>
             <p>
-                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large language models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits your interests.
+                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large lanage models (LLMs) to AI safety, roboti, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits your interests.
             </p>
             <h3 className="text-2xl font-semibold text-gray-700 pt-4">Our Goal</h3>
             <p>
-                Our primary goal is to foster a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
+              Our primary goal is to foster a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
             </p>
             <ul className="list-disc list-inside space-y-2 pl-4">
                 <li>Help individuals find relevant communities to enhance their learning and career growth.</li>
@@ -705,14 +707,14 @@ const AboutView = () => (
             <p>
                 You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram d t-SNE Cluster views—to explore the relationships between different communities and find the perfect one for you.
             </p>
-        </div>
+    </div>
     </div>
 );
 
 
 // --- Placeholder Views for New Tabs ---
 const PlaceholderView = ({ title }) => (
-    <div className="flex flex-col items-center justify-center h-96 bg-white rounded-lg shadow-md">
+    <div className="flex flex-col items-center ify-center h-96 bg-white rounded-lg shadd">
         <h2 className="text-2xl font-bold text-gray-500">{title}</h2>
         <p className="text-gray-400 mt-2">This is where the {title.toLowerCase()} visualizationill go.</p>
     </div>
@@ -1236,123 +1238,406 @@ const DendogramView = () => {
     );
 };
 
-// --- t-SNE Cluster View Component ---
-const TSNEView = () => {
-    const canvasRef = useRef(null);
-    const containerRef = useRef(null);
-    const [view, setView] = useState({ scale: 1, offsetX: 0, offsetY: 0 });
-    const isDragging = useRef(false);
-    const dragStart = useRef({ x: 0, y: 0 });
+// --- New Component for the Floating Card ---
+const PinnedServerCard = ({ data, onClose, chartRef }) => {
+    const cardRef = useRef(null);
+    const [style, setStyle] = useState({ opacity: 0, pointerEvents: 'none' });
 
-    const draw = (ctx, scale, offsetX, offsetY) => {
-        const canvas = ctx.canvas;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    useLayoutEffect(() => {
+        if (data && cardRef.current && chartRef.current) {
+            const { x, y } = data;
+            const chartRect = chartRef.current.getBoundingClientRect();
+            const cardWidth = cardRef.current.offsetWidth;
+            const cardHeight = cardRef.current.offsetHeight;
 
-        ctx.save();
-        ctx.translate(offsetX, offsetY);
-        ctx.scale(scale, scale);
+            // Horizontal positioning: Check if the card would overflow the right boundary
+            let finalX = x + 20; // Default position: to the right of the node
+            if (finalX + cardWidth > chartRect.width - 10) { // 10px buffer
+                finalX = x - cardWidth - 20; // Flip to the left
+            }
 
-        // --- Draw Grid ---
-        const gridSize = 50;
-        const gridColor = '#e0e0e0';
-        ctx.strokeStyle = gridColor;
-        ctx.lineWidth = 1 / scale;
+            // Vertical positioning: Clamp the card to stay within the vertical boundaries
+            let finalY = y;
+            if (y - cardHeight / 2 < 10) { // 10px buffer from top
+                finalY = cardHeight / 2 + 10;
+            } else if (y + cardHeight / 2 > chartRect.height - 10) { // 10px buffer from bottom
+                finalY = chartRect.height - cardHeight / 2 - 10;
+            }
 
-        const startX = Math.floor(-offsetX / scale / gridSize) * gridSize;
-        const startY = Math.floor(-offsetY / scale / gridSize) * gridSize;
-        const endX = startX + canvas.width / scale;
-        const endY = startY + canvas.height / scale;
-
-        for (let x = startX; x <= endX; x += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(x, startY);
-            ctx.lineTo(x, endY);
-            ctx.stroke();
+            setStyle({
+                position: 'absolute',
+                top: `${finalY}px`,
+                left: `${finalX}px`,
+                transform: 'translateY(-50%)',
+                zIndex: 50,
+                opacity: 1,
+                transition: 'opacity 0.2s ease-in-out',
+            });
         }
-        for (let y = startY; y <= endY; y += gridSize) {
-            ctx.beginPath();
-            ctx.moveTo(startX, y);
-            ctx.lineTo(endX, y);
-            ctx.stroke();
-        }
-        
-        ctx.restore();
-    };
+    }, [data, chartRef]);
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        const container = containerRef.current;
-        const ctx = canvas.getContext('2d');
-
-        const resizeCanvas = () => {
-            canvas.width = container.offsetWidth;
-            canvas.height = container.offsetHeight;
-            draw(ctx, view.scale, view.offsetX, view.offsetY);
-        };
-
-        const handleWheel = (e) => {
-            e.preventDefault();
-            const zoomFactor = 1.1;
-            let newScale = e.deltaY > 0 ? view.scale / zoomFactor : view.scale * zoomFactor;
-            
-            // Clamp the scale to a wider range
-            newScale = Math.max(0.1, Math.min(newScale, 10));
-
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
-
-            const newOffsetX = mouseX - (mouseX - view.offsetX) * (newScale / view.scale);
-            const newOffsetY = mouseY - (mouseY - view.offsetY) * (newScale / view.scale);
-
-            setView({ scale: newScale, offsetX: newOffsetX, offsetY: newOffsetY });
-        };
-
-        const handleMouseDown = (e) => {
-            isDragging.current = true;
-            dragStart.current = { x: e.clientX - view.offsetX, y: e.clientY - view.offsetY };
-            canvas.style.cursor = 'grabbing';
-        };
-
-        const handleMouseUp = () => {
-            isDragging.current = false;
-            canvas.style.cursor = 'grab';
-        };
-
-        const handleMouseMove = (e) => {
-            if (!isDragging.current) return;
-            const newOffsetX = e.clientX - dragStart.current.x;
-            const newOffsetY = e.clientY - dragStart.current.y;
-            setView(prev => ({ ...prev, offsetX: newOffsetX, offsetY: newOffsetY }));
-        };
-
-        canvas.addEventListener('wheel', handleWheel);
-        canvas.addEventListener('mousedown', handleMouseDown);
-        window.addEventListener('mouseup', handleMouseUp);
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('resize', resizeCanvas);
-
-        resizeCanvas();
-        canvas.style.cursor = 'grab';
-
-        return () => {
-            canvas.removeEventListener('wheel', handleWheel);
-            canvas.removeEventListener('mousedown', handleMouseDown);
-            window.removeEventListener('mouseup', handleMouseUp);
-            window.removeEventListener('mousemove', handleMouseMove);
-            window.removeEventListener('resize', resizeCanvas);
-        };
-    }, []);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
-        draw(ctx, view.scale, view.offsetX, view.offsetY);
-    }, [view]);
+    if (!data) return null;
+    
+    const { server } = data;
+    const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800';
 
     return (
-        <div ref={containerRef} className="w-full h-full bg-white">
-            <canvas ref={canvasRef} />
+        <div 
+            ref={cardRef}
+            style={style} 
+            className="w-72 bg-white rounded-xl shadow-2xl border border-gray-200"
+            onClick={(e) => e.stopPropagation()}
+        >
+            <div className="p-4">
+                <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-lg font-bold text-gray-800">{server.name}</h3>
+                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                        <CloseIcon className="w-5 h-5" />
+                    </button>
+                </div>
+                <div className="flex items-center flex-wrap gap-x-3 text-xs mb-3">
+                    <span className="flex items-center font-bold"><StarIcon className="w-4 h-4 mr-1" />{server.rating}</span>
+                    <span className="px-2 py-0.5 border border-gray-300 rounded-full font-semibold">{server.tag}</span>
+                    <span className={`px-2 py-0.5 ${activityClass} rounded-full font-semibold`}>
+                        {server.activityLevel}
+                    </span>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">{server.description}</p>
+                <div className="flex flex-wrap gap-2">
+                    {server.features.map(feature => {
+                        const style = featureTagStyles[feature];
+                        if (!style) return null;
+                        return (
+                            <span key={feature} className={`inline-flex items-center gap-1.5 px-2 py-1 ${style.color} rounded-md text-xs font-medium`}>
+                                {style.icon}
+                                {feature}
+                            </span>
+                        );
+                    })}
+                </div>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-b-xl">
+                 <button className="w-full inline-flex items-center justify-center gap-2 px-3 py-1.5 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors">
+                    Join Server
+                    <ExternalLinkIcon className="w-4 h-4" />
+                </button>
+            </div>
+        </div>
+    );
+};
+
+// --- FIX: Moved clusterData outside the component ---
+// This data is now a constant and won't be recreated on every render.
+const clusterData = {
+  "servers": [
+    {"name": "EleutherAI", "rating": 8.1, "tag": "Research", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Lots of resources; community projects to do and very active community.", "features": ["Reading Group", "Paper Channel", "VC events/Office Hours", "Jobs Board"], "x": 10.370316505432129, "y": 5.420857906341553, "cluster_id": 3},
+    {"name": "Cohere for AI", "rating": 8.1, "tag": "Research", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Pretty good. Lots of stuff to do for various skill levels.", "features": ["Reading Group", "Paper Channel", "VC events/Office Hours"], "x": 10.428757667541504, "y": 5.405788421630859, "cluster_id": 3},
+    {"name": "AI Safety Camp", "rating": 7.8, "tag": "Alignment", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Focused on AI safety research and education with regular workshops.", "features": ["Reading Group", "Paper Channel", "VC events/Office Hours", "Jobs Board"], "x": 10.398018836975098, "y": 5.419445037841797, "cluster_id": 3},
+    {"name": "GPU Collective", "rating": 7.2, "tag": "GPU", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Community for sharing GPU resources and optimization techniques.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.4111328125, "y": 7.152174949645996, "cluster_id": 0},
+    {"name": "Seoul AI Hub", "rating": 6.9, "tag": "General", "activityLevel": "Active", "language": "Korean", "location": "Discord", "description": "Korean-speaking AI community with regular paper discussions.", "features": ["Reading Group", "Paper Channel", "Jobs Board"], "x": 11.238466262817383, "y": 4.1088666915893555, "cluster_id": -1},
+    {"name": "Prompt Engineering Masters", "rating": 7.5, "tag": "Prompting", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Advanced techniques and strategies for prompt engineering.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "Robotics Research Group", "rating": 7.4, "tag": "Robotics", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Connect with AI entrepreneurs and find co-founders.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.16782283782959, "y": 6.136894226074219, "cluster_id": 0},
+    {"name": "Neural AI 9", "rating": 7.0, "tag": "Research", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "A place for all things related to neural networks.", "features": ["Paper Channel"], "x": 10.428731918334961, "y": 5.253073215484619, "cluster_id": 3},
+    {"name": "Deep AI 10", "rating": 8.7, "tag": "Hackathons", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Weekly hackathons and coding challenges.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.441052436828613, "y": 7.151704788208008, "cluster_id": 0},
+    {"name": "AI Startup Incubator", "rating": 8.0, "tag": "Entrepreneurship", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Connect with AI entrepreneurs and find co-founders.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.42398452758789, "y": 7.147983551025391, "cluster_id": 0},
+    {"name": "Casual Coders", "rating": 6.5, "tag": "Casual", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A friendly place to chat about code and projects.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "LLM Builders", "rating": 9.1, "tag": "LLM", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "For developers and researchers working on Large Language Models.", "features": ["Paper Channel", "Jobs Board"], "x": 9.182415962219238, "y": 5.093539237976074, "cluster_id": 2},
+    {"name": "Bug Bounty Hunters", "rating": 7.9, "tag": "Bug bounties", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Find and report vulnerabilities in AI systems.", "features": [], "x": 7.730303764343262, "y": 8.428784370422363, "cluster_id": -1},
+    {"name": "AI Conference Hub", "rating": 8.3, "tag": "Conference", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Discuss upcoming AI conferences and share insights.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "Crypto & AI", "rating": 6.8, "tag": "Crypto", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Exploring the intersection of cryptocurrency and artificial intelligence.", "features": [], "x": 6.702220439910889, "y": 8.169151306152344, "cluster_id": -1},
+    {"name": "Puzzle Solvers AI", "rating": 7.1, "tag": "Puzzle", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Using AI to solve complex puzzles and games.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "Generative Art Gallery", "rating": 8.5, "tag": "Generation", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Showcase and discuss AI-generated art.", "features": ["Paper Channel"], "x": 9.123537063598633, "y": 4.96541690826416, "cluster_id": 2},
+    {"name": "AI for Education", "rating": 7.7, "tag": "Education", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Developing and using AI tools for learning.", "features": ["Reading Group", "Jobs Board"], "x": 9.432653427124023, "y": 3.8617305755615234, "cluster_id": 1},
+    {"name": "Open Source AI Tools", "rating": 8.4, "tag": "Tool", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Contribute to and discuss open-source AI projects.", "features": ["Jobs Board"], "x": 8.243552207946777, "y": 5.923832893371582, "cluster_id": 0},
+    {"name": "Korean AI Tech", "rating": 7.3, "tag": "General", "activityLevel": "Active", "language": "Korean", "location": "Discord", "description": "A Korean-speaking community for all AI topics.", "features": ["Reading Group", "Paper Channel"], "x": 11.238466262817383, "y": 4.1088666915893555, "cluster_id": -1},
+    {"name": "Slack AI Innovators", "rating": 7.0, "tag": "Tool", "activityLevel": "Semi-active", "language": "English", "location": "Slack", "description": "A Slack community for AI developers.", "features": [], "x": 8.16782283782959, "y": 6.136894226074219, "cluster_id": 0},
+    {"name": "IRL AI Meetup Group", "rating": 8.8, "tag": "Conference", "activityLevel": "Active", "language": "English", "location": "Irl", "description": "Organizing in-person AI meetups and events.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "The Alignment Problem", "rating": 9.2, "tag": "Alignment", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Dedicated to solving the AI alignment problem.", "features": ["Reading Group", "Paper Channel"], "x": 10.398018836975098, "y": 5.419445037841797, "cluster_id": 3},
+    {"name": "Hackathon Heroes", "rating": 8.6, "tag": "Hackathons", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Team up for AI hackathons and competitions.", "features": ["Jobs Board"], "x": 8.441052436828613, "y": 7.151704788208008, "cluster_id": 0},
+    {"name": "GPU Traders", "rating": 6.7, "tag": "GPU", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "A community for buying, selling, and trading GPUs.", "features": [], "x": 6.702220439910889, "y": 8.169151306152344, "cluster_id": -1},
+    {"name": "AI Ethics Discussion", "rating": 8.2, "tag": "Alignment", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Debating the ethical implications of AI.", "features": ["Reading Group"], "x": 10.428731918334961, "y": 5.253073215484619, "cluster_id": 3},
+    {"name": "Machine Learning Cafe", "rating": 7.4, "tag": "Casual", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A relaxed space for ML enthusiasts.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "Prompt Perfect", "rating": 7.9, "tag": "Prompting", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Master the art of prompt engineering.", "features": ["Paper Channel"], "x": 9.123537063598633, "y": 4.96541690826416, "cluster_id": 2},
+    {"name": "Code Generation Guild", "rating": 8.1, "tag": "Generation", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Exploring AI-powered code generation.", "features": ["Jobs Board"], "x": 9.182415962219238, "y": 5.093539237976074, "cluster_id": 2},
+    {"name": "Robotics & Automation", "rating": 8.5, "tag": "Robotics", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Building and programming intelligent robots.", "features": ["Jobs Board"], "x": 8.243552207946777, "y": 5.923832893371582, "cluster_id": 0},
+    {"name": "AI Company Connect", "rating": 8.9, "tag": "Company", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A network for professionals at AI companies.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.42398452758789, "y": 7.147983551025391, "cluster_id": 0},
+    {"name": "The Puzzle Box", "rating": 7.6, "tag": "Puzzle", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A community for AI-based puzzle solving.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "LLM Fine-Tuning", "rating": 8.8, "tag": "LLM", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Techniques and best practices for fine-tuning LLMs.", "features": ["Paper Channel"], "x": 9.123537063598633, "y": 4.96541690826416, "cluster_id": 2},
+    {"name": "AI in Finance", "rating": 7.8, "tag": "Crypto", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Applying AI to financial markets and cryptocurrency.", "features": ["Jobs Board"], "x": 6.702220439910889, "y": 8.169151306152344, "cluster_id": -1},
+    {"name": "EdTech AI", "rating": 7.5, "tag": "Education", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Innovating in education with AI.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "The Turing Test", "rating": 7.2, "tag": "Casual", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Casual chats about AI and consciousness.", "features": [], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "AI Hardware Hub", "rating": 8.0, "tag": "GPU", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Discussions on hardware for AI, including GPUs and TPUs.", "features": ["Jobs Board"], "x": 8.4111328125, "y": 7.152174949645996, "cluster_id": 0},
+    {"name": "Startup Founders AI", "rating": 8.7, "tag": "Entrepreneurship", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "A community for founders of AI startups.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "AI Art Prompters", "rating": 8.3, "tag": "Prompting", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Sharing prompts and creations for AI art generation.", "features": [], "x": 7.730303764343262, "y": 8.428784370422363, "cluster_id": -1},
+    {"name": "Research Paper Club", "rating": 8.6, "tag": "Research", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Weekly discussions of new AI research papers.", "features": ["Reading Group", "Paper Channel"], "x": 10.428731918334961, "y": 5.253073215484619, "cluster_id": 3},
+    {"name": "Autonomous Agents", "rating": 9.0, "tag": "Robotics", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Developing autonomous AI agents.", "features": ["Jobs Board"], "x": 8.243552207946777, "y": 5.923832893371582, "cluster_id": 0},
+    {"name": "AI for Good", "rating": 8.9, "tag": "Alignment", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Using AI to solve social and environmental problems.", "features": ["VC events/Office Hours"], "x": 10.428757667541504, "y": 5.405788421630859, "cluster_id": 3},
+    {"name": "The Generative Lounge", "rating": 7.9, "tag": "Generation", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A place to share and discuss generative models.", "features": ["Paper Channel"], "x": 9.123537063598633, "y": 4.96541690826416, "cluster_id": 2},
+    {"name": "AI Toolmakers", "rating": 8.2, "tag": "Tool", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Building the next generation of AI tools.", "features": ["Jobs Board"], "x": 8.243552207946777, "y": 5.923832893371582, "cluster_id": 0},
+    {"name": "Global AI Conference", "rating": 8.5, "tag": "Conference", "activityLevel": "Active", "language": "English", "location": "Irl", "description": "The official server for the Global AI Conference.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "Data Science Dojo", "rating": 7.7, "tag": "Education", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Learn and practice data science with a supportive community.", "features": ["Reading Group", "Jobs Board"], "x": 9.432653427124023, "y": 3.8617305755615234, "cluster_id": 1},
+    {"name": "The Logic Puzzle", "rating": 7.3, "tag": "Puzzle", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Solving logic puzzles with and without AI.", "features": [], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "Corporate AI Solutions", "rating": 8.4, "tag": "Company", "activityLevel": "Active", "language": "English", "location": "Slack", "description": "Discussing the implementation of AI in large companies.", "features": ["Jobs Board"], "x": 8.42398452758789, "y": 7.147983551025391, "cluster_id": 0},
+    {"name": "Web3 & AI Nexus", "rating": 7.1, "tag": "Crypto", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Exploring the synergy between Web3 and AI.", "features": [], "x": 6.702220439910889, "y": 8.169151306152344, "cluster_id": -1}
+  ],
+  "clusters": {
+    "3": {"label": "Research & Alignment focused", "server_count": 7, "average_score": 8.29, "top_tags": ["Research", "Alignment"]},
+    "0": {"label": "VC events/Office Hours & Jobs Board focused", "server_count": 15, "average_score": 8.11, "top_tags": ["VC events/Office Hours", "Jobs Board"]},
+    "1": {"label": "Reading Group & Casual focused", "server_count": 7, "average_score": 7.24, "top_tags": ["Reading Group", "Casual"]},
+    "2": {"label": "Paper Channel & LLM focused", "server_count": 5, "average_score": 8.68, "top_tags": ["Paper Channel", "LLM"]}
+  }
+};
+
+// --- UMAP Cluster View Component ---
+const UMAPView = () => {
+    const [pinnedServer, setPinnedServer] = useState(null);
+    const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+    const chartRef = useRef(null);
+    const tooltipRef = useRef(null);
+    const legendRef = useRef(null);
+
+    // --- STEP 1: Create a Centralized Color Mapping ---
+    const CLUSTER_COLOR_MAP = {
+      '0': '#1f77b4', // Blue
+      '1': '#ff7f0e', // Orange
+      '2': '#2ca02c', // Green
+      '3': '#d62728', // Red
+    };
+    
+    const OUTLIER_COLOR = "#cccccc";
+
+    // Helper function for deterministic color lookup
+    const getColor = useCallback((clusterId) => {
+        if (clusterId === -1) return OUTLIER_COLOR;
+        // Ensure the key is a string when accessing the map
+        return CLUSTER_COLOR_MAP[String(clusterId)] || OUTLIER_COLOR; 
+    }, []);
+
+    // --- STEP 2: Modify useMemo ---
+    const { xScale, yScale, radiusScale } = useMemo(() => {
+        if (!clusterData) return {};
+        
+        const { servers } = clusterData;
+
+        const xExtent = d3.extent(servers, d => d.x);
+        const yExtent = d3.extent(servers, d => d.y);
+        const scoreExtent = d3.extent(servers, d => d.rating);
+        const padding = 1.5;
+
+        const memoizedXScale = d3.scaleLinear().domain([xExtent[0] - padding, xExtent[1] + padding]);
+        const memoizedYScale = d3.scaleLinear().domain([yExtent[0] - padding, yExtent[1] + padding]);
+        const memoizedRadiusScale = d3.scaleSqrt().domain(scoreExtent).range([5, 15]);
+
+        return { 
+            xScale: memoizedXScale, 
+            yScale: memoizedYScale, 
+            radiusScale: memoizedRadiusScale, 
+        };
+    }, []); // Dependency array is now empty because clusterData is a stable constant
+
+
+    // This useEffect hook runs to draw the D3 chart.
+    useEffect(() => {
+        if (!clusterData || !chartRef.current || !xScale) return;
+
+        const { servers } = clusterData;
+        const container = chartRef.current;
+        const tooltip = d3.select(tooltipRef.current);
+        
+        const drawChart = () => {
+            d3.select(container).select("svg").remove();
+
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            xScale.range([0, width]);
+            yScale.range([height, 0]);
+
+            const svg = d3.select(container).append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .on("click", () => setPinnedServer(null));
+
+            const mainGroup = svg.append("g");
+            
+            let simulationNodes = servers.map(d => ({...d}));
+
+            const simulation = d3.forceSimulation(simulationNodes)
+                .force("collide", d3.forceCollide(d => radiusScale(d.rating) + 2).strength(0.7))
+                .force("x", d3.forceX(d => xScale(d.x)).strength(0.1))
+                .force("y", d3.forceY(d => yScale(d.y)).strength(0.1))
+                .stop();
+
+            for (let i = 0; i < 120; ++i) simulation.tick();
+
+            const hullGroup = mainGroup.append("g").attr("class", "hulls");
+            const nodeGroup = mainGroup.append("g").attr("class", "nodes");
+            
+            const pointsByCluster = d3.group(simulationNodes, d => d.cluster_id);
+            const hullLine = d3.line().curve(d3.curveCatmullRomClosed);
+
+            for (const [clusterId, points] of pointsByCluster.entries()) {
+                if (clusterId === -1 || points.length < 3) continue;
+
+                const screenPoints = points.map(p => [p.x, p.y]);
+                const hull = d3.polygonHull(screenPoints);
+                if (!hull) continue;
+
+                const hullPadding = 35;
+                const centroid = d3.polygonCentroid(hull);
+                const paddedHull = hull.map(p => {
+                    const angle = Math.atan2(p[1] - centroid[1], p[0] - centroid[0]);
+                    return [p[0] + hullPadding * Math.cos(angle), p[1] + hullPadding * Math.sin(angle)];
+                });
+
+                hullGroup.append("path")
+                    .attr("d", hullLine(paddedHull))
+                    .attr("fill", getColor(clusterId))
+                    .attr("fill-opacity", 0.1)
+                    .attr("stroke", getColor(clusterId))
+                    .attr("stroke-opacity", 0.3)
+                    .attr("stroke-width", 1)
+                    .attr("stroke-linejoin", "round");
+            }
+
+            const nodes = nodeGroup.selectAll("circle")
+                .data(simulationNodes)
+                .join("circle")
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y)
+                .attr("r", d => radiusScale(d.rating))
+                .attr("fill", d => getColor(d.cluster_id))
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 1.5)
+                .attr("cursor", "pointer")
+                .style("transition", "r 0.2s, opacity 0.2s")
+                .style("opacity", 0.8)
+                .on("mouseover", (event, d) => {
+                    d3.select(event.currentTarget).attr("r", radiusScale(d.rating) * 1.5);
+                    nodeGroup.selectAll("circle").style("opacity", n => n === d ? 1 : 0.3);
+                    
+                    tooltip.style("visibility", "visible").style("opacity", 1);
+                    tooltip.html(`<strong>${d.name}</strong><br/><span class="font-bold text-yellow-400">Score: ${d.rating}</span>`);
+                })
+                .on("mousemove", (event) => {
+                    const [x, y] = d3.pointer(event, container);
+                    tooltip.style("top", (y - 10) + "px")
+                           .style("left", (x + 10) + "px");
+                })
+                .on("mouseout", (event, d) => {
+                    d3.select(event.currentTarget).attr("r", radiusScale(d.rating));
+                    nodeGroup.selectAll("circle").style("opacity", 0.8);
+                    tooltip.style("visibility", "hidden").style("opacity", 0);
+                })
+                .on("click", (event, d) => {
+                    event.stopPropagation();
+                    const [x, y] = d3.pointer(event, container);
+                    setPinnedServer({
+                        server: d,
+                        x: x,
+                        y: y
+                    });
+                });
+
+            const zoom = d3.zoom()
+                .scaleExtent([0.2, 8])
+                .on("zoom", (event) => {
+                    mainGroup.attr("transform", event.transform);
+                });
+
+            svg.call(zoom);
+        }
+
+        drawChart();
+        
+        // Use ResizeObserver for more reliable resize detection
+        const resizeObserver = new ResizeObserver(drawChart);
+        resizeObserver.observe(container);
+
+        return () => {
+            resizeObserver.unobserve(container);
+        };
+
+    }, [xScale, yScale, radiusScale, getColor]); // Removed isSidebarVisible dependency
+
+    // This useEffect hook populates the legend.
+    useEffect(() => {
+        if (!clusterData || !legendRef.current) return;
+        
+        const { clusters } = clusterData;
+        const legendContainer = d3.select(legendRef.current);
+        legendContainer.html("");
+
+        const sortedClusters = Object.entries(clusters).sort((a, b) => a[0] - b[0]);
+
+        for (const [clusterId, info] of sortedClusters) {
+            const item = legendContainer.append("div").attr("class", "flex items-center mb-2 text-sm");
+            item.append("div")
+                .attr("class", "w-4 h-4 rounded-full mr-2 flex-shrink-0")
+                .style("background-color", getColor(clusterId));
+            item.append("div").text(info.label);
+        }
+        
+        const outlierItem = legendContainer.append("div").attr("class", "flex items-center mb-2 text-sm");
+        outlierItem.append("div")
+            .attr("class", "w-4 h-4 rounded-full mr-2 flex-shrink-0")
+            .style("background-color", OUTLIER_COLOR);
+        outlierItem.append("div").text("Outliers / Unclustered");
+
+    }, [getColor]);
+
+
+    return (
+        <div className="w-full h-full p-4 bg-gray-50 relative overflow-hidden">
+            <div className="w-full h-full border rounded-lg bg-white shadow-sm relative" ref={chartRef}>
+                 <div 
+                    ref={tooltipRef} 
+                    className="absolute invisible bg-gray-900 text-white text-xs rounded-md px-3 py-1.5 pointer-events-none transition-opacity opacity-0 whitespace-nowrap z-50"
+                ></div>
+                {pinnedServer && (
+                    <PinnedServerCard 
+                        data={pinnedServer} 
+                        onClose={() => setPinnedServer(null)} 
+                        chartRef={chartRef}
+                    />
+                )}
+            </div>
+
+            {/* Sidebar Content (the part that slides) */}
+            <div 
+                className={`absolute top-4 h-[calc(100%-2rem)] w-64 bg-white rounded-lg shadow-lg transition-transform duration-300 ease-in-out ${isSidebarVisible ? 'translate-x-0' : 'translate-x-[calc(100%+1rem)]'}`}
+                style={{ right: '1rem' }}
+            >
+                <div className="w-full h-full p-4 overflow-y-auto flex flex-col">
+                    <div>
+                        <h3 className="text-lg font-semibold mb-3 border-b pb-2">Cluster Legend</h3>
+                        <div ref={legendRef}></div>
+                    </div>
+                    <div className="mt-6 pt-4 border-t">
+                        <h4 className="font-semibold mb-2 text-gray-700">How It Works</h4>
+                        <p className="text-xs text-gray-600 space-y-2">
+                            <span>
+                                Servers are plotted based on their characteristics using <strong>UMAP</strong> for dimensionality reduction. Dense groups are then identified using the <strong>HDBSCAN</strong> clustering algorithm.
+                            </span>
+                            <span className="block pt-2">
+                                The size of each circle corresponds to its score, with larger circles indicating higher-rated servers.
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            {/* Sidebar Button (animates separately) */}
+            <button 
+                onClick={() => setIsSidebarVisible(!isSidebarVisible)}
+                className={`absolute top-1/2 z-20 w-6 h-10 bg-white border border-r-0 border-gray-300 rounded-l-md flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-all duration-300 ease-in-out`}
+                style={{
+                    transform: 'translateY(-50%)',
+                    right: isSidebarVisible ? '17rem' : '1rem' // 16rem (width) + 1rem (padding)
+                }}
+            >
+                {isSidebarVisible ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </button>
         </div>
     );
 };
@@ -1360,7 +1645,7 @@ const TSNEView = () => {
 
 // Main App component
 export default function App() {
-  const [activeTab, setActiveTab] = useState('Server Explorer');
+  const [activeTab, setActiveTab] = useState('UMAP Cluster'); // Default to the new view
   const [chats, setChats] = useState({
       'initial-chat': {
           title: 'New Chat',
@@ -1375,12 +1660,10 @@ export default function App() {
             return <ListView />;
         case 'Folder Dendogram':
             return <DendogramView />;
-        case 't-SNE Cluster':
-            return <TSNEView />;
+        case 'UMAP Cluster':
+            return <UMAPView />;
         case 'XY Plot':
             return <PlaceholderView title="XY Plot" />;
-        case 'Weighted Cluster':
-            return <PlaceholderView title="Weighted Cluster" />;
         case 'Assistant':
             return <AssistantView chats={chats} setChats={setChats} activeChatId={activeChatId} setActiveChatId={setActiveChatId} />;
         case 'About':
@@ -1399,15 +1682,14 @@ export default function App() {
           <nav className="-mb-px flex space-x-2" aria-label="Tabs">
             <Tab label="Server Explorer" isActive={activeTab === 'Server Explorer'} onClick={() => setActiveTab('Server Explorer')} />
             <Tab label="Folder Dendogram" isActive={activeTab === 'Folder Dendogram'} onClick={() => setActiveTab('Folder Dendogram')} />
-            <Tab label="t-SNE Cluster" isActive={activeTab === 't-SNE Cluster'} onClick={() => setActiveTab('t-SNE Cluster')} />
+            <Tab label="UMAP Cluster" isActive={activeTab === 'UMAP Cluster'} onClick={() => setActiveTab('UMAP Cluster')} />
             <Tab label="XY Plot" isActive={activeTab === 'XY Plot'} onClick={() => setActiveTab('XY Plot')} />
-            <Tab label="Weighted Cluster" isActive={activeTab === 'Weighted Cluster'} onClick={() => setActiveTab('Weighted Cluster')} />
             <Tab label="Assistant" isActive={activeTab === 'Assistant'} onClick={() => setActiveTab('Assistant')} />
           </nav>
         </div>
 
         {/* Main Content Container */}
-        <div className={activeTab === 't-SNE Cluster' ? 'flex-1 relative' : 'mt-4 bg-gray-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner'}>
+        <div className={activeTab === 'UMAP Cluster' ? 'flex-1 relative' : 'mt-4 bg-gray-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner'}>
            {renderActiveTab()}
         </div>
       </main>
