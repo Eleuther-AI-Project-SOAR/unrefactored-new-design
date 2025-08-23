@@ -29,6 +29,7 @@ const SendIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3.478 2.405a.75.75 
 const MoreIcon = ({ className = 'w-5 h-5' }) => <Icon path="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" className={className} />;
 const FolderIcon = ({ className = 'w-5 h-5' }) => <Icon path="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" className={className} />;
 const FileIcon = ({ className = 'w-5 h-5' }) => <Icon path="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" className={className} />;
+const InfoIcon = ({ className = 'w-6 h-6' }) => <Icon path="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" className={className} />;
 
 // Header component for the top navigation bar
 const Header = ({ setActiveTab }) => (
@@ -688,9 +689,9 @@ const AboutView = () => (
                 Welcome to the AI Discord Directory, your central hub for discovering and exploring communities focused on Artificial Intelligence. In the rapidly expanding world of AI, finding the right community to learn, collaborate, and stay up-to-date can be a challenge. Our mission is to simplify that process.
             </p>
             <p>
-                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large lanage models (LLMs) to AI safety, roboti, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits your interests.
+                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large lanage models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits your interests.
             </p>
-            <h3 className="text-2xl font-semibold text-gray-700 pt-4">Our Goal</h3>
+          <h3 className="text-2xl font-semibold text-gray-700 pt-4">Our Goal</h3>
             <p>
               Our primary goal is to foster a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
             </p>
@@ -705,7 +706,7 @@ const AboutView = () => (
                 We gather information on various AI-focused communities and organize it in a structured way. Each server is evaluated based on several factors, including activity level, primary focus, and available resources like paper channels or job boards. Our unique scoring system helps you quickly identify high-quality and active communities.
             </p>
             <p>
-                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram d t-SNE Cluster views—to explore the relationships between different communities and find the perfect one for you.
+                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram d t-SNE Cluster views—to explore the relnships between different communities and find the perfect one for you.
             </p>
     </div>
     </div>
@@ -714,7 +715,7 @@ const AboutView = () => (
 
 // --- Placeholder Views for New Tabs ---
 const PlaceholderView = ({ title }) => (
-    <div className="flex flex-col items-center ify-center h-96 bg-white rounded-lg shadd">
+    <div className="flex flex-col items-center ify-center h-96 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-gray-500">{title}</h2>
         <p className="text-gray-400 mt-2">This is where the {title.toLowerCase()} visualizationill go.</p>
     </div>
@@ -1391,10 +1392,10 @@ const clusterData = {
 // --- UMAP Cluster View Component ---
 const UMAPView = () => {
     const [pinnedServer, setPinnedServer] = useState(null);
-    const [isSidebarVisible, setIsSidebarVisible] = useState(true);
+    const [isInfoVisible, setIsInfoVisible] = useState(false);
     const chartRef = useRef(null);
     const tooltipRef = useRef(null);
-    const legendRef = useRef(null);
+    const infoBoxRef = useRef(null);
 
     // --- STEP 1: Create a Centralized Color Mapping ---
     const CLUSTER_COLOR_MAP = {
@@ -1440,12 +1441,13 @@ const UMAPView = () => {
     useEffect(() => {
         if (!clusterData || !chartRef.current || !xScale) return;
 
-        const { servers } = clusterData;
+        const { servers, clusters } = clusterData;
         const container = chartRef.current;
         const tooltip = d3.select(tooltipRef.current);
         
         const drawChart = () => {
             d3.select(container).select("svg").remove();
+            d3.select(container).select("#legend-container").remove();
 
             const width = container.clientWidth;
             const height = container.clientHeight;
@@ -1538,6 +1540,29 @@ const UMAPView = () => {
                         y: y
                     });
                 });
+            
+            const legendContainer = d3.select(container).append("div")
+                .attr("id", "legend-container")
+                .attr("class", "absolute top-4 left-4 bg-white/30 backdrop-blur-sm p-3 rounded-lg shadow-lg");
+
+            legendContainer.append("h3").attr("class", "text-sm font-semibold mb-2 text-gray-700").text("Cluster Legend");
+            const legendItems = legendContainer.append("div").attr("class", "flex flex-col space-y-1");
+            const sortedClusters = Object.entries(clusters).sort((a, b) => a[0] - b[0]);
+
+            for (const [clusterId, info] of sortedClusters) {
+                const item = legendItems.append("div").attr("class", "flex items-center text-xs");
+                item.append("div")
+                    .attr("class", "w-3 h-3 rounded-sm mr-2 flex-shrink-0")
+                    .style("background-color", getColor(clusterId));
+                item.append("span").text(info.label);
+            }
+            
+            const outlierItem = legendItems.append("div").attr("class", "flex items-center text-xs");
+            outlierItem.append("div")
+                .attr("class", "w-3 h-3 rounded-sm mr-2 flex-shrink-0")
+                .style("background-color", OUTLIER_COLOR);
+            outlierItem.append("span").text("Outliers");
+
 
             const zoom = d3.zoom()
                 .scaleExtent([0.2, 8])
@@ -1550,7 +1575,6 @@ const UMAPView = () => {
 
         drawChart();
         
-        // Use ResizeObserver for more reliable resize detection
         const resizeObserver = new ResizeObserver(drawChart);
         resizeObserver.observe(container);
 
@@ -1558,33 +1582,20 @@ const UMAPView = () => {
             resizeObserver.unobserve(container);
         };
 
-    }, [xScale, yScale, radiusScale, getColor]); // Removed isSidebarVisible dependency
+    }, [xScale, yScale, radiusScale, getColor]);
 
-    // This useEffect hook populates the legend.
+    // Effect to handle clicks outside the info box
     useEffect(() => {
-        if (!clusterData || !legendRef.current) return;
-        
-        const { clusters } = clusterData;
-        const legendContainer = d3.select(legendRef.current);
-        legendContainer.html("");
-
-        const sortedClusters = Object.entries(clusters).sort((a, b) => a[0] - b[0]);
-
-        for (const [clusterId, info] of sortedClusters) {
-            const item = legendContainer.append("div").attr("class", "flex items-center mb-2 text-sm");
-            item.append("div")
-                .attr("class", "w-4 h-4 rounded-full mr-2 flex-shrink-0")
-                .style("background-color", getColor(clusterId));
-            item.append("div").text(info.label);
+        function handleClickOutside(event) {
+            if (infoBoxRef.current && !infoBoxRef.current.contains(event.target)) {
+                setIsInfoVisible(false);
+            }
         }
-        
-        const outlierItem = legendContainer.append("div").attr("class", "flex items-center mb-2 text-sm");
-        outlierItem.append("div")
-            .attr("class", "w-4 h-4 rounded-full mr-2 flex-shrink-0")
-            .style("background-color", OUTLIER_COLOR);
-        outlierItem.append("div").text("Outliers / Unclustered");
-
-    }, [getColor]);
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [infoBoxRef]);
 
 
     return (
@@ -1603,18 +1614,22 @@ const UMAPView = () => {
                 )}
             </div>
 
-            {/* Sidebar Content (the part that slides) */}
-            <div 
-                className={`absolute top-4 h-[calc(100%-2rem)] w-64 bg-white rounded-lg shadow-lg transition-transform duration-300 ease-in-out ${isSidebarVisible ? 'translate-x-0' : 'translate-x-[calc(100%+1rem)]'}`}
-                style={{ right: '1rem' }}
-            >
-                <div className="w-full h-full p-4 overflow-y-auto flex flex-col">
-                    <div>
-                        <h3 className="text-lg font-semibold mb-3 border-b pb-2">Cluster Legend</h3>
-                        <div ref={legendRef}></div>
-                    </div>
-                    <div className="mt-6 pt-4 border-t">
-                        <h4 className="font-semibold mb-2 text-gray-700">How It Works</h4>
+            {/* Info Button and Box */}
+            <div className="absolute bottom-8 left-8 z-20">
+                <button 
+                    onClick={() => setIsInfoVisible(prev => !prev)}
+                    className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+                >
+                    <InfoIcon className="w-6 h-6 text-gray-600" />
+                </button>
+                {isInfoVisible && (
+                    <div ref={infoBoxRef} className="absolute bottom-full mb-2 w-80 bg-white rounded-lg shadow-xl border p-4">
+                        <div className="flex justify-between items-center mb-2">
+                            <h4 className="font-semibold text-gray-800">How It Works</h4>
+                            <button onClick={() => setIsInfoVisible(false)} className="text-gray-400 hover:text-gray-600">
+                                <CloseIcon className="w-5 h-5" />
+                            </button>
+                        </div>
                         <p className="text-xs text-gray-600 space-y-2">
                             <span>
                                 Servers are plotted based on their characteristics using <strong>UMAP</strong> for dimensionality reduction. Dense groups are then identified using the <strong>HDBSCAN</strong> clustering algorithm.
@@ -1624,20 +1639,8 @@ const UMAPView = () => {
                             </span>
                         </p>
                     </div>
-                </div>
+                )}
             </div>
-
-            {/* Sidebar Button (animates separately) */}
-            <button 
-                onClick={() => setIsSidebarVisible(!isSidebarVisible)}
-                className={`absolute top-1/2 z-20 w-6 h-10 bg-white border border-r-0 border-gray-300 rounded-l-md flex items-center justify-center text-gray-500 hover:bg-gray-100 transition-all duration-300 ease-in-out`}
-                style={{
-                    transform: 'translateY(-50%)',
-                    right: isSidebarVisible ? '17rem' : '1rem' // 16rem (width) + 1rem (padding)
-                }}
-            >
-                {isSidebarVisible ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </button>
         </div>
     );
 };
