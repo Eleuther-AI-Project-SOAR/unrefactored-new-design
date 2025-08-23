@@ -691,7 +691,7 @@ const AboutView = () => (
             <p>
                 This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large lanage models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits your interests.
             </p>
-          <h3 className="text-2xl font-semibold text-gray-700 pt-4">Our Goal</h3>
+            <h3 className="text-2xl font-semibold text-gray-700 pt-4">Our al</h3>
             <p>
               Our primary goal is to foster a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
             </p>
@@ -706,7 +706,7 @@ const AboutView = () => (
                 We gather information on various AI-focused communities and organize it in a structured way. Each server is evaluated based on several factors, including activity level, primary focus, and available resources like paper channels or job boards. Our unique scoring system helps you quickly identify high-quality and active communities.
             </p>
             <p>
-                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram d t-SNE Cluster views—to explore the relnships between different communities and find the perfect one for you.
+                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram d t-SNE Cluster views—to explore the relationships between different communities and find the perfect onr you.
             </p>
     </div>
     </div>
@@ -1665,8 +1665,6 @@ export default function App() {
             return <DendogramView />;
         case 'UMAP Cluster':
             return <UMAPView />;
-        case 'XY Plot':
-            return <PlaceholderView title="XY Plot" />;
         case 'Assistant':
             return <AssistantView chats={chats} setChats={setChats} activeChatId={activeChatId} setActiveChatId={setActiveChatId} />;
         case 'About':
@@ -1686,7 +1684,6 @@ export default function App() {
             <Tab label="Server Explorer" isActive={activeTab === 'Server Explorer'} onClick={() => setActiveTab('Server Explorer')} />
             <Tab label="Folder Dendogram" isActive={activeTab === 'Folder Dendogram'} onClick={() => setActiveTab('Folder Dendogram')} />
             <Tab label="UMAP Cluster" isActive={activeTab === 'UMAP Cluster'} onClick={() => setActiveTab('UMAP Cluster')} />
-            <Tab label="XY Plot" isActive={activeTab === 'XY Plot'} onClick={() => setActiveTab('XY Plot')} />
             <Tab label="Assistant" isActive={activeTab === 'Assistant'} onClick={() => setActiveTab('Assistant')} />
           </nav>
         </div>
