@@ -16,7 +16,7 @@ const ReadingGroupIcon = ({ className = 'w-4 h-4' }) => <Icon path="M20 6h-8l-2-
 const PaperChannelIcon = ({ className = 'w-4 h-4' }) => <Icon path="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" className={className} />;
 const VCEventsIcon = ({ className = 'w-4 h-4' }) => <Icon path="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" className={className} />;
 const JobsBoardIcon = ({ className = 'w-4 h-4' }) => <Icon path="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-2 .89-2 2v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zM10 4h4v2h-4V4zm10 15H4V8h16v11z" className={className} />;
-const ExternalLinkIcon = ({ className = 'w-4 h-4' }) => <Icon path="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" className={className} />;
+const ExternalLinkIcon = ({ className = 'w-5 h-5' }) => <Icon path="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" className={className} />;
 const MinusIcon = ({ className = 'w-5 h-5' }) => <Icon path="M5 11h14v2H5z" className={className} />;
 const PlusIcon = ({ className = 'w-5 h-5' }) => <Icon path="M11 5h2v6h6v2h-6v6h-2v-6H5v-2h6V5z" className={className} />;
 const CloseIcon = ({ className = 'w-6 h-6' }) => <Icon path="M6.28 6.28a.75.75 0 00-1.06 1.06L10.94 12l-5.72 5.72a.75.75 0 101.06 1.06L12 13.06l5.72 5.72a.75.75 0 101.06-1.06L13.06 12l5.72-5.72a.75.75 0 00-1.06-1.06L12 10.94 6.28 6.28z" className={className} />;
@@ -112,7 +112,8 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
     };
 
     return (
-        <div className="w-full lg:w-1/4 xl:w-1/5 lg:sticky lg:top-6">
+        // MODIFICATION: Adopted a fixed sidebar strategy
+        <div className="w-full lg:w-80 xl:w-96 lg:flex-shrink-0 lg:sticky lg:top-6">
             <div className="p-4 bg-white rounded-lg shadow-md lg:max-h-[calc(100vh-3rem)] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold">Filters</h2>
@@ -201,51 +202,60 @@ const ServerCard = ({ server, onViewClick }) => {
     const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800';
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between hover:shadow-lg transition-shadow duration-200 h-full">
-            {/* Top section of the card */}
-            <div className="flex-grow">
-                <h3 className="text-xl font-bold text-blue-600 hover:underline">{server.name}</h3>
-                <div className="flex items-center flex-wrap gap-x-3 text-sm text-gray-500 mt-1">
-                    {server.rating >= 7.5 && <StarIcon />}
-                    <span className="font-semibold text-gray-800 text-base">{server.rating}</span>
-                    <span className="px-2 py-1 border border-gray-400 rounded-full text-xs font-semibold">{server.tag}</span>
-                    <span className={`px-2 py-1 ${activityClass} rounded-full text-xs font-semibold`}>
-                        {server.activityLevel}
-                    </span>
-                </div>
-                 <div className="flex items-center space-x-2 text-sm text-gray-600 mt-3">
-                    <DiscordIcon className="w-4 h-4 text-gray-500" />
-                    <span>discord</span>
-                    <span>•</span>
-                    <LanguageIcon className="w-4 h-4 text-gray-500" />
-                    <span>english</span>
-                </div>
-                <p className="text-gray-600 mt-3 text-sm">{server.description}</p>
-            </div>
-
-            {/* Bottom section of the card */}
-            <div>
-                <div className="flex flex-wrap gap-2 mt-4">
-                    {server.features.map(feature => {
-                        const style = featureTagStyles[feature];
-                        if (!style) return null;
-                        return (
-                            <span key={feature} className={`inline-flex items-center gap-1.5 px-2 py-1 ${style.color} rounded-md text-xs font-medium`}>
-                                {style.icon}
-                                {feature}
-                            </span>
-                        );
-                    })}
-                </div>
-                <div className="mt-6 flex items-center justify-between">
-                     <div className="flex items-center gap-2">
-                        <button onClick={() => onViewClick(server)} className="px-3 py-1.5 bg-gray-200 text-gray-800 rounded-md text-sm font-semibold hover:bg-gray-300 transition-colors">
-                            View
-                        </button>
-                        <button className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors">
-                            Join
+        <div 
+            onClick={() => onViewClick(server)}
+            className="bg-white rounded-lg shadow-md p-8 flex flex-col hover:shadow-lg transition-shadow duration-200 cursor-pointer border border-gray-200 overflow-hidden"
+        >
+            {/* MODIFICATION: Removed flex-grow from this container to fix spacing */}
+            <div className="flex flex-col">
+                {/* Top section of the card */}
+                <div>
+                    <div className="flex justify-between items-start">
+                        <h3 className="text-xl font-bold text-gray-900 pr-2">{server.name}</h3>
+                        <button 
+                            onClick={(e) => {
+                                e.stopPropagation(); 
+                                alert(`Joining ${server.name}...`);
+                            }}
+                            className="text-indigo-500 hover:text-indigo-700 transition-colors flex-shrink-0"
+                        >
                             <ExternalLinkIcon />
                         </button>
+                    </div>
+
+                    <div className="flex items-center flex-wrap gap-x-3 gap-y-2 text-sm text-gray-500 mt-1">
+                        {server.rating >= 7.5 && <StarIcon />}
+                        <span className="font-semibold text-gray-800 text-base">{server.rating}</span>
+                        <div className="flex items-center gap-x-3 flex-shrink-0">
+                            <span className="px-2 py-1 border border-gray-400 rounded-full text-xs font-semibold whitespace-nowrap">{server.tag}</span>
+                            <span className={`px-2 py-1 ${activityClass} rounded-full text-xs font-semibold whitespace-nowrap`}>
+                                {server.activityLevel}
+                            </span>
+                        </div>
+                    </div>
+                     <div className="flex items-center space-x-2 text-sm text-gray-600 mt-2">
+                        <DiscordIcon className="w-4 h-4 text-gray-500" />
+                        <span>discord</span>
+                        <span>•</span>
+                        <LanguageIcon className="w-4 h-4 text-gray-500" />
+                        <span>english</span>
+                    </div>
+                    <p className="text-gray-600 mt-4 text-sm">{server.description}</p>
+                </div>
+
+                {/* MODIFICATION: Using a standard margin instead of mt-auto */}
+                <div className="mt-5">
+                    <div className="flex flex-wrap gap-2">
+                        {server.features.map(feature => {
+                            const style = featureTagStyles[feature];
+                            if (!style) return null;
+                            return (
+                                <span key={feature} className={`inline-flex items-center gap-1.5 px-2 py-1 ${style.color} rounded-md text-xs font-medium`}>
+                                    {style.icon}
+                                    {feature}
+                                </span>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
@@ -320,18 +330,20 @@ const ServerModal = ({ server, onClose }) => {
 
 // --- View Components ---
 const GridView = ({ servers, onViewClick }) => (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+    // MODIFICATION: Use CSS Grid's auto-fill and minmax for a robust, responsive layout
+    <div className="grid grid-cols-[repeat(auto-fill,minmax(330px,1fr))] gap-6 items-stretch">
         {servers.map(server => <ServerCard key={server.name} server={server} onViewClick={onViewClick} />)}
     </div>
 );
 
 const TableView = ({ servers, onViewClick }) => (
     <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full divide-y divide-gray-200">
+        {/* MODIFICATION: Added table-auto for better column spacing */}
+        <table className="min-w-full divide-y divide-gray-200 table-auto">
             <thead className="bg-gray-50">
                 <tr>
                     {['Name', 'Score', 'Type', 'Activity', 'Location', 'Features', 'Link'].map(header => (
-                        <th key={header} scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th key={header} scope="col" className={`px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${header === 'Link' ? 'text-right' : 'text-left'}`}>
                             {header}
                         </th>
                     ))}
@@ -533,7 +545,6 @@ const ListView = () => {
         { value: 'name', label: 'Name', type: 'value' },
         { value: 'rating', label: 'Score', type: 'value' },
         { value: 'activityLevelOrder', label: 'Activity', type: 'value' },
-        { value: 'featureCount', label: 'Features', type: 'value' },
         ...filterData.map(f => ({ value: f.key, label: f.title, type: 'tag', tags: f.tags }))
     ];
     
@@ -652,27 +663,30 @@ const ListView = () => {
 
     return (
         <>
-            <div className="flex flex-col lg:flex-row gap-6 lg:items-start">
-                <Filters 
-                    searchQuery={searchQuery}
-                    setSearchQuery={setSearchQuery}
-                    minScore={minScore}
-                    setMinScore={setMinScore}
-                    selectedTags={selectedTags}
-                    setSelectedTags={setSelectedTags}
-                    resultsCount={processedServers.length}
-                    totalCount={servers.length}
-                />
-                <div className="w-full lg:w-3/4 xl:w-4/5">
-                    <div className="flex justify-between items-start mb-4">
-                        <MultiSortControl sortLevels={sortLevels} setSortLevels={setSortLevels} sortOptions={sortOptions} />
-                        <ViewSwitcher view={viewMode} setView={setViewMode} />
+            <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex flex-col lg:flex-row gap-6 lg:items-start">
+                    <Filters 
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        minScore={minScore}
+                        setMinScore={setMinScore}
+                        selectedTags={selectedTags}
+                        setSelectedTags={setSelectedTags}
+                        resultsCount={processedServers.length}
+                        totalCount={servers.length}
+                    />
+                    {/* MODIFICATION: Added min-w-0 to allow the flex item to shrink */}
+                    <div className="w-full flex-1 min-w-0">
+                        <div className="flex justify-between items-start mb-4">
+                            <MultiSortControl sortLevels={sortLevels} setSortLevels={setSortLevels} sortOptions={sortOptions} />
+                            <ViewSwitcher view={viewMode} setView={setViewMode} />
+                        </div>
+                        {viewMode === 'grid' ? (
+                            <GridView servers={processedServers} onViewClick={handleViewClick} />
+                        ) : (
+                            <TableView servers={processedServers} onViewClick={handleViewClick} />
+                        )}
                     </div>
-                    {viewMode === 'grid' ? (
-                        <GridView servers={processedServers} onViewClick={handleViewClick} />
-                    ) : (
-                        <TableView servers={processedServers} onViewClick={handleViewClick} />
-                    )}
                 </div>
             </div>
             <ServerModal server={selectedServer} onClose={handleCloseModal} />
@@ -689,9 +703,9 @@ const AboutView = () => (
                 Welcome to the AI Discord Directory, your central hub for discovering and exploring communities focused on Artificial Intelligence. In the rapidly expanding world of AI, finding the right community to learn, collaborate, and stay up-to-date can be a challenge. Our mission is to simplify that process.
             </p>
             <p>
-                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large lanage models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits your interests.
+                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—fr cutng-edge research and large lanage models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a studentust starting your journey, or a hobbyist passiona about AI, you'll find a community that fits your interests.
             </p>
-            <h3 className="text-2xl font-semibold text-gray-700 pt-4">Our al</h3>
+            <h3 className="text-2xfont-semibold text-gray-700 pt-4">Our Goal</h3>
             <p>
               Our primary goal is to foster a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
             </p>
@@ -706,7 +720,7 @@ const AboutView = () => (
                 We gather information on various AI-focused communities and organize it in a structured way. Each server is evaluated based on several factors, including activity level, primary focus, and available resources like paper channels or job boards. Our unique scoring system helps you quickly identify high-quality and active communities.
             </p>
             <p>
-                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram d t-SNE Cluster views—to explore the relationships between different communities and find the perfect onr you.
+                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram d t-SNE Cluster views—to explore the relationships between diffe communities and find the perfect one for you.
             </p>
     </div>
     </div>
@@ -715,9 +729,9 @@ const AboutView = () => (
 
 // --- Placeholder Views for New Tabs ---
 const PlaceholderView = ({ title }) => (
-    <div className="flex flex-col items-center ify-center h-96 bg-white rounded-lg shadow-md">
+    <div clame="flex flex items-center ify-center h-96 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-gray-500">{title}</h2>
-        <p className="text-gray-400 mt-2">This is where the {title.toLowerCase()} visualizationill go.</p>
+        <p clame="text-gray-400 mt-2">This is where the {title.toLowee()} visualizationill go.</p>
     </div>
 );
 
@@ -1648,7 +1662,7 @@ const UMAPView = () => {
 
 // Main App component
 export default function App() {
-  const [activeTab, setActiveTab] = useState('UMAP Cluster'); // Default to the new view
+  const [activeTab, setActiveTab] = useState('Server Explorer');
   const [chats, setChats] = useState({
       'initial-chat': {
           title: 'New Chat',
