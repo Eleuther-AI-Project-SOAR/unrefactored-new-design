@@ -42,8 +42,9 @@ const Header = ({ setActiveTab }) => (
         <nav className="hidden md:block">
           <div className="ml-10 flex items-baseline space-x-4">
             <button onClick={() => setActiveTab('Server Explorer')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</button>
-            <button onClick={() => setActiveTab('About')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About</button>
-            <button onClick={() => alert('Funding page coming soon!')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Funding</button>
+                        <button onClick={() => setActiveTab('About')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About</button>
+	<button onClick={() => setActiveTab('Submit Server')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Submit Server</button>
+
           </div>
         </nav>
       </div>
@@ -112,7 +113,6 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
     };
 
     return (
-        // MODIFICATION: Adopted a fixed sidebar strategy
         <div className="w-full lg:w-80 xl:w-96 lg:flex-shrink-0 lg:sticky lg:top-6">
             <div className="p-4 bg-white rounded-lg shadow-md lg:max-h-[calc(100vh-3rem)] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
@@ -206,9 +206,7 @@ const ServerCard = ({ server, onViewClick }) => {
             onClick={() => onViewClick(server)}
             className="bg-white rounded-lg shadow-md p-8 flex flex-col hover:shadow-lg transition-shadow duration-200 cursor-pointer border border-gray-200 overflow-hidden"
         >
-            {/* MODIFICATION: Removed flex-grow from this container to fix spacing */}
             <div className="flex flex-col">
-                {/* Top section of the card */}
                 <div>
                     <div className="flex justify-between items-start">
                         <h3 className="text-xl font-bold text-gray-900 pr-2">{server.name}</h3>
@@ -243,7 +241,6 @@ const ServerCard = ({ server, onViewClick }) => {
                     <p className="text-gray-600 mt-4 text-sm">{server.description}</p>
                 </div>
 
-                {/* MODIFICATION: Using a standard margin instead of mt-auto */}
                 <div className="mt-5">
                     <div className="flex flex-wrap gap-2">
                         {server.features.map(feature => {
@@ -277,7 +274,6 @@ const ServerModal = ({ server, onClose }) => {
     return (
         <div onClick={handleOutsideClick} className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center p-4">
             <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-                {/* Modal Header */}
                 <div className="flex justify-between items-center p-4 border-b">
                     <h2 className="text-2xl font-bold text-gray-800">{server.name}</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
@@ -285,7 +281,6 @@ const ServerModal = ({ server, onClose }) => {
                     </button>
                 </div>
 
-                {/* Modal Body */}
                 <div className="p-6 space-y-4 overflow-y-auto">
                     <div className="flex items-center flex-wrap gap-x-3 text-sm">
                         {server.rating >= 7.5 && <StarIcon />}
@@ -316,7 +311,6 @@ const ServerModal = ({ server, onClose }) => {
                     </div>
                 </div>
 
-                {/* Modal Footer */}
                 <div className="flex justify-end items-center p-4 border-t bg-gray-50 rounded-b-lg">
                     <button className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors">
                         Join Server
@@ -330,7 +324,6 @@ const ServerModal = ({ server, onClose }) => {
 
 // --- View Components ---
 const GridView = ({ servers, onViewClick }) => (
-    // MODIFICATION: Use CSS Grid's auto-fill and minmax for a robust, responsive layout
     <div className="grid grid-cols-[repeat(auto-fill,minmax(330px,1fr))] gap-6 items-stretch">
         {servers.map(server => <ServerCard key={server.name} server={server} onViewClick={onViewClick} />)}
     </div>
@@ -338,7 +331,6 @@ const GridView = ({ servers, onViewClick }) => (
 
 const TableView = ({ servers, onViewClick }) => (
     <div className="overflow-x-auto bg-white rounded-lg shadow">
-        {/* MODIFICATION: Added table-auto for better column spacing */}
         <table className="min-w-full divide-y divide-gray-200 table-auto">
             <thead className="bg-gray-50">
                 <tr>
@@ -675,7 +667,6 @@ const ListView = () => {
                         resultsCount={processedServers.length}
                         totalCount={servers.length}
                     />
-                    {/* MODIFICATION: Added min-w-0 to allow the flex item to shrink */}
                     <div className="w-full flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-4">
                             <MultiSortControl sortLevels={sortLevels} setSortLevels={setSortLevels} sortOptions={sortOptions} />
@@ -703,9 +694,9 @@ const AboutView = () => (
                 Welcome to the AI Discord Directory, your central hub for discovering and exploring communities focused on Artificial Intelligence. In the rapidly expanding world of AI, finding the right community to learn, collaborate, and stay up-to-date can be a challenge. Our mission is to simplify that process.
             </p>
             <p>
-                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—fr cutng-edge research and large lanage models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a studentust starting your journey, or a hobbyist passiona about AI, you'll find a community that fits your interests.
+                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large language models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits yo interests.
             </p>
-            <h3 className="text-2xfont-semibold text-gray-700 pt-4">Our Goal</h3>
+            <h3 className="text-2xl font-semibold text-gray-700 pt-4">Our Goal</h3>
             <p>
               Our primary goal is to foster a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
             </p>
@@ -720,7 +711,7 @@ const AboutView = () => (
                 We gather information on various AI-focused communities and organize it in a structured way. Each server is evaluated based on several factors, including activity level, primary focus, and available resources like paper channels or job boards. Our unique scoring system helps you quickly identify high-quality and active communities.
             </p>
             <p>
-                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram d t-SNE Cluster views—to explore the relationships between diffe communities and find the perfect one for you.
+                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram a t-SNE Cluster views—to explore the relationships between different communities and find the perfect one for you.
             </p>
     </div>
     </div>
@@ -729,9 +720,9 @@ const AboutView = () => (
 
 // --- Placeholder Views for New Tabs ---
 const PlaceholderView = ({ title }) => (
-    <div clame="flex flex items-center ify-center h-96 bg-white rounded-lg shadow-md">
+    <div className="flex flex-col items-center justify-center h-96 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold text-gray-500">{title}</h2>
-        <p clame="text-gray-400 mt-2">This is where the {title.toLowee()} visualizationill go.</p>
+        <p className="text-gray-400 mt-2">This is where the {title.toLowerCase()} visualization willo.</p>
     </div>
 );
 
@@ -936,13 +927,11 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
 
 // --- Dendogram View Component ---
 const DendogramView = () => {
-    // State for the interactive dendogram
     const [expandedFolders, setExpandedFolders] = useState({});
     const [selectedNode, setSelectedNode] = useState(null);
     const [expandedServer, setExpandedServer] = useState(null);
     const [dendogramData, setDendogramData] = useState(null);
 
-    // State for clustering options
     const [clusterFeatures, setClusterFeatures] = useState({
         'Server Type': true,
         'Activity Level': false,
@@ -952,12 +941,10 @@ const DendogramView = () => {
     });
     const [includeScore, setIncludeScore] = useState(false);
     
-    // State for applied clustering options
     const [appliedClusterFeatures, setAppliedClusterFeatures] = useState(clusterFeatures);
     const [appliedIncludeScore, setAppliedIncludeScore] = useState(includeScore);
 
 
-    // Expanded dummy data for more interesting clusters
     const servers = useMemo(() => [
         { name: 'EleutherAI', rating: 8.1, tag: 'Research', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Community for large-scale AI research.', features: ['Reading Group', 'Paper Channel'] },
         { name: 'Cohere for AI', rating: 8.1, tag: 'Research', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Non-profit research lab from Cohere.', features: ['Paper Channel', 'Jobs Board'] },
@@ -982,18 +969,15 @@ const DendogramView = () => {
         { name: 'Corporate AI Solutions', rating: 8.4, tag: 'Company', activityLevel: 'Active', language: 'English', location: 'Slack', description: 'AI implementation in large companies.', features: ['Jobs Board'] },
     ], []);
 
-    // This function simulates hierarchical clustering by recursively grouping servers.
     const generateDendogram = useCallback((serversToCluster, featureOptions, sortByScore) => {
-        // Recursive helper function to group servers
         const groupServers = (servers, keys, parentId = 'root') => {
             if (keys.length === 0 || servers.length === 0) {
-                // Base case: If no more keys, or no servers, create leaf nodes
                 let finalServers = [...servers];
                 if (sortByScore) {
                     finalServers.sort((a, b) => b.rating - a.rating);
                 }
                 return finalServers.map((server, i) => ({
-                    id: `${parentId}-${server.name.replace(/\s+/g, '')}-${i}`, // Ensure unique ID for leaves
+                    id: `${parentId}-${server.name.replace(/\s+/g, '')}-${i}`,
                     name: server.name,
                     isLeaf: true,
                     server: server,
@@ -1003,7 +987,6 @@ const DendogramView = () => {
 
             const [currentKey, ...restKeys] = keys;
             
-            // Group servers by the current feature key
             const grouped = servers.reduce((acc, server) => {
                 const value = server[currentKey] || 'N/A';
                 if (!acc[value]) {
@@ -1013,7 +996,6 @@ const DendogramView = () => {
                 return acc;
             }, {});
 
-            // Recursively process each group
             return Object.entries(grouped).map(([groupName, serversInGroup]) => {
                 const nodeId = `${parentId}-${currentKey}-${groupName.replace(/\s+/g, '')}`;
                 const children = groupServers(serversInGroup, restKeys, nodeId);
@@ -1057,12 +1039,11 @@ const DendogramView = () => {
         };
     }, []);
 
-    // Generate dendogram when component mounts or when options change
     useEffect(() => {
         const data = generateDendogram(servers, appliedClusterFeatures, appliedIncludeScore);
         setDendogramData(data);
         setSelectedNode(data);
-        setExpandedFolders({root: true}); // Auto-expand the root
+        setExpandedFolders({root: true});
     }, [servers, generateDendogram, appliedClusterFeatures, appliedIncludeScore]);
 
     const handleUpdateClusters = () => {
@@ -1116,7 +1097,6 @@ const DendogramView = () => {
         }));
     };
 
-    // Recursive component to render the folder tree
     const Folder = ({ node, depth = 0 }) => (
         <div>
             <div className={`flex items-center space-x-2 py-1 rounded-md transition-colors ${selectedNode?.id === node.id ? 'bg-indigo-100' : 'hover:bg-gray-100'}`}>
@@ -1158,7 +1138,6 @@ const DendogramView = () => {
                 <p className="text-gray-600">Hierarchical clustering based on your selected attributes</p>
             </div>
 
-            {/* Clustering Options Panel */}
             <div className="max-w-5xl mx-auto">
                 <div className="bg-white p-4 rounded-lg shadow-md mb-6 border">
                     <h3 className="text-lg font-semibold mb-3">Clustering Options</h3>
@@ -1265,17 +1244,15 @@ const PinnedServerCard = ({ data, onClose, chartRef }) => {
             const cardWidth = cardRef.current.offsetWidth;
             const cardHeight = cardRef.current.offsetHeight;
 
-            // Horizontal positioning: Check if the card would overflow the right boundary
-            let finalX = x + 20; // Default position: to the right of the node
-            if (finalX + cardWidth > chartRect.width - 10) { // 10px buffer
-                finalX = x - cardWidth - 20; // Flip to the left
+            let finalX = x + 20;
+            if (finalX + cardWidth > chartRect.width - 10) {
+                finalX = x - cardWidth - 20;
             }
 
-            // Vertical positioning: Clamp the card to stay within the vertical boundaries
             let finalY = y;
-            if (y - cardHeight / 2 < 10) { // 10px buffer from top
+            if (y - cardHeight / 2 < 10) {
                 finalY = cardHeight / 2 + 10;
-            } else if (y + cardHeight / 2 > chartRect.height - 10) { // 10px buffer from bottom
+            } else if (y + cardHeight / 2 > chartRect.height - 10) {
                 finalY = chartRect.height - cardHeight / 2 - 10;
             }
 
@@ -1341,8 +1318,6 @@ const PinnedServerCard = ({ data, onClose, chartRef }) => {
     );
 };
 
-// --- FIX: Moved clusterData outside the component ---
-// This data is now a constant and won't be recreated on every render.
 const clusterData = {
   "servers": [
     {"name": "EleutherAI", "rating": 8.1, "tag": "Research", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Lots of resources; community projects to do and very active community.", "features": ["Reading Group", "Paper Channel", "VC events/Office Hours", "Jobs Board"], "x": 10.370316505432129, "y": 5.420857906341553, "cluster_id": 3},
@@ -1411,24 +1386,20 @@ const UMAPView = () => {
     const tooltipRef = useRef(null);
     const infoBoxRef = useRef(null);
 
-    // --- STEP 1: Create a Centralized Color Mapping ---
     const CLUSTER_COLOR_MAP = {
-      '0': '#1f77b4', // Blue
-      '1': '#ff7f0e', // Orange
-      '2': '#2ca02c', // Green
-      '3': '#d62728', // Red
+      '0': '#1f77b4',
+      '1': '#ff7f0e',
+      '2': '#2ca02c',
+      '3': '#d62728',
     };
     
     const OUTLIER_COLOR = "#cccccc";
 
-    // Helper function for deterministic color lookup
     const getColor = useCallback((clusterId) => {
         if (clusterId === -1) return OUTLIER_COLOR;
-        // Ensure the key is a string when accessing the map
         return CLUSTER_COLOR_MAP[String(clusterId)] || OUTLIER_COLOR; 
     }, []);
 
-    // --- STEP 2: Modify useMemo ---
     const { xScale, yScale, radiusScale } = useMemo(() => {
         if (!clusterData) return {};
         
@@ -1448,10 +1419,9 @@ const UMAPView = () => {
             yScale: memoizedYScale, 
             radiusScale: memoizedRadiusScale, 
         };
-    }, []); // Dependency array is now empty because clusterData is a stable constant
+    }, []);
 
 
-    // This useEffect hook runs to draw the D3 chart.
     useEffect(() => {
         if (!clusterData || !chartRef.current || !xScale) return;
 
@@ -1598,7 +1568,6 @@ const UMAPView = () => {
 
     }, [xScale, yScale, radiusScale, getColor]);
 
-    // Effect to handle clicks outside the info box
     useEffect(() => {
         function handleClickOutside(event) {
             if (infoBoxRef.current && !infoBoxRef.current.contains(event.target)) {
@@ -1628,7 +1597,6 @@ const UMAPView = () => {
                 )}
             </div>
 
-            {/* Info Button and Box */}
             <div className="absolute bottom-8 left-8 z-20">
                 <button 
                     onClick={() => setIsInfoVisible(prev => !prev)}
@@ -1659,6 +1627,177 @@ const UMAPView = () => {
     );
 };
 
+// --- New Submit Server View Component ---
+const SubmitServerView = () => {
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [description, setDescription] = useState('');
+
+    const serverTypeTags = filterData.find(f => f.title === 'Server Type')?.tags || [];
+    const otherTags = filterData.find(f => f.title === 'Others')?.tags || [];
+    const allSelectableTags = [...serverTypeTags, ...otherTags];
+
+
+    const handleTagClick = (tag) => {
+        setSelectedTags(prev => 
+            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+        );
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        alert('Thank you for your submission! It will be reviewed shortly.');
+    };
+
+    return (
+        <div className="bg-gray-50 py-12">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header Section */}
+                <div className="text-center mb-12">
+                    <h2 className="text-4xl font-extrabold text-gray-900">List Your AI Discord Server</h2>
+                    <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                        Join our directory and connect your AI research community with researchers worldwide. Get your server discovered by the right audience.
+                    </p>
+                </div>
+
+                <div className="space-y-8">
+                    {/* Application Form */}
+                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <div className="flex items-start space-x-3 mb-6">
+                            <div className="bg-indigo-100 p-2 rounded-full">
+                                <FileIcon className="w-6 h-6 text-indigo-600" />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-gray-800">Server Application</h3>
+                                <p className="text-sm text-gray-500">
+                                    Fill out this form to get your Discord server listed in our directory. All submissions are manually reviewed to ensure quality.
+                                </p>
+                            </div>
+                        </div>
+
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label htmlFor="org-name" className="block text-sm font-medium text-gray-700 mb-1">Organization Name (Optional)</label>
+                                    <input type="text" id="org-name" placeholder="e.g., Stanford AI Lab" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                </div>
+                                <div>
+                                    <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-1">Website (Optional)</label>
+                                    <input type="url" id="website" placeholder="https://your-organization.com" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                </div>
+                                <div>
+                                    <label htmlFor="server-name" className="block text-sm font-medium text-gray-700 mb-1">Discord Server Name *</label>
+                                    <input type="text" id="server-name" placeholder="e.g., AI Research Hub" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                </div>
+                                <div>
+                                    <label htmlFor="member-count" className="block text-sm font-medium text-gray-700 mb-1">Current Member Count *</label>
+                                    <input type="number" id="member-count" placeholder="e.g., 1500" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                </div>
+                            </div>
+                            <div>
+                                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Server Description *</label>
+                                <textarea 
+                                    id="description" 
+                                    rows="4" 
+                                    placeholder="Describe your server's purpose, main topics, and what makes it unique... (minimum 10 characters)" 
+                                    required 
+                                    minLength="10"
+                                    maxLength="500"
+                                    value={description}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                ></textarea>
+                                <p className="text-right text-xs text-gray-500 mt-1">{description.length}/500 characters</p>
+                            </div>
+                            <div>
+                                <label htmlFor="invite-link" className="block text-sm font-medium text-gray-700 mb-1">Discord Invite Link *</label>
+                                <input type="url" id="invite-link" placeholder="https://discord.gg/your-server" required pattern="https?://discord\.gg/.*" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                <p className="text-xs text-gray-500 mt-1">Must be a valid Discord invite link (https://discord.gg/...)</p>
+                            </div>
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Contact Email *</label>
+                                     <input type="email" id="email" placeholder="your.email@example.com" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                </div>
+                                <div>
+                                    <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-1">Language *</label>
+                                    <input type="text" id="language" placeholder="e.g., English" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                </div>
+                            </div>
+                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label htmlFor="activity-level" className="block text-sm font-medium text-gray-700 mb-1">Activity Level *</label>
+                                    <select id="activity-level" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        <option value="">Select activity level</option>
+                                        <option>Very Active</option>
+                                        <option>Active</option>
+                                        <option>Semi-active</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label htmlFor="difficulty-level" className="block text-sm font-medium text-gray-700 mb-1">Target Difficulty Level *</label>
+                                    <select id="difficulty-level" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                        <option value="">Select difficulty level</option>
+                                        <option>Beginner</option>
+                                        <option>Intermediate</option>
+                                        <option>Advanced</option>
+                                        <option>All levels</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Features & Tags * <span className="text-gray-500">(Select at least one)</span></label>
+                                <div className="flex flex-wrap gap-2">
+                                    {allSelectableTags.map(tag => (
+                                        <button
+                                            key={tag}
+                                            type="button"
+                                            onClick={() => handleTagClick(tag)}
+                                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                                                selectedTags.includes(tag) 
+                                                ? 'bg-indigo-600 text-white' 
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                            }`}
+                                        >
+                                            {tag}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="pt-4 flex justify-end">
+                                <button type="submit" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg text-base font-semibold hover:bg-indigo-700 transition-colors shadow-md">
+                                    Submit Application
+                                    <SendIcon className="w-5 h-5" />
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* Review Process */}
+                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+                        <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">Review Process</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                            <div className="flex flex-col items-center">
+                                <div className="text-4xl font-bold text-indigo-500 mb-2">1</div>
+                                <h4 className="font-bold text-gray-800">Application Review</h4>
+                                <p className="text-sm text-gray-500 mt-1">We review your server for quality, relevance, and activity level.</p>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <div className="text-4xl font-bold text-indigo-500 mb-2">2</div>
+                                <h4 className="font-bold text-gray-800">Verification</h4>
+                                <p className="text-sm text-gray-500 mt-1">We verify your Discord server and ensure it meets our community standards.</p>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <div className="text-4xl font-bold text-indigo-500 mb-2">3</div>
+                                <h4 className="font-bold text-gray-800">Go Live</h4>
+                                <p className="text-sm text-gray-500 mt-1">Once approved, your server goes live in our directory.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 // Main App component
 export default function App() {
@@ -1683,6 +1822,8 @@ export default function App() {
             return <AssistantView chats={chats} setChats={setChats} activeChatId={activeChatId} setActiveChatId={setActiveChatId} />;
         case 'About':
             return <AboutView />;
+        case 'Submit Server':
+            return <SubmitServerView />;
         default:
             return <ListView />;
     }
@@ -1692,20 +1833,26 @@ export default function App() {
     <div className="h-screen bg-gray-100 font-sans flex flex-col">
       <Header setActiveTab={setActiveTab} />
       <main className="flex-1 flex flex-col">
-        {/* Tab Navigation */}
-        <div className="px-4 sm:px-6 lg:px-8 pt-6 border-b border-gray-200">
-          <nav className="-mb-px flex space-x-2" aria-label="Tabs">
-            <Tab label="Server Explorer" isActive={activeTab === 'Server Explorer'} onClick={() => setActiveTab('Server Explorer')} />
-            <Tab label="Folder Dendogram" isActive={activeTab === 'Folder Dendogram'} onClick={() => setActiveTab('Folder Dendogram')} />
-            <Tab label="UMAP Cluster" isActive={activeTab === 'UMAP Cluster'} onClick={() => setActiveTab('UMAP Cluster')} />
-            <Tab label="Assistant" isActive={activeTab === 'Assistant'} onClick={() => setActiveTab('Assistant')} />
-          </nav>
-        </div>
-
-        {/* Main Content Container */}
-        <div className={activeTab === 'UMAP Cluster' ? 'flex-1 relative' : 'mt-4 bg-gray-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner'}>
-           {renderActiveTab()}
-        </div>
+        {/* Conditional rendering for tabs vs. full-page views */}
+        {activeTab === 'Submit Server' ? (
+            <div className="flex-1 overflow-y-auto">
+                {renderActiveTab()}
+            </div>
+        ) : (
+            <>
+                <div className="px-4 sm:px-6 lg:px-8 pt-6 border-b border-gray-200">
+                  <nav className="-mb-px flex space-x-2" aria-label="Tabs">
+                    <Tab label="Server Explorer" isActive={activeTab === 'Server Explorer'} onClick={() => setActiveTab('Server Explorer')} />
+                    <Tab label="Folder Dendogram" isActive={activeTab === 'Folder Dendogram'} onClick={() => setActiveTab('Folder Dendogram')} />
+                    <Tab label="UMAP Cluster" isActive={activeTab === 'UMAP Cluster'} onClick={() => setActiveTab('UMAP Cluster')} />
+                    <Tab label="Assistant" isActive={activeTab === 'Assistant'} onClick={() => setActiveTab('Assistant')} />
+                  </nav>
+                </div>
+                <div className={activeTab === 'UMAP Cluster' ? 'flex-1 relative' : 'mt-4 bg-gray-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner flex-1'}>
+                   {renderActiveTab()}
+                </div>
+            </>
+        )}
       </main>
     </div>
   );
