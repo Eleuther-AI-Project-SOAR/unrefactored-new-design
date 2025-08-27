@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
+import { servers } from "./data/servers";
 import * as d3 from 'd3';
 
 // Helper component for SVG icons
@@ -98,7 +99,7 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
             return { ...prev, [category]: newCategoryTags };
         });
     };
-    
+
     const handleClearAll = () => {
         setSelectedTags({});
         setMinScore(0);
@@ -117,14 +118,14 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
             <div className="p-4 bg-white rounded-lg shadow-md lg:max-h-[calc(100vh-3rem)] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold">Filters</h2>
-                    <button 
+                    <button
                         onClick={handleClearAll}
                         className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
                     >
                         Clear All
                     </button>
                 </div>
-                
+
                 <div className="space-y-5">
                     <div>
                         <label htmlFor="search" className="sr-only">Search servers</label>
@@ -202,7 +203,7 @@ const ServerCard = ({ server, onViewClick }) => {
     const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800';
 
     return (
-        <div 
+        <div
             onClick={() => onViewClick(server)}
             className="bg-white rounded-lg shadow-md p-8 flex flex-col hover:shadow-lg transition-shadow duration-200 cursor-pointer border border-gray-200 overflow-hidden"
         >
@@ -210,9 +211,9 @@ const ServerCard = ({ server, onViewClick }) => {
                 <div>
                     <div className="flex justify-between items-start">
                         <h3 className="text-xl font-bold text-gray-900 pr-2">{server.name}</h3>
-                        <button 
+                        <button
                             onClick={(e) => {
-                                e.stopPropagation(); 
+                                e.stopPropagation();
                                 alert(`Joining ${server.name}...`);
                             }}
                             className="text-indigo-500 hover:text-indigo-700 transition-colors flex-shrink-0"
@@ -264,7 +265,7 @@ const ServerCard = ({ server, onViewClick }) => {
 const ServerModal = ({ server, onClose }) => {
     if (!server) return null;
     const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800';
-    
+
     const handleOutsideClick = (e) => {
         if (e.target === e.currentTarget) {
             onClose();
@@ -439,7 +440,7 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
     const removeLevel = (index) => {
         setSortLevels(sortLevels.filter((_, i) => i !== index));
     };
-    
+
     const availableSortOptions = sortOptions.filter(option => {
         if (option.type === 'value') {
             return !sortLevels.some(level => level.key === option.value);
@@ -462,12 +463,12 @@ const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
                                 <button onClick={() => removeLevel(index)} className="p-2 text-gray-400 hover:text-red-600">
                                     <CloseIcon className="w-4 h-4" />
                                 </button>
-                                <div 
-                                    className="relative flex-grow" 
-                                    onMouseEnter={() => setActiveSubmenu(index)} 
+                                <div
+                                    className="relative flex-grow"
+                                    onMouseEnter={() => setActiveSubmenu(index)}
                                     onMouseLeave={() => setActiveSubmenu(null)}
                                 >
-                                    <button 
+                                    <button
                                         className="w-full text-left p-2 hover:bg-gray-100 rounded-md flex justify-between items-center"
                                     >
                                         <span>{selectedOption.label}: {selectedOption.type === 'tag' ? level.specificTag : level.direction}</span>
@@ -532,14 +533,14 @@ const ListView = () => {
     const [selectedTags, setSelectedTags] = useState({});
     const [viewMode, setViewMode] = useState('grid');
     const [sortLevels, setSortLevels] = useState([{ key: 'rating', direction: 'descending', specificTag: 'none' }]);
-    
+
     const sortOptions = [
         { value: 'name', label: 'Name', type: 'value' },
         { value: 'rating', label: 'Score', type: 'value' },
         { value: 'activityLevelOrder', label: 'Activity', type: 'value' },
         ...filterData.map(f => ({ value: f.key, label: f.title, type: 'tag', tags: f.tags }))
     ];
-    
+
     const handleViewClick = (server) => {
         setSelectedServer(server);
     };
@@ -547,58 +548,6 @@ const ListView = () => {
     const handleCloseModal = () => {
         setSelectedServer(null);
     };
-
-    const servers = [
-        { name: 'EleutherAI', rating: 8.1, tag: 'Research', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Lots of resources; community projects to do and very active community.', features: ['Reading Group', 'Paper Channel', 'VC events/Office Hours', 'Jobs Board'] },
-        { name: 'Cohere for AI', rating: 8.1, tag: 'Research', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Pretty good. Lots of stuff to do for various skill levels.', features: ['Reading Group', 'Paper Channel', 'VC events/Office Hours'] },
-        { name: 'AI Safety Camp', rating: 7.8, tag: 'Alignment', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Focused on AI safety research and education with regular workshops.', features: ['Reading Group', 'Paper Channel', 'VC events/Office Hours', 'Jobs Board'] },
-        { name: 'GPU Collective', rating: 7.2, tag: 'GPU', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'Community for sharing GPU resources and optimization techniques.', features: ['VC events/Office Hours', 'Jobs Board'] },
-        { name: 'Seoul AI Hub', rating: 6.9, tag: 'General', activityLevel: 'Active', language: 'Korean', location: 'Discord', description: 'Korean-speaking AI community with regular paper discussions.', features: ['Reading Group', 'Paper Channel', 'Jobs Board'] },
-        { name: 'Prompt Engineering Masters', rating: 7.5, tag: 'Prompting', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Advanced techniques and strategies for prompt engineering.', features: ['VC events/Office Hours'] },
-        { name: 'Robotics Research Group', rating: 7.4, tag: 'Robotics', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'Connect with AI entrepreneurs and find co-founders.', features: ['VC events/Office Hours', 'Jobs Board'] },
-        { name: 'Neural AI 9', rating: 7.0, tag: 'Research', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'A place for all things related to neural networks.', features: ['Paper Channel'] },
-        { name: 'Deep AI 10', rating: 8.7, tag: 'Hackathons', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Weekly hackathons and coding challenges.', features: ['VC events/Office Hours', 'Jobs Board'] },
-        { name: 'AI Startup Incubator', rating: 8.0, tag: 'Entrepreneurship', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Connect with AI entrepreneurs and find co-founders.', features: ['VC events/Office Hours', 'Jobs Board'] },
-        { name: 'Casual Coders', rating: 6.5, tag: 'Casual', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'A friendly place to chat about code and projects.', features: ['Reading Group'] },
-        { name: 'LLM Builders', rating: 9.1, tag: 'LLM', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'For developers and researchers working on Large Language Models.', features: ['Paper Channel', 'Jobs Board'] },
-        { name: 'Bug Bounty Hunters', rating: 7.9, tag: 'Bug bounties', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Find and report vulnerabilities in AI systems.', features: [] },
-        { name: 'AI Conference Hub', rating: 8.3, tag: 'Conference', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Discuss upcoming AI conferences and share insights.', features: ['VC events/Office Hours'] },
-        { name: 'Crypto & AI', rating: 6.8, tag: 'Crypto', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'Exploring the intersection of cryptocurrency and artificial intelligence.', features: [] },
-        { name: 'Puzzle Solvers AI', rating: 7.1, tag: 'Puzzle', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Using AI to solve complex puzzles and games.', features: ['Reading Group'] },
-        { name: 'Generative Art Gallery', rating: 8.5, tag: 'Generation', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Showcase and discuss AI-generated art.', features: ['Paper Channel'] },
-        { name: 'AI for Education', rating: 7.7, tag: 'Education', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Developing and using AI tools for learning.', features: ['Reading Group', 'Jobs Board'] },
-        { name: 'Open Source AI Tools', rating: 8.4, tag: 'Tool', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Contribute to and discuss open-source AI projects.', features: ['Jobs Board'] },
-        { name: 'Korean AI Tech', rating: 7.3, tag: 'General', activityLevel: 'Active', language: 'Korean', location: 'Discord', description: 'A Korean-speaking community for all AI topics.', features: ['Reading Group', 'Paper Channel'] },
-        { name: 'Slack AI Innovators', rating: 7.0, tag: 'Tool', activityLevel: 'Semi-active', language: 'English', location: 'Slack', description: 'A Slack community for AI developers.', features: [] },
-        { name: 'IRL AI Meetup Group', rating: 8.8, tag: 'Conference', activityLevel: 'Active', language: 'English', location: 'Irl', description: 'Organizing in-person AI meetups and events.', features: ['VC events/Office Hours'] },
-        { name: 'The Alignment Problem', rating: 9.2, tag: 'Alignment', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Dedicated to solving the AI alignment problem.', features: ['Reading Group', 'Paper Channel'] },
-        { name: 'Hackathon Heroes', rating: 8.6, tag: 'Hackathons', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Team up for AI hackathons and competitions.', features: ['Jobs Board'] },
-        { name: 'GPU Traders', rating: 6.7, tag: 'GPU', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'A community for buying, selling, and trading GPUs.', features: [] },
-        { name: 'AI Ethics Discussion', rating: 8.2, tag: 'Alignment', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Debating the ethical implications of AI.', features: ['Reading Group'] },
-        { name: 'Machine Learning Cafe', rating: 7.4, tag: 'Casual', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'A relaxed space for ML enthusiasts.', features: ['Reading Group'] },
-        { name: 'Prompt Perfect', rating: 7.9, tag: 'Prompting', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Master the art of prompt engineering.', features: ['Paper Channel'] },
-        { name: 'Code Generation Guild', rating: 8.1, tag: 'Generation', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Exploring AI-powered code generation.', features: ['Jobs Board'] },
-        { name: 'Robotics & Automation', rating: 8.5, tag: 'Robotics', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Building and programming intelligent robots.', features: ['Jobs Board'] },
-        { name: 'AI Company Connect', rating: 8.9, tag: 'Company', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'A network for professionals at AI companies.', features: ['VC events/Office Hours', 'Jobs Board'] },
-        { name: 'The Puzzle Box', rating: 7.6, tag: 'Puzzle', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'A community for AI-based puzzle solving.', features: ['Reading Group'] },
-        { name: 'LLM Fine-Tuning', rating: 8.8, tag: 'LLM', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Techniques and best practices for fine-tuning LLMs.', features: ['Paper Channel'] },
-        { name: 'AI in Finance', rating: 7.8, tag: 'Crypto', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Applying AI to financial markets and cryptocurrency.', features: ['Jobs Board'] },
-        { name: 'EdTech AI', rating: 7.5, tag: 'Education', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Innovating in education with AI.', features: ['Reading Group'] },
-        { name: 'The Turing Test', rating: 7.2, tag: 'Casual', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'Casual chats about AI and consciousness.', features: [] },
-        { name: 'AI Hardware Hub', rating: 8.0, tag: 'GPU', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Discussions on hardware for AI, including GPUs and TPUs.', features: ['Jobs Board'] },
-        { name: 'Startup Founders AI', rating: 8.7, tag: 'Entrepreneurship', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'A community for founders of AI startups.', features: ['VC events/Office Hours'] },
-        { name: 'AI Art Prompters', rating: 8.3, tag: 'Prompting', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Sharing prompts and creations for AI art generation.', features: [] },
-        { name: 'Research Paper Club', rating: 8.6, tag: 'Research', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Weekly discussions of new AI research papers.', features: ['Reading Group', 'Paper Channel'] },
-        { name: 'Autonomous Agents', rating: 9.0, tag: 'Robotics', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Developing autonomous AI agents.', features: ['Jobs Board'] },
-        { name: 'AI for Good', rating: 8.9, tag: 'Alignment', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Using AI to solve social and environmental problems.', features: ['VC events/Office Hours'] },
-        { name: 'The Generative Lounge', rating: 7.9, tag: 'Generation', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'A place to share and discuss generative models.', features: ['Paper Channel'] },
-        { name: 'AI Toolmakers', rating: 8.2, tag: 'Tool', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Building the next generation of AI tools.', features: ['Jobs Board'] },
-        { name: 'Global AI Conference', rating: 8.5, tag: 'Conference', activityLevel: 'Active', language: 'English', location: 'Irl', description: 'The official server for the Global AI Conference.', features: ['VC events/Office Hours'] },
-        { name: 'Data Science Dojo', rating: 7.7, tag: 'Education', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Learn and practice data science with a supportive community.', features: ['Reading Group', 'Jobs Board'] },
-        { name: 'The Logic Puzzle', rating: 7.3, tag: 'Puzzle', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'Solving logic puzzles with and without AI.', features: [] },
-        { name: 'Corporate AI Solutions', rating: 8.4, tag: 'Company', activityLevel: 'Active', language: 'English', location: 'Slack', description: 'Discussing the implementation of AI in large companies.', features: ['Jobs Board'] },
-        { name: 'Web3 & AI Nexus', rating: 7.1, tag: 'Crypto', activityLevel: 'Semi-active', language: 'English', location: 'Discord', description: 'Exploring the synergy between Web3 and AI.', features: [] },
-    ];
 
     const processedServers = useMemo(() => {
         let filtered = servers.filter(server => {
@@ -619,12 +568,12 @@ const ListView = () => {
         });
 
         const activityOrder = { 'Very Active': 1, 'Active': 2, 'Semi-active': 3, 'Mostly Inactive': 4, 'Inactive': 5 };
-        
+
         const sorted = [...filtered].sort((a, b) => {
             for (const level of sortLevels) {
                 const { key, direction, specificTag } = level;
                 const sortOption = sortOptions.find(opt => opt.value === key);
-                
+
                 if (sortOption.type === 'tag' && specificTag !== 'none') {
                     const aHasTag = Array.isArray(a[key]) ? a[key].includes(specificTag) : a[key] === specificTag;
                     const bHasTag = Array.isArray(b[key]) ? b[key].includes(specificTag) : b[key] === specificTag;
@@ -642,7 +591,7 @@ const ListView = () => {
                         aValue = a[key];
                         bValue = b[key];
                     }
-                    
+
                     if (aValue < bValue) return direction === 'ascending' ? -1 : 1;
                     if (aValue > bValue) return direction === 'ascending' ? 1 : -1;
                 }
@@ -657,7 +606,7 @@ const ListView = () => {
         <>
             <div className="max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row gap-6 lg:items-start">
-                    <Filters 
+                    <Filters
                         searchQuery={searchQuery}
                         setSearchQuery={setSearchQuery}
                         minScore={minScore}
@@ -750,7 +699,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, [menuRef]);
-    
+
     const handleNewChat = () => {
         const newChatId = `chat-${Date.now()}`;
         setChats(prev => ({
@@ -796,7 +745,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
             const remainingChatIds = Object.keys(updatedChats);
             setActiveChatId(remainingChatIds.length > 0 ? remainingChatIds[0] : null);
         }
-        
+
         setMenuOpen(null);
     };
 
@@ -815,7 +764,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
             {/* Sidebar */}
             <div className="w-1/4 bg-gray-100 border-r rounded-l-lg flex flex-col">
                 <div className="p-2">
-                    <button 
+                    <button
                         onClick={handleNewChat}
                         className="w-full px-3 py-2 bg-white text-gray-800 rounded-md text-sm font-semibold hover:bg-gray-200 transition-colors border"
                     >
@@ -825,7 +774,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
                 <div className="flex-grow overflow-y-auto p-2 space-y-1">
                     {Object.keys(chats).reverse().map(chatId => (
                         <div key={chatId} className="relative group">
-                            <button 
+                            <button
                                 onClick={() => setActiveChatId(chatId)}
                                 className={`w-full text-left px-3 py-2 rounded-md text-sm truncate ${activeChatId === chatId ? 'bg-indigo-100 text-indigo-800' : 'hover:bg-gray-200'}`}
                             >
@@ -849,13 +798,13 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
                                 </button>
                                 {menuOpen === chatId && (
                                     <div ref={menuRef} className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
-                                        <button 
+                                        <button
                                             onClick={() => { setEditingChatId(chatId); setEditingTitle(chats[chatId].title); setMenuOpen(null); }}
                                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                                         >
                                             Rename
                                         </button>
-                                        <button 
+                                        <button
                                             onClick={() => handleDeleteChat(chatId)}
                                             className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
                                         >
@@ -940,7 +889,7 @@ const DendogramView = () => {
         'Others': false,
     });
     const [includeScore, setIncludeScore] = useState(false);
-    
+
     const [appliedClusterFeatures, setAppliedClusterFeatures] = useState(clusterFeatures);
     const [appliedIncludeScore, setAppliedIncludeScore] = useState(includeScore);
 
@@ -986,7 +935,7 @@ const DendogramView = () => {
             }
 
             const [currentKey, ...restKeys] = keys;
-            
+
             const grouped = servers.reduce((acc, server) => {
                 const value = server[currentKey] || 'N/A';
                 if (!acc[value]) {
@@ -1007,7 +956,7 @@ const DendogramView = () => {
                 };
             });
         };
-        
+
         const featureMap = {
             'Server Type': 'tag',
             'Activity Level': 'activityLevel',
@@ -1019,7 +968,7 @@ const DendogramView = () => {
             .filter(([, isActive]) => isActive)
             .map(([name]) => featureMap[name])
             .filter(Boolean);
-        
+
         if (activeFeatureKeys.length === 0) {
              return {
                 id: 'root',
@@ -1050,7 +999,7 @@ const DendogramView = () => {
         setAppliedClusterFeatures(clusterFeatures);
         setAppliedIncludeScore(includeScore);
     };
-    
+
     const getAllDescendantIds = (node) => {
         let ids = [];
         if (node.children && !node.isLeaf) {
@@ -1070,7 +1019,7 @@ const DendogramView = () => {
         setExpandedFolders(prev => {
             const newExpanded = {...prev};
             const isCurrentlyExpanded = !!newExpanded[node.id];
-            
+
             const descendantIds = getAllDescendantIds(node);
 
             if (isCurrentlyExpanded) {
@@ -1089,7 +1038,7 @@ const DendogramView = () => {
             return newExpanded;
         });
     };
-    
+
     const handleFeatureChange = (featureName) => {
         setClusterFeatures(prev => ({
             ...prev,
@@ -1119,7 +1068,7 @@ const DendogramView = () => {
             )}
         </div>
     );
-    
+
     const serversToShow = useMemo(() => {
         const serverList = selectedNode?.isLeaf ? [selectedNode.server] : selectedNode?.servers;
         if (!serverList) return [];
@@ -1164,7 +1113,7 @@ const DendogramView = () => {
                                 />
                                 <span className="text-sm font-medium">Sort by Score</span>
                             </label>
-                            <button 
+                            <button
                                 onClick={handleUpdateClusters}
                                 className="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors"
                             >
@@ -1174,7 +1123,7 @@ const DendogramView = () => {
                     </div>
                 </div>
             </div>
-            
+
             <div className="flex flex-col md:flex-row gap-6">
                 <div className="w-full md:w-1/3">
                     <div>
@@ -1269,14 +1218,14 @@ const PinnedServerCard = ({ data, onClose, chartRef }) => {
     }, [data, chartRef]);
 
     if (!data) return null;
-    
+
     const { server } = data;
     const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800';
 
     return (
-        <div 
+        <div
             ref={cardRef}
-            style={style} 
+            style={style}
             className="w-72 bg-white rounded-xl shadow-2xl border border-gray-200"
             onClick={(e) => e.stopPropagation()}
         >
@@ -1392,17 +1341,17 @@ const UMAPView = () => {
       '2': '#2ca02c',
       '3': '#d62728',
     };
-    
+
     const OUTLIER_COLOR = "#cccccc";
 
     const getColor = useCallback((clusterId) => {
         if (clusterId === -1) return OUTLIER_COLOR;
-        return CLUSTER_COLOR_MAP[String(clusterId)] || OUTLIER_COLOR; 
+        return CLUSTER_COLOR_MAP[String(clusterId)] || OUTLIER_COLOR;
     }, []);
 
     const { xScale, yScale, radiusScale } = useMemo(() => {
         if (!clusterData) return {};
-        
+
         const { servers } = clusterData;
 
         const xExtent = d3.extent(servers, d => d.x);
@@ -1414,10 +1363,10 @@ const UMAPView = () => {
         const memoizedYScale = d3.scaleLinear().domain([yExtent[0] - padding, yExtent[1] + padding]);
         const memoizedRadiusScale = d3.scaleSqrt().domain(scoreExtent).range([5, 15]);
 
-        return { 
-            xScale: memoizedXScale, 
-            yScale: memoizedYScale, 
-            radiusScale: memoizedRadiusScale, 
+        return {
+            xScale: memoizedXScale,
+            yScale: memoizedYScale,
+            radiusScale: memoizedRadiusScale,
         };
     }, []);
 
@@ -1428,7 +1377,7 @@ const UMAPView = () => {
         const { servers, clusters } = clusterData;
         const container = chartRef.current;
         const tooltip = d3.select(tooltipRef.current);
-        
+
         const drawChart = () => {
             d3.select(container).select("svg").remove();
             d3.select(container).select("#legend-container").remove();
@@ -1445,7 +1394,7 @@ const UMAPView = () => {
                 .on("click", () => setPinnedServer(null));
 
             const mainGroup = svg.append("g");
-            
+
             let simulationNodes = servers.map(d => ({...d}));
 
             const simulation = d3.forceSimulation(simulationNodes)
@@ -1458,7 +1407,7 @@ const UMAPView = () => {
 
             const hullGroup = mainGroup.append("g").attr("class", "hulls");
             const nodeGroup = mainGroup.append("g").attr("class", "nodes");
-            
+
             const pointsByCluster = d3.group(simulationNodes, d => d.cluster_id);
             const hullLine = d3.line().curve(d3.curveCatmullRomClosed);
 
@@ -1501,7 +1450,7 @@ const UMAPView = () => {
                 .on("mouseover", (event, d) => {
                     d3.select(event.currentTarget).attr("r", radiusScale(d.rating) * 1.5);
                     nodeGroup.selectAll("circle").style("opacity", n => n === d ? 1 : 0.3);
-                    
+
                     tooltip.style("visibility", "visible").style("opacity", 1);
                     tooltip.html(`<strong>${d.name}</strong><br/><span class="font-bold text-yellow-400">Score: ${d.rating}</span>`);
                 })
@@ -1524,7 +1473,7 @@ const UMAPView = () => {
                         y: y
                     });
                 });
-            
+
             const legendContainer = d3.select(container).append("div")
                 .attr("id", "legend-container")
                 .attr("class", "absolute top-4 left-4 bg-white/30 backdrop-blur-sm p-3 rounded-lg shadow-lg");
@@ -1540,7 +1489,7 @@ const UMAPView = () => {
                     .style("background-color", getColor(clusterId));
                 item.append("span").text(info.label);
             }
-            
+
             const outlierItem = legendItems.append("div").attr("class", "flex items-center text-xs");
             outlierItem.append("div")
                 .attr("class", "w-3 h-3 rounded-sm mr-2 flex-shrink-0")
@@ -1558,7 +1507,7 @@ const UMAPView = () => {
         }
 
         drawChart();
-        
+
         const resizeObserver = new ResizeObserver(drawChart);
         resizeObserver.observe(container);
 
@@ -1584,21 +1533,21 @@ const UMAPView = () => {
     return (
         <div className="w-full h-full p-4 bg-gray-50 relative overflow-hidden">
             <div className="w-full h-full border rounded-lg bg-white shadow-sm relative" ref={chartRef}>
-                 <div 
-                    ref={tooltipRef} 
+                 <div
+                    ref={tooltipRef}
                     className="absolute invisible bg-gray-900 text-white text-xs rounded-md px-3 py-1.5 pointer-events-none transition-opacity opacity-0 whitespace-nowrap z-50"
                 ></div>
                 {pinnedServer && (
-                    <PinnedServerCard 
-                        data={pinnedServer} 
-                        onClose={() => setPinnedServer(null)} 
+                    <PinnedServerCard
+                        data={pinnedServer}
+                        onClose={() => setPinnedServer(null)}
                         chartRef={chartRef}
                     />
                 )}
             </div>
 
             <div className="absolute bottom-8 left-8 z-20">
-                <button 
+                <button
                     onClick={() => setIsInfoVisible(prev => !prev)}
                     className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
                 >
@@ -1638,7 +1587,7 @@ const SubmitServerView = () => {
 
 
     const handleTagClick = (tag) => {
-        setSelectedTags(prev => 
+        setSelectedTags(prev =>
             prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
         );
     };
@@ -1695,11 +1644,11 @@ const SubmitServerView = () => {
                             </div>
                             <div>
                                 <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Server Description *</label>
-                                <textarea 
-                                    id="description" 
-                                    rows="4" 
-                                    placeholder="Describe your server's purpose, main topics, and what makes it unique... (minimum 10 characters)" 
-                                    required 
+                                <textarea
+                                    id="description"
+                                    rows="4"
+                                    placeholder="Describe your server's purpose, main topics, and what makes it unique... (minimum 10 characters)"
+                                    required
                                     minLength="10"
                                     maxLength="500"
                                     value={description}
@@ -1753,8 +1702,8 @@ const SubmitServerView = () => {
                                             type="button"
                                             onClick={() => handleTagClick(tag)}
                                             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                                                selectedTags.includes(tag) 
-                                                ? 'bg-indigo-600 text-white' 
+                                                selectedTags.includes(tag)
+                                                ? 'bg-indigo-600 text-white'
                                                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                             }`}
                                         >
@@ -1857,4 +1806,3 @@ export default function App() {
     </div>
   );
 }
-
