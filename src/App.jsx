@@ -261,7 +261,7 @@ const ServerCard = ({ server, onViewClick }) => {
                         {server.rating >= 7.5 && <StarIcon />}
                         <span className="font-semibold text-gray-800 dark:text-gray-200 text-base">{server.rating}</span>
                         <div className="flex items-center gap-x-3 flex-shrink-0">
-                            <span className="px-2 py-1 border border-gray-400 dark:border-gray-500 rounded-full text-xs font-semibold whitespace-nowrap">{server.tag}</span>
+                            <span className="px-2 py-1 border border-gray-400 dark:border-gray-500 dark:text-gray-400 rounded-full text-xs font-semibold whitespace-nowrap">{server.tag}</span>
                             <span className={`px-2 py-1 ${activityClass} rounded-full text-xs font-semibold whitespace-nowrap`}>
                                 {server.activityLevel}
                             </span>
@@ -326,7 +326,7 @@ const ServerModal = ({ server, onClose }) => {
                     <div className="flex items-center flex-wrap gap-x-3 text-sm">
                         {server.rating >= 7.5 && <StarIcon />}
                         <span className="font-semibold text-gray-800 dark:text-gray-200 text-lg">{server.rating}</span>
-                        <span className="px-3 py-1 border border-gray-400 dark:border-gray-500 rounded-full text-sm font-semibold">{server.tag}</span>
+                        <span className="px-3 py-1 border border-gray-400 dark:border-gray-500 dark:text-gray-400 rounded-full text-sm font-semibold">{server.tag}</span>
                         <span className={`px-3 py-1 ${activityClass} rounded-full text-sm font-semibold`}>
                             {server.activityLevel}
                         </span>
@@ -388,7 +388,7 @@ const TableView = ({ servers, onViewClick }) => (
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{server.name}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{server.rating}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border border-gray-400 dark:border-gray-500">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border border-gray-400 dark:border-gray-500 dark:text-gray-400">
                                 {server.tag}
                             </span>
                         </td>
