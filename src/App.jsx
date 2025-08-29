@@ -10,8 +10,11 @@ const Icon = ({ path, className = 'w-6 h-6' }) => (
 
 // --- Icon components for clarity ---
 const StarIcon = ({ className = 'w-5 h-5 text-yellow-400' }) => <Icon path="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" className={className} />;
-const DiscordIcon = ({ className = 'w-5 h-5' }) => <Icon path="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5c-1.25 0-2.45-.54-3.34-1.42L6.25 16c.4.41.87.75 1.39 1.02.4.21.83.38 1.28.5.05.15.1.3.15.45.3.91.68 1.55 1.12 2.03.11.12.23.24.36.35.24.24.5.46.77.65.2.14.4.27.6.39.58.35 1.2.62 1.85.8.06.01.12.02.18.03-1.45-.61-2.64-1.7-3.4-3.15-.1-.2-.19-.4-.28-.6-.32-.7-.56-1.47-.7-2.25zM15.5 11c-.83 0-1.5-.89-1.5-2s.67-2 1.5-2 1.5.89 1.5 2-.67 2-1.5 2zm-5 0c-.83 0-1.5-.89-1.5-2s.67-2 1.5-2 1.5.89 1.5 2-.67 2-1.5 2z" className={className} />;
-const LanguageIcon = ({ className = 'w-5 h-5' }) => <Icon path="M12 6c1.1 0 2 .9 2 2s-.9 2-2 2-2-.9-2-2 .9-2 2-2m0 10c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm0-14C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" className={className} />;
+const LanguageIcon = ({ className = 'w-4 h-4' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -1 24 24" fill="currentColor" className={className}>
+        <path fillRule="evenodd" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" clipRule="evenodd" />
+    </svg>
+);
 const ReadingGroupIcon = ({ className = 'w-4 h-4' }) => <Icon path="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V6h5.17l2 2H20v10z" className={className} />;
 const PaperChannelIcon = ({ className = 'w-4 h-4' }) => <Icon path="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" className={className} />;
 const VCEventsIcon = ({ className = 'w-4 h-4' }) => <Icon path="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" className={className} />;
@@ -22,31 +25,57 @@ const PlusIcon = ({ className = 'w-5 h-5' }) => <Icon path="M11 5h2v6h6v2h-6v6h-
 const CloseIcon = ({ className = 'w-6 h-6' }) => <Icon path="M6.28 6.28a.75.75 0 00-1.06 1.06L10.94 12l-5.72 5.72a.75.75 0 101.06 1.06L12 13.06l5.72 5.72a.75.75 0 101.06-1.06L13.06 12l5.72-5.72a.75.75 0 00-1.06-1.06L12 10.94 6.28 6.28z" className={className} />;
 const GridIcon = ({ className = 'w-5 h-5' }) => <Icon path="M2 2h9v9H2V2zm11 0h9v9h-9V2zM2 13h9v9H2v-9zm11 0h9v9h-9v-9z" className={className} />;
 const ListIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3 5h18v2H3V5zm0 6h18v2H3v-2zm0 6h18v2H3v-2z" className={className} />;
-const ChevronDownIcon = ({ className = 'w-4 h-4' }) => <Icon path="M12 15.25a1 1 0 01-.7-.29l-4-4a1 1 0 111.4-1.42L12 12.84l3.3-3.3a1 1 0 111.4 1.42l-4 4a1 1 0 01-.7.29z" className={className} />;
 const ChevronRightIcon = ({ className = 'w-5 h-5' }) => <Icon path="M10.75 16.4a.99.99 0 01-.7-.29.99.99 0 010-1.41L13.16 12l-3.1-3.1a.99.99 0 010-1.41 1 1 0 011.41 0l3.8 3.8a.99.99 0 010 1.41l-3.8 3.8a1 1 0 01-.71.29z" className={className} />;
-const ChevronLeftIcon = ({ className = 'w-5 h-5' }) => <Icon path="M13.25 16.4a1 1 0 01-.71-.29l-3.8-3.8a.99.99 0 010-1.41l3.8-3.8a1 1 0 011.41 1.41L10.84 12l3.1 3.1a.99.99 0 010 1.41 1 1 0 01-.7.29z" className={className} />;
+const ChevronDownIcon = ({ className = 'w-4 h-4' }) => <Icon path="M12 15.25a1 1 0 01-.7-.29l-4-4a1 1 0 111.4-1.42L12 12.84l3.3-3.3a1 1 0 111.4 1.42l-4 4a1 1 0 01-.7.29z" className={className} />;
 const SendIcon = ({ className = 'w-5 h-5' }) => <Icon path="M3.478 2.405a.75.75 0 00-.926.94l2.432 7.905H13.5a.75.75 0 010 1.5H4.984l-2.432 7.905a.75.75 0 00.926.94 60.519 60.519 0 0018.445-8.986.75.75 0 000-1.218A60.517 60.517 0 003.478 2.405z" className={className} />;
 const MoreIcon = ({ className = 'w-5 h-5' }) => <Icon path="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" className={className} />;
 const FolderIcon = ({ className = 'w-5 h-5' }) => <Icon path="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" className={className} />;
 const FileIcon = ({ className = 'w-5 h-5' }) => <Icon path="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" className={className} />;
 const InfoIcon = ({ className = 'w-6 h-6' }) => <Icon path="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" className={className} />;
 
+// --- New Theme Icons ---
+const SunIcon = ({ className = 'w-5 h-5' }) => (
+     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
+        <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.166 7.758a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+    </svg>
+);
+
+const MoonIcon = ({ className = 'w-5 h-5' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" className={className}>
+        <path d="M303.3 112.7C196.2 121.2 112 210.8 112 320C112 434.9 205.1 528 320 528C353.3 528 384.7 520.2 412.6 506.3C309.2 482.9 232 390.5 232 280C232 214.2 259.4 154.9 303.3 112.7zM64 320C64 178.6 178.6 64 320 64C339.4 64 358.4 66.2 376.7 70.3C386.6 72.5 394 80.8 395.2 90.8C396.4 100.8 391.2 110.6 382.1 115.2C321.5 145.4 280 207.9 280 280C280 381.6 362.4 464 464 464C469 464 473.9 463.8 478.8 463.4C488.9 462.6 498.4 468.2 502.6 477.5C506.8 486.8 504.6 497.6 497.3 504.6C451.3 548.8 388.8 576 320 576C178.6 576 64 461.4 64 320z"/>
+    </svg>
+);
+
+// --- Location & Sort Icons ---
+const DiscordLocationIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -20 640 640" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path fill="currentColor" d="M524.5 133.8C524.3 133.5 524.1 133.2 523.7 133.1C485.6 115.6 445.3 103.1 404 96C403.6 95.9 403.2 96 402.9 96.1C402.6 96.2 402.3 96.5 402.1 96.9C396.6 106.8 391.6 117.1 387.2 127.5C342.6 120.7 297.3 120.7 252.8 127.5C248.3 117 243.3 106.8 237.7 96.9C237.5 96.6 237.2 96.3 236.9 96.1C236.6 95.9 236.2 95.9 235.8 95.9C194.5 103 154.2 115.5 116.1 133C115.8 133.1 115.5 133.4 115.3 133.7C39.1 247.5 18.2 358.6 28.4 468.2C28.4 468.5 28.5 468.7 28.6 469C28.7 469.3 28.9 469.4 29.1 469.6C73.5 502.5 123.1 527.6 175.9 543.8C176.3 543.9 176.7 543.9 177 543.8C177.3 543.7 177.7 543.4 177.9 543.1C189.2 527.7 199.3 511.3 207.9 494.3C208 494.1 208.1 493.8 208.1 493.5C208.1 493.2 208.1 493 208 492.7C207.9 492.4 207.8 492.2 207.6 492.1C207.4 492 207.2 491.8 206.9 491.7C191.1 485.6 175.7 478.3 161 469.8C160.7 469.6 160.5 469.4 160.3 469.2C160.1 469 160 468.6 160 468.3C160 468 160 467.7 160.2 467.4C160.4 467.1 160.5 466.9 160.8 466.7C163.9 464.4 167 462 169.9 459.6C170.2 459.4 170.5 459.2 170.8 459.2C171.1 459.2 171.5 459.2 171.8 459.3C268 503.2 372.2 503.2 467.3 459.3C467.6 459.2 468 459.1 468.3 459.1C468.6 459.1 469 459.3 469.2 459.5C472.1 461.9 475.2 464.4 478.3 466.7C478.5 466.9 478.7 467.1 478.9 467.4C479.1 467.7 479.1 468 479.1 468.3C479.1 468.6 479 468.9 478.8 469.2C478.6 469.5 478.4 469.7 478.2 469.8C463.5 478.4 448.2 485.7 432.3 491.6C432.1 491.7 431.8 491.8 431.6 492C431.4 492.2 431.3 492.4 431.2 492.7C431.1 493 431.1 493.2 431.1 493.5C431.1 493.8 431.2 494 431.3 494.3C440.1 511.3 450.1 527.6 461.3 543.1C461.5 543.4 461.9 543.7 462.2 543.8C462.5 543.9 463 543.9 463.3 543.8C516.2 527.6 565.9 502.5 610.4 469.6C610.6 469.4 610.8 469.2 610.9 469C611 468.8 611.1 468.5 611.1 468.2C623.4 341.4 590.6 231.3 524.2 133.7zM222.5 401.5C193.5 401.5 169.7 374.9 169.7 342.3C169.7 309.7 193.1 283.1 222.5 283.1C252.2 283.1 275.8 309.9 275.3 342.3C275.3 375 251.9 401.5 222.5 401.5zM417.9 401.5C388.9 401.5 365.1 374.9 365.1 342.3C365.1 309.7 388.5 283.1 417.9 283.1C447.6 283.1 471.2 309.9 470.7 342.3C470.7 375 447.5 401.5 417.9 401.5z"/></svg>);
+const SlackLocationIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -20 640 640" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path fill="currentColor" d="M190.1 379.1C190.1 405 168.9 426.2 143 426.2C117.1 426.2 96 405 96 379.1C96 353.2 117.2 332 143.1 332L190.2 332L190.2 379.1zM213.8 379.1C213.8 353.2 235 332 260.9 332C286.8 332 308 353.2 308 379.1L308 496.9C308 522.8 286.8 544 260.9 544C235 544 213.8 522.8 213.8 496.9L213.8 379.1zM260.9 190.1C235 190.1 213.8 168.9 213.8 143C213.8 117.1 235 96 260.9 96C286.8 96 308 117.2 308 143.1L308 190.2L260.9 190.2zM260.9 213.8C286.8 213.8 308 235 308 260.9C308 286.8 286.8 308 260.9 308L143.1 308C117.2 308 96 286.8 96 260.9C96 235 117.2 213.8 143.1 213.8L260.9 213.8zM449.9 260.9C449.9 235 471.1 213.8 497 213.8C522.9 213.8 544 235 544 260.9C544 286.8 522.8 308 496.9 308L449.8 308L449.8 260.9zM426.2 260.9C426.2 286.8 405 308 379.1 308C353.2 308 332 286.8 332 260.9L332 143.1C332 117.2 353.2 96 379.1 96C405 96 426.2 117.2 426.2 143.1L426.2 260.9zM379.1 449.9C405 449.9 426.2 471.1 426.2 497C426.2 522.9 405 544 379.1 544C353.2 544 332 522.8 332 496.9L332 449.8L379.1 449.8zM379.1 426.2C353.2 426.2 332 405 332 379.1C332 353.2 353.2 332 379.1 332L496.9 332C522.8 332 544 353.2 544 379.1C544 405 522.8 426.2 496.9 426.2L379.1 426.2z"/></svg>);
+const PersonLocationIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -20 640 640" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path fill="currentColor" d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"/></svg>);
+const SortIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" className="size-4"><path fillRule="evenodd" d="M11.47 4.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1-1.06 1.06L12 6.31 8.78 9.53a.75.75 0 0 1-1.06-1.06l3.75-3.75Zm-3.75 9.75a.75.75 0 0 1 1.06 0L12 17.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-3.75 3.75a.75.75 0 0 1-1.06 0l-3.75-3.75a.75.75 0 0 1 0-1.06Z" clipRule="evenodd"></path></svg>);
+
 // Header component for the top navigation bar
-const Header = ({ setActiveTab }) => (
-  <header className="bg-gray-100 text-gray-800">
+const Header = ({ setActiveTab, theme, toggleTheme }) => (
+  <header className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between h-16">
         <div className="flex-shrink-0">
-          <h1 className="text-2xl font-bold">AI Discord Directory</h1>
+          <h1 className="text-2xl font-bold cursor-pointer" onClick={() => setActiveTab('Server Explorer')}>AI Discord Directory</h1>
         </div>
-        <nav className="hidden md:block">
-          <div className="ml-10 flex items-baseline space-x-4">
-            <button onClick={() => setActiveTab('Server Explorer')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</button>
-                        <button onClick={() => setActiveTab('About')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">About</button>
-	<button onClick={() => setActiveTab('Submit Server')} className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Submit Server</button>
-
-          </div>
-        </nav>
+        <div className="flex items-center">
+          <nav className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-4">
+              <button onClick={() => setActiveTab('Server Explorer')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</button>
+              <button onClick={() => setActiveTab('About')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</button>
+              <button onClick={() => setActiveTab('Submit Server')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">Submit Server</button>
+            </div>
+          </nav>
+            <button 
+                onClick={toggleTheme}
+                className="ml-4 p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
+                aria-label="Toggle dark mode"
+            >
+                {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+            </button>
+        </div>
       </div>
     </div>
   </header>
@@ -58,8 +87,8 @@ const Tab = ({ label, isActive, onClick }) => (
     onClick={onClick}
     className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors duration-200 ease-in-out
       ${isActive
-        ? 'border-indigo-500 text-indigo-600'
-        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+        ? 'border-indigo-500 dark:border-indigo-400 text-indigo-600 dark:text-indigo-400'
+        : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
       }`}
   >
     {label}
@@ -79,7 +108,7 @@ const FilterTag = ({ tag, isSelected, onClick }) => (
     <button
         onClick={onClick}
         className={`px-2.5 py-1 border rounded-full text-xs transition-colors duration-200
-            ${isSelected ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'}
+            ${isSelected ? 'bg-indigo-600 text-white border-indigo-600 dark:bg-indigo-500 dark:border-indigo-500' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 dark:hover:bg-gray-600'}
         `}
     >
         {tag}
@@ -114,12 +143,12 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
 
     return (
         <div className="w-full lg:w-80 xl:w-96 lg:flex-shrink-0 lg:sticky lg:top-6">
-            <div className="p-4 bg-white rounded-lg shadow-md lg:max-h-[calc(100vh-3rem)] overflow-y-auto">
+            <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md lg:max-h-[calc(100vh-3rem)] overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-lg font-semibold">Filters</h2>
+                    <h2 className="text-lg font-semibold dark:text-gray-200">Filters</h2>
                     <button 
                         onClick={handleClearAll}
-                        className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors"
+                        className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition-colors"
                     >
                         Clear All
                     </button>
@@ -128,10 +157,10 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
                 <div className="space-y-5">
                     <div>
                         <label htmlFor="search" className="sr-only">Search servers</label>
-                        <input type="text" id="search" placeholder="Search servers..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                        <input type="text" id="search" placeholder="Search servers..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400" />
                     </div>
                     <div>
-                        <label htmlFor="min-score" className="block text-sm font-medium text-gray-700 mb-1">Min Score: {minScore.toFixed(1)}</label>
+                        <label htmlFor="min-score" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Min Score: {minScore.toFixed(1)}</label>
                         <input
                             type="range"
                             id="min-score"
@@ -140,21 +169,21 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
                             step="0.1"
                             value={minScore}
                             onChange={(e) => setMinScore(parseFloat(e.target.value))}
-                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600 dark:bg-gray-700 dark:accent-indigo-500"
                         />
                     </div>
-                    <p className="text-sm text-gray-600 text-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
                         Showing <b>{resultsCount}</b> of <b>{totalCount}</b> servers
                     </p>
 
-                    <div className="space-y-6 border-t pt-6">
-                        {filterData.map(({ title, tags }) => {
+                    <div className="space-y-6 dark:border-gray-700 pt-6">
+                        {filterData.map(({ title, tags, key }) => {
                             const isCollapsed = collapsedCategories[title];
                             return (
                                 <div key={title}>
-                                    <div className="flex justify-between items-center border-b pb-2 mb-3">
-                                        <h3 className="text-sm font-semibold text-gray-800 uppercase tracking-wider">{title}</h3>
-                                        <button onClick={() => toggleCategory(title)} className="text-gray-500 hover:text-gray-800">
+                                    <div className="flex justify-between items-center border-b dark:border-gray-700 pb-2 mb-3">
+                                        <h3 className="text-sm font-semibold text-gray-800 dark:text-gray-200 uppercase tracking-wider">{title}</h3>
+                                        <button onClick={() => toggleCategory(title)} className="text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
                                             {isCollapsed ? <PlusIcon /> : <MinusIcon />}
                                         </button>
                                     </div>
@@ -164,8 +193,8 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
                                                 <FilterTag
                                                     key={tag}
                                                     tag={tag}
-                                                    isSelected={(selectedTags[title] || []).includes(tag)}
-                                                    onClick={() => handleTagClick(title, tag)}
+                                                    isSelected={(selectedTags[key] || []).includes(tag)}
+                                                    onClick={() => handleTagClick(key, tag)}
                                                 />
                                             ))}
                                         </div>
@@ -180,65 +209,71 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
     );
 }
 
-// Mappings for tag styles
+// Mappings for tag and style info
 const featureTagStyles = {
-    'Reading Group': { icon: <ReadingGroupIcon />, color: 'bg-purple-100 text-purple-800' },
-    'Paper Channel': { icon: <PaperChannelIcon />, color: 'bg-blue-100 text-blue-800' },
-    'VC events/Office Hours': { icon: <VCEventsIcon />, color: 'bg-green-100 text-green-800' },
-    'Jobs Board': { icon: <JobsBoardIcon />, color: 'bg-orange-100 text-orange-800' },
+    'Reading Group': { icon: <ReadingGroupIcon />, color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/50 dark:text-purple-300' },
+    'Paper Channel': { icon: <PaperChannelIcon />, color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300' },
+    'VC events/Office Hours': { icon: <VCEventsIcon />, color: 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' },
+    'Jobs Board': { icon: <JobsBoardIcon />, color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300' },
 };
 
 const activityLevelStyles = {
-    'Very Active': 'bg-green-500 text-white',
-    'Active': 'bg-green-200 text-green-800',
-    'Semi-active': 'bg-yellow-200 text-yellow-800',
-    'Mostly Inactive': 'bg-gray-300 text-gray-800',
-    'Inactive': 'bg-gray-200 text-gray-600',
+    'Very Active': 'bg-green-500 text-white dark:bg-green-600',
+    'Active': 'bg-green-200 text-green-800 dark:bg-green-800/60 dark:text-green-200',
+    'Semi-active': 'bg-yellow-200 text-yellow-800 dark:bg-yellow-800/60 dark:text-yellow-200',
+    'Mostly Inactive': 'bg-gray-300 text-gray-800 dark:bg-gray-600 dark:text-gray-100',
+    'Inactive': 'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-300',
 };
 
+const locationStyles = {
+    'Discord': <DiscordLocationIcon />,
+    'Slack': <SlackLocationIcon />,
+    'Irl': <PersonLocationIcon />,
+};
 
 // Server card component
 const ServerCard = ({ server, onViewClick }) => {
-    const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800';
+    const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
 
     return (
         <div 
             onClick={() => onViewClick(server)}
-            className="bg-white rounded-lg shadow-md p-8 flex flex-col hover:shadow-lg transition-shadow duration-200 cursor-pointer border border-gray-200 overflow-hidden"
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 flex flex-col hover:shadow-lg dark:hover:bg-gray-700 transition-shadow duration-200 cursor-pointer border border-gray-200 dark:border-gray-700 overflow-hidden"
         >
             <div className="flex flex-col">
                 <div>
                     <div className="flex justify-between items-start">
-                        <h3 className="text-xl font-bold text-gray-900 pr-2">{server.name}</h3>
-                        <button 
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 pr-2">{server.name}</h3>
+                        <a 
+                            href="#"
                             onClick={(e) => {
                                 e.stopPropagation(); 
                                 alert(`Joining ${server.name}...`);
                             }}
-                            className="text-indigo-500 hover:text-indigo-700 transition-colors flex-shrink-0"
+                            className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors flex-shrink-0"
                         >
                             <ExternalLinkIcon />
-                        </button>
+                        </a>
                     </div>
 
-                    <div className="flex items-center flex-wrap gap-x-3 gap-y-2 text-sm text-gray-500 mt-1">
+                    <div className="flex items-center flex-wrap gap-x-3 gap-y-2 text-sm text-gray-500 dark:text-gray-400 mt-1">
                         {server.rating >= 7.5 && <StarIcon />}
-                        <span className="font-semibold text-gray-800 text-base">{server.rating}</span>
+                        <span className="font-semibold text-gray-800 dark:text-gray-200 text-base">{server.rating}</span>
                         <div className="flex items-center gap-x-3 flex-shrink-0">
-                            <span className="px-2 py-1 border border-gray-400 rounded-full text-xs font-semibold whitespace-nowrap">{server.tag}</span>
+                            <span className="px-2 py-1 border border-gray-400 dark:border-gray-500 rounded-full text-xs font-semibold whitespace-nowrap">{server.tag}</span>
                             <span className={`px-2 py-1 ${activityClass} rounded-full text-xs font-semibold whitespace-nowrap`}>
                                 {server.activityLevel}
                             </span>
                         </div>
                     </div>
-                     <div className="flex items-center space-x-2 text-sm text-gray-600 mt-2">
-                        <DiscordIcon className="w-4 h-4 text-gray-500" />
-                        <span>discord</span>
+                     <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300 mt-2">
+                        {locationStyles[server.location] || <DiscordLocationIcon />}
+                        <span>{server.location}</span>
                         <span>•</span>
-                        <LanguageIcon className="w-4 h-4 text-gray-500" />
-                        <span>english</span>
+                        <LanguageIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <span>{server.language}</span>
                     </div>
-                    <p className="text-gray-600 mt-4 text-sm">{server.description}</p>
+                    <p className="text-gray-600 dark:text-gray-300 mt-4 text-sm line-clamp-3">{server.description}</p>
                 </div>
 
                 <div className="mt-5">
@@ -263,7 +298,7 @@ const ServerCard = ({ server, onViewClick }) => {
 // --- Modal Component ---
 const ServerModal = ({ server, onClose }) => {
     if (!server) return null;
-    const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800';
+    const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
     
     const handleOutsideClick = (e) => {
         if (e.target === e.currentTarget) {
@@ -272,11 +307,16 @@ const ServerModal = ({ server, onClose }) => {
     };
 
     return (
-        <div onClick={handleOutsideClick} className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
-                <div className="flex justify-between items-center p-4 border-b">
-                    <h2 className="text-2xl font-bold text-gray-800">{server.name}</h2>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+        <div onClick={handleOutsideClick} className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex justify-center items-center p-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+                <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
+                    <div className="flex items-center gap-2">
+                        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">{server.name}</h2>
+                        <a href="#" onClick={(e) => e.stopPropagation()} className="text-indigo-500 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
+                            <ExternalLinkIcon />
+                        </a>
+                    </div>
+                    <button onClick={onClose} className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
                         <CloseIcon />
                     </button>
                 </div>
@@ -284,18 +324,25 @@ const ServerModal = ({ server, onClose }) => {
                 <div className="p-6 space-y-4 overflow-y-auto">
                     <div className="flex items-center flex-wrap gap-x-3 text-sm">
                         {server.rating >= 7.5 && <StarIcon />}
-                        <span className="font-semibold text-gray-800 text-lg">{server.rating}</span>
-                        <span className="px-3 py-1 border border-gray-400 rounded-full text-sm font-semibold">{server.tag}</span>
+                        <span className="font-semibold text-gray-800 dark:text-gray-200 text-lg">{server.rating}</span>
+                        <span className="px-3 py-1 border border-gray-400 dark:border-gray-500 rounded-full text-sm font-semibold">{server.tag}</span>
                         <span className={`px-3 py-1 ${activityClass} rounded-full text-sm font-semibold`}>
                             {server.activityLevel}
                         </span>
                     </div>
+                    <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-300 mt-2">
+                        {locationStyles[server.location] || <DiscordLocationIcon />}
+                        <span>{server.location}</span>
+                        <span>•</span>
+                        <LanguageIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+                        <span>{server.language}</span>
+                    </div>
                     <div>
-                        <h4 className="font-semibold text-gray-700 mb-2">Description</h4>
-                        <p className="text-gray-600 text-sm">{server.description} {server.description} {server.description}</p>
+                        <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-2">Description</h4>
+                        <p className="text-gray-600 dark:text-gray-300 text-sm">{server.description}</p>
                     </div>
                      <div>
-                        <h4 className="font-semibold text-gray-700 mb-2">Features</h4>
+                        <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-2">Features</h4>
                         <div className="flex flex-wrap gap-2">
                             {server.features.length > 0 ? server.features.map(feature => {
                                 const style = featureTagStyles[feature];
@@ -306,16 +353,9 @@ const ServerModal = ({ server, onClose }) => {
                                         {feature}
                                     </span>
                                 );
-                            }) : <p className="text-sm text-gray-500">No specific features listed.</p>}
+                            }) : <p className="text-sm text-gray-500 dark:text-gray-400">No specific features listed.</p>}
                         </div>
                     </div>
-                </div>
-
-                <div className="flex justify-end items-center p-4 border-t bg-gray-50 rounded-b-lg">
-                    <button className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors">
-                        Join Server
-                        <ExternalLinkIcon />
-                    </button>
                 </div>
             </div>
         </div>
@@ -330,24 +370,24 @@ const GridView = ({ servers, onViewClick }) => (
 );
 
 const TableView = ({ servers, onViewClick }) => (
-    <div className="overflow-x-auto bg-white rounded-lg shadow">
-        <table className="min-w-full divide-y divide-gray-200 table-auto">
-            <thead className="bg-gray-50">
+    <div className="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
+        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-auto">
+            <thead className="bg-gray-50 dark:bg-gray-700/50">
                 <tr>
                     {['Name', 'Score', 'Type', 'Activity', 'Location', 'Features', 'Link'].map(header => (
-                        <th key={header} scope="col" className={`px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider ${header === 'Link' ? 'text-right' : 'text-left'}`}>
+                        <th key={header} scope="col" className={`px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider ${header === 'Link' ? 'text-right' : 'text-left'}`}>
                             {header}
                         </th>
                     ))}
                 </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {servers.map(server => (
-                    <tr key={server.name} onClick={() => onViewClick(server)} className="hover:bg-gray-50 cursor-pointer">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{server.name}</td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{server.rating}</td>
+                    <tr key={server.name} onClick={() => onViewClick(server)} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{server.name}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{server.rating}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border border-gray-400">
+                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full border border-gray-400 dark:border-gray-500">
                                 {server.tag}
                             </span>
                         </td>
@@ -356,7 +396,7 @@ const TableView = ({ servers, onViewClick }) => (
                                 {server.activityLevel}
                             </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{server.location} • {server.language}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{server.location} • {server.language}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex flex-wrap gap-1">
                                 {server.features.map(feature => {
@@ -366,7 +406,7 @@ const TableView = ({ servers, onViewClick }) => (
                             </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="#" onClick={(e) => e.stopPropagation()} className="text-indigo-600 hover:text-indigo-900">link</a>
+                            <a href="#" onClick={(e) => e.stopPropagation()} className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-900 dark:hover:text-indigo-300">link</a>
                         </td>
                     </tr>
                 ))}
@@ -376,153 +416,135 @@ const TableView = ({ servers, onViewClick }) => (
 );
 
 const ViewSwitcher = ({ view, setView }) => (
-    <div className="flex items-center p-1 bg-gray-200 rounded-lg">
-        <button onClick={() => setView('grid')} className={`p-2 rounded-md ${view === 'grid' ? 'bg-white shadow' : 'text-gray-500 hover:bg-gray-300'}`}>
+    <div className="flex items-center p-1 bg-gray-200 dark:bg-gray-700 rounded-lg">
+        <button onClick={() => setView('grid')} className={`p-2 rounded-md ${view === 'grid' ? 'bg-white dark:bg-gray-800 shadow' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
             <GridIcon />
         </button>
-        <button onClick={() => setView('table')} className={`p-2 rounded-md ${view === 'table' ? 'bg-white shadow' : 'text-gray-500 hover:bg-gray-300'}`}>
+        <button onClick={() => setView('table')} className={`p-2 rounded-md ${view === 'table' ? 'bg-white dark:bg-gray-800 shadow' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
             <ListIcon />
         </button>
     </div>
 );
 
-const MultiSortControl = ({ sortLevels, setSortLevels, sortOptions }) => {
-    const [openDropdown, setOpenDropdown] = useState(false);
-    const [activeSubmenu, setActiveSubmenu] = useState(null);
-    const [showAddLevelMenu, setShowAddLevelMenu] = useState(false);
-    const wrapperRef = useRef(null);
+// --- New Sort Dropdown Component ---
+const SortDropDown = ({ 
+    sorting, 
+    setSorting,
+    showSortDropdown,
+    toggleSortDropdown,
+    resetSorting,
+    isSortingApplied
+}) => {
+    const dropdownRef = useRef(null);
 
+    // Close dropdown when clicking outside
     useEffect(() => {
-        function handleClickOutside(event) {
-            if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-                setOpenDropdown(false);
-                setActiveSubmenu(null);
-                setShowAddLevelMenu(false);
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                toggleSortDropdown(false);
             }
-        }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [wrapperRef]);
-
-
-    const handleLevelChange = (index, key, value) => {
-        const newLevels = [...sortLevels];
-        newLevels[index][key] = value;
-        if (key === 'key') {
-            const selectedOption = sortOptions.find(opt => opt.value === value);
-            if (selectedOption.type === 'value') {
-                newLevels[index].specificTag = 'none';
-                newLevels[index].direction = 'ascending';
-            } else {
-                newLevels[index].direction = 'none';
-                if (selectedOption.tags && selectedOption.tags.length > 0) {
-                    newLevels[index].specificTag = selectedOption.tags[0];
-                } else {
-                    newLevels[index].specificTag = 'none';
-                }
-            }
-        }
-        setSortLevels(newLevels);
-        setActiveSubmenu(null);
-    };
-
-    const addLevel = (sortOption) => {
-        const newLevel = {
-            key: sortOption.value,
-            direction: sortOption.type === 'value' ? 'ascending' : 'none',
-            specificTag: sortOption.type === 'tag' && sortOption.tags && sortOption.tags.length > 0 ? sortOption.tags[0] : 'none'
         };
-        setSortLevels([...sortLevels, newLevel]);
-        setShowAddLevelMenu(false);
+
+        if (showSortDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showSortDropdown, toggleSortDropdown]);
+
+    const primaryOptions = ['Score', 'Name', 'Activity', 'Server Type', 'Language', 'Location', 'Others'];
+
+    const getSecondaryOptions = (primaryOption) => {
+        switch (primaryOption) {
+            case 'Score':
+            case 'Name':
+            case 'Activity':
+                return ['descending', 'ascending'];
+            case 'Server Type':
+                return filterData.find(f => f.title === 'Server Type').tags;
+            case 'Language':
+                return filterData.find(f => f.title === 'Language').tags;
+            case 'Location':
+                return filterData.find(f => f.title === 'Location').tags;
+            case 'Others':
+                return filterData.find(f => f.title === 'Others').tags;
+            default:
+                return ['descending', 'ascending'];
+        }
     };
 
-    const removeLevel = (index) => {
-        setSortLevels(sortLevels.filter((_, i) => i !== index));
+    const secondaryOptions = getSecondaryOptions(sorting.primary);
+
+    const handlePrimaryChange = (option) => {
+        setSorting({ primary: option, secondary: getSecondaryOptions(option)[0] });
     };
-    
-    const availableSortOptions = sortOptions.filter(option => {
-        if (option.type === 'value') {
-            return !sortLevels.some(level => level.key === option.value);
-        }
-        return true;
-    });
+
+    const handleSecondaryChange = (option) => {
+        setSorting(prev => ({ ...prev, secondary: option }));
+    };
 
     return (
-        <div className="relative" ref={wrapperRef}>
-            <button onClick={() => setOpenDropdown(!openDropdown)} className="flex items-center space-x-2 p-2 border rounded-md bg-white text-sm">
-                <span>Sort Priority</span>
-                <ChevronDownIcon />
-            </button>
-            {openDropdown && (
-                <div className="absolute top-full mt-1 w-72 bg-white border rounded-md shadow-lg z-50 p-2 space-y-2">
-                    {sortLevels.map((level, index) => {
-                        const selectedOption = sortOptions.find(opt => opt.value === level.key);
-                        return (
-                            <div key={index} className="flex items-center justify-between group">
-                                <button onClick={() => removeLevel(index)} className="p-2 text-gray-400 hover:text-red-600">
-                                    <CloseIcon className="w-4 h-4" />
-                                </button>
-                                <div 
-                                    className="relative flex-grow" 
-                                    onMouseEnter={() => setActiveSubmenu(index)} 
-                                    onMouseLeave={() => setActiveSubmenu(null)}
-                                >
-                                    <button 
-                                        className="w-full text-left p-2 hover:bg-gray-100 rounded-md flex justify-between items-center"
-                                    >
-                                        <span>{selectedOption.label}: {selectedOption.type === 'tag' ? level.specificTag : level.direction}</span>
-                                        <ChevronRightIcon />
-                                    </button>
-                                    {activeSubmenu === index && (
-                                        <div className="absolute left-full -top-px w-48 bg-white border rounded-md shadow-lg">
-                                            {selectedOption.type === 'value' ? (
-                                                <>
-                                                    <button onClick={() => handleLevelChange(index, 'direction', 'ascending')} className="block w-full text-left px-4 py-2 hover:bg-gray-100">Ascending</button>
-                                                    <button onClick={() => handleLevelChange(index, 'direction', 'descending')} className="block w-full text-left px-4 py-2 hover:bg-gray-100">Descending</button>
-                                                </>
-                                            ) : (
-                                                <div className="max-h-60 overflow-y-auto">
-                                                    {selectedOption.tags.map(tag => (
-                                                        <button key={tag} onClick={() => handleLevelChange(index, 'specificTag', tag)} className="block w-full text-left px-4 py-2 hover:bg-gray-100">{tag}</button>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })}
-                    <div className="border-t pt-2">
-                        <div className="relative">
+        <div className="absolute top-full mt-1 w-64 bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700 z-20" ref={dropdownRef}>
+            <div className="p-2">
+                {isSortingApplied && (
+                    <div className="mb-2">
+                        <button
+                            onClick={() => {
+                                resetSorting();
+                                toggleSortDropdown(false);
+                            }}
+                            className="w-full text-xs px-2 py-1 rounded text-left bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-200"
+                        >
+                            Reset Sorting
+                        </button>
+                    </div>
+                )}
+                {isSortingApplied && <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>}
+                <div className="mb-2">
+                    <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">Sort By</div>
+                    <div className="grid grid-cols-2 gap-1">
+                        {primaryOptions.map((option) => (
                             <button
-                                onClick={() => setShowAddLevelMenu(!showAddLevelMenu)}
-                                className="text-sm font-semibold text-indigo-600 hover:text-indigo-800 w-full text-left p-2 disabled:text-gray-400 disabled:cursor-not-allowed"
-                                disabled={availableSortOptions.length === 0}
+                                key={option}
+                                onClick={() => handlePrimaryChange(option)}
+                                className={`text-xs px-2 py-1 rounded text-left ${
+                                    sorting.primary === option
+                                        ? 'bg-indigo-600 text-white dark:bg-indigo-500'
+                                        : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300'
+                                }`}
                             >
-                                + Add Sort Level
+                                {option}
                             </button>
-                            {showAddLevelMenu && (
-                                <div className="absolute top-full mt-1 w-48 bg-white border rounded-md shadow-lg z-20">
-                                    {availableSortOptions.map(option => (
-                                        <button
-                                            key={option.value}
-                                            onClick={() => addLevel(option)}
-                                            className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                                        >
-                                            {option.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
+                        ))}
                     </div>
                 </div>
-            )}
+                <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                <div>
+                    <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                        {['Score', 'Name', 'Activity'].includes(sorting.primary) ? 'Order' : 'Prioritize'}
+                    </div>
+                    <div className="grid grid-cols-2 gap-1 max-h-40 overflow-y-auto">
+                        {secondaryOptions.map((option) => (
+                            <button
+                                key={option}
+                                onClick={() => handleSecondaryChange(option)}
+                                className={`text-xs px-2 py-1 rounded text-left ${
+                                    sorting.secondary === option
+                                        ? 'bg-indigo-600 text-white dark:bg-indigo-500'
+                                        : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300'
+                                }`}
+                            >
+                                {option}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
-
 
 // List view component
 const ListView = () => {
@@ -531,15 +553,13 @@ const ListView = () => {
     const [minScore, setMinScore] = useState(0);
     const [selectedTags, setSelectedTags] = useState({});
     const [viewMode, setViewMode] = useState('grid');
-    const [sortLevels, setSortLevels] = useState([{ key: 'rating', direction: 'descending', specificTag: 'none' }]);
+    const [sorting, setSorting] = useState({ primary: 'Score', secondary: 'descending' });
+    const [showSortDropdown, setShowSortDropdown] = useState(false);
     
-    const sortOptions = [
-        { value: 'name', label: 'Name', type: 'value' },
-        { value: 'rating', label: 'Score', type: 'value' },
-        { value: 'activityLevelOrder', label: 'Activity', type: 'value' },
-        ...filterData.map(f => ({ value: f.key, label: f.title, type: 'tag', tags: f.tags }))
-    ];
-    
+    const toggleSortDropdown = (state) => setShowSortDropdown(prevState => typeof state === 'boolean' ? state : !prevState);
+    const resetSorting = () => setSorting({ primary: 'Score', secondary: 'descending' });
+    const isSortingApplied = sorting.primary !== 'Score' || sorting.secondary !== 'descending';
+
     const handleViewClick = (server) => {
         setSelectedServer(server);
     };
@@ -605,53 +625,63 @@ const ListView = () => {
             const searchMatch = server.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                                 server.description.toLowerCase().includes(searchQuery.toLowerCase());
             const scoreMatch = server.rating >= minScore;
-            const tagMatch = Object.entries(selectedTags).every(([category, tags]) => {
+            
+            const tagMatch = Object.entries(selectedTags).every(([categoryKey, tags]) => {
                 if (tags.length === 0) return true;
-                const serverPropKey = filterData.find(f => f.title === category)?.key;
-                if (!serverPropKey) return true;
-                const serverValue = server[serverPropKey];
-                if (Array.isArray(serverValue)) {
+                const serverValue = server[categoryKey];
+
+                if (categoryKey === 'features') {
+                    // 'AND' logic for features
                     return tags.every(tag => serverValue.includes(tag));
                 }
+                
+                // 'OR' logic for other categories
                 return tags.includes(serverValue);
             });
+
             return searchMatch && scoreMatch && tagMatch;
         });
-
-        const activityOrder = { 'Very Active': 1, 'Active': 2, 'Semi-active': 3, 'Mostly Inactive': 4, 'Inactive': 5 };
         
         const sorted = [...filtered].sort((a, b) => {
-            for (const level of sortLevels) {
-                const { key, direction, specificTag } = level;
-                const sortOption = sortOptions.find(opt => opt.value === key);
-                
-                if (sortOption.type === 'tag' && specificTag !== 'none') {
-                    const aHasTag = Array.isArray(a[key]) ? a[key].includes(specificTag) : a[key] === specificTag;
-                    const bHasTag = Array.isArray(b[key]) ? b[key].includes(specificTag) : b[key] === specificTag;
+            const { primary, secondary } = sorting;
+            const isAscending = secondary === 'ascending';
+            
+            switch (primary) {
+                case 'Score':
+                    return isAscending ? a.rating - b.rating : b.rating - a.rating;
+                case 'Name':
+                    return isAscending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+                case 'Activity':
+                    const activityValues = { 'Very Active': 4, 'Active': 3, 'Semi-active': 2, 'Mostly Inactive': 1, 'Inactive': 0 };
+                    const comparison = activityValues[a.activityLevel] - activityValues[b.activityLevel];
+                    return isAscending ? comparison : -comparison;
+                case 'Server Type':
+                    const aHasTag = a.tag.includes(secondary);
+                    const bHasTag = b.tag.includes(secondary);
                     if (aHasTag && !bHasTag) return -1;
                     if (!aHasTag && bHasTag) return 1;
-                } else if (sortOption.type === 'value') {
-                    let aValue, bValue;
-                    if (key === 'featureCount') {
-                        aValue = a.features.length;
-                        bValue = b.features.length;
-                    } else if (key === 'activityLevelOrder') {
-                        aValue = activityOrder[a.activityLevel];
-                        bValue = activityOrder[b.activityLevel];
-                    } else {
-                        aValue = a[key];
-                        bValue = b[key];
-                    }
-                    
-                    if (aValue < bValue) return direction === 'ascending' ? -1 : 1;
-                    if (aValue > bValue) return direction === 'ascending' ? 1 : -1;
-                }
+                    return a.name.localeCompare(b.name);
+                case 'Language':
+                    if (a.language === secondary && b.language !== secondary) return -1;
+                    if (a.language !== secondary && b.language === secondary) return 1;
+                    return a.name.localeCompare(b.name);
+                case 'Location':
+                    if (a.location === secondary && b.location !== secondary) return -1;
+                    if (a.location !== secondary && b.location === secondary) return 1;
+                    return a.name.localeCompare(b.name);
+                case 'Others':
+                    const aHasFeature = a.features.includes(secondary);
+                    const bHasFeature = b.features.includes(secondary);
+                    if (aHasFeature && !bHasFeature) return -1;
+                    if (!aHasFeature && bHasFeature) return 1;
+                    return a.name.localeCompare(b.name);
+                default:
+                    return b.rating - a.rating;
             }
-            return 0;
         });
 
         return sorted;
-    }, [servers, searchQuery, minScore, selectedTags, sortLevels]);
+    }, [servers, searchQuery, minScore, selectedTags, sorting]);
 
     return (
         <>
@@ -669,7 +699,25 @@ const ListView = () => {
                     />
                     <div className="w-full flex-1 min-w-0">
                         <div className="flex justify-between items-start mb-4">
-                            <MultiSortControl sortLevels={sortLevels} setSortLevels={setSortLevels} sortOptions={sortOptions} />
+                            <div className="relative">
+                                <button
+                                    onClick={toggleSortDropdown}
+                                    className="flex items-center space-x-2 p-2 border dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm dark:text-gray-300"
+                                >
+                                    <span>{isSortingApplied ? `${sorting.primary}: ${sorting.secondary}` : 'Sort By'}</span>
+                                    <SortIcon />
+                                </button>
+                                {showSortDropdown && (
+                                    <SortDropDown 
+                                        sorting={sorting}
+                                        setSorting={setSorting}
+                                        showSortDropdown={showSortDropdown}
+                                        toggleSortDropdown={toggleSortDropdown}
+                                        resetSorting={resetSorting}
+                                        isSortingApplied={isSortingApplied}
+                                    />
+                                )}
+                            </div>
                             <ViewSwitcher view={viewMode} setView={setViewMode} />
                         </div>
                         {viewMode === 'grid' ? (
@@ -687,18 +735,18 @@ const ListView = () => {
 
 // --- About Page View ---
 const AboutView = () => (
-    <div className="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
-        <h2 className="text-3xl font-bold text-gray-800 mb-4">About the AI Discord Directory</h2>
-        <div className="space-y-4 text-gray-600">
+    <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+        <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">About the AI Discord Directory</h2>
+        <div className="space-y-4 text-gray-600 dark:text-gray-300">
             <p>
                 Welcome to the AI Discord Directory, your central hub for discovering and exploring communities focused on Artificial Intelligence. In the rapidly expanding world of AI, finding the right community to learn, collaborate, and stay up-to-date can be a challenge. Our mission is to simplify that process.
             </p>
             <p>
-                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large language models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits yo interests.
+                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large language models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits your interests.
             </p>
-            <h3 className="text-2xl font-semibold text-gray-700 pt-4">Our Goal</h3>
+            <h3 className="text-2xl font-semibold xt-gray-700 dark:text-gray-200 pt-4">Our Goal</h3>
             <p>
-              Our primary goal is to foster a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
+              Our primary goal is to fost a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
             </p>
             <ul className="list-disc list-inside space-y-2 pl-4">
                 <li>Help individuals find relevant communities to enhance their learning and career growth.</li>
@@ -706,27 +754,19 @@ const AboutView = () => (
                 <li>Provide a platform for server owners to reach a wider audience of AI enthusiasts.</li>
                 <li>Offer powerful filtering and visualization tools to help you understand the landscape of AI communities.</li>
             </ul>
-            <h3 className="text-2xl font-semibold text-gray-700 pt-4">How It Works</h3>
+            <h3 className="text-2xl font-semibold text-gray-700 dark:text-gray-200 pt-4">How It Works</h3>
             <p>
                 We gather information on various AI-focused communities and organize it in a structured way. Each server is evaluated based on several factors, including activity level, primary focus, and available resources like paper channels or job boards. Our unique scoring system helps you quickly identify high-quality and active communities.
             </p>
             <p>
-                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram a t-SNE Cluster views—to explore the relationships between different communities and find the perfect one for you.
+                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram and t-SNE Cluster views—to explore the relathips between different communities and find the perfect one for you.
             </p>
     </div>
     </div>
 );
 
 
-// --- Placeholder Views for New Tabs ---
-const PlaceholderView = ({ title }) => (
-    <div className="flex flex-col items-center justify-center h-96 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-gray-500">{title}</h2>
-        <p className="text-gray-400 mt-2">This is where the {title.toLowerCase()} visualization willo.</p>
-    </div>
-);
-
-// --- Assistant View Component ---
+// --- Assnt View Component ---
 const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
     const [input, setInput] = useState('');
     const [editingChatId, setEditingChatId] = useState(null);
@@ -813,11 +853,11 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
     return (
         <div className="flex h-[calc(100vh-12rem)]">
             {/* Sidebar */}
-            <div className="w-1/4 bg-gray-100 border-r rounded-l-lg flex flex-col">
+            <div className="w-1/4 bg-gray-100 dark:bg-gray-800 border-r dark:border-gray-700 rounded-l-lg flex flex-col">
                 <div className="p-2">
                     <button 
                         onClick={handleNewChat}
-                        className="w-full px-3 py-2 bg-white text-gray-800 rounded-md text-sm font-semibold hover:bg-gray-200 transition-colors border"
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors border dark:border-gray-600"
                     >
                         + New Chat
                     </button>
@@ -827,7 +867,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
                         <div key={chatId} className="relative group">
                             <button 
                                 onClick={() => setActiveChatId(chatId)}
-                                className={`w-full text-left px-3 py-2 rounded-md text-sm truncate ${activeChatId === chatId ? 'bg-indigo-100 text-indigo-800' : 'hover:bg-gray-200'}`}
+                                className={`w-full text-left px-3 py-2 rounded-md text-sm truncate ${activeChatId === chatId ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300' : 'hover:bg-gray-200 dark:hover:bg-gray-700 dark:text-gray-300'}`}
                             >
                                 {editingChatId === chatId ? (
                                     <input
@@ -845,19 +885,19 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
                             </button>
                             <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
                                 <button onClick={() => setMenuOpen(menuOpen === chatId ? null : chatId)}>
-                                    <MoreIcon className="w-5 h-5 text-gray-500"/>
+                                    <MoreIcon className="w-5 h-5 text-gray-500 dark:text-gray-400"/>
                                 </button>
                                 {menuOpen === chatId && (
-                                    <div ref={menuRef} className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-10 border">
+                                    <div ref={menuRef} className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-900 rounded-md shadow-lg z-10 border dark:border-gray-700">
                                         <button 
                                             onClick={() => { setEditingChatId(chatId); setEditingTitle(chats[chatId].title); setMenuOpen(null); }}
-                                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                                         >
                                             Rename
                                         </button>
                                         <button 
                                             onClick={() => handleDeleteChat(chatId)}
-                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800"
                                         >
                                             Delete
                                         </button>
@@ -870,14 +910,14 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
             </div>
 
             {/* Chat Window */}
-            <div className="w-3/4 bg-white rounded-r-lg flex flex-col relative">
+            <div className="w-3/4 bg-white dark:bg-gray-900 rounded-r-lg flex flex-col relative">
                  {activeChat && activeChat.messages.length > 0 ? (
                     <>
                         <div className="flex-grow overflow-y-auto p-6">
                             <div className="max-w-4xl mx-auto">
                                 {activeChat.messages.map((msg, index) => (
                                     <div key={index} className={`flex items-start gap-4 mb-4 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                        <div className={`px-4 py-2 rounded-lg max-w-lg ${msg.sender === 'user' ? 'bg-indigo-500 text-white' : 'bg-transparent text-gray-800 select-text'}`}>
+                                        <div className={`px-4 py-2 rounded-lg max-w-lg ${msg.sender === 'user' ? 'bg-indigo-500 text-white' : 'bg-transparent text-gray-800 dark:text-gray-200 select-text'}`}>
                                             {msg.text}
                                         </div>
                                     </div>
@@ -885,7 +925,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
                             </div>
                             <div ref={messagesEndRef} />
                         </div>
-                        <div className="p-4 bg-white">
+                        <div className="p-4 bg-white dark:bg-gray-900">
                              <div className="max-w-4xl mx-auto flex">
                                 <input
                                     type="text"
@@ -893,7 +933,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
                                     onChange={(e) => setInput(e.target.value)}
                                     onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                                     placeholder="e.g., 'Find me a server for AI safety research'"
-                                    className="flex-grow px-4 py-3 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
+                                    className="flex-grow px-4 py-3 border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 rounded-l-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
                                 />
                                 <button onClick={handleSendMessage} className="px-4 py-3 bg-indigo-600 text-white rounded-r-full hover:bg-indigo-700 transition-colors shadow-sm">
                                     <SendIcon />
@@ -903,7 +943,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
                     </>
                  ) : (
                     <div className="flex flex-col items-center justify-center h-full">
-                        <h2 className="text-2xl font-bold text-gray-500 mb-4">Tell me what you are looking for?</h2>
+                        <h2 className="text-2xl font-bold text-gray-500 dark:text-gray-400 mb-4">Tell me what you are looking for?</h2>
                         <div className="w-full max-w-xl flex">
                              <input
                                 type="text"
@@ -911,7 +951,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
                                 onChange={(e) => setInput(e.target.value)}
                                 onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                                 placeholder="e.g., 'Find me a server for AI safety research'"
-                                className="flex-grow px-4 py-3 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
+                                className="flex-grow px-4 py-3 border border-gray-300 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 rounded-l-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent shadow-sm"
                             />
                             <button onClick={handleSendMessage} className="px-4 py-3 bg-indigo-600 text-white rounded-r-full hover:bg-indigo-700 transition-colors shadow-sm">
                                 <SendIcon />
@@ -1099,16 +1139,16 @@ const DendogramView = () => {
 
     const Folder = ({ node, depth = 0 }) => (
         <div>
-            <div className={`flex items-center space-x-2 py-1 rounded-md transition-colors ${selectedNode?.id === node.id ? 'bg-indigo-100' : 'hover:bg-gray-100'}`}>
+            <div className={`flex items-center space-x-2 py-1 rounded-md transition-colors ${selectedNode?.id === node.id ? 'bg-indigo-100 dark:bg-indigo-900/50' : 'hover:bg-gray-100 dark:hover:bg-gray-700'}`}>
                 <div style={{ paddingLeft: `${depth * 1.5}rem` }} className="flex items-center space-x-2 flex-grow">
-                    <button onClick={() => !node.isLeaf && toggleFolder(node)} className="w-5 h-5 flex items-center justify-center text-gray-500">
+                    <button onClick={() => !node.isLeaf && toggleFolder(node)} className="w-5 h-5 flex items-center justify-center text-gray-500 dark:text-gray-400">
                         {!node.isLeaf && (
                             expandedFolders[node.id] ? <ChevronDownIcon className="w-4 h-4" /> : <ChevronRightIcon className="w-4 h-4" />
                         )}
                     </button>
                     <button onClick={() => setSelectedNode(node)} className="flex items-center space-x-2 text-left">
-                        {node.isLeaf ? <FileIcon className="w-5 h-5 text-gray-500 flex-shrink-0" /> : <FolderIcon className="w-5 h-5 text-yellow-500 flex-shrink-0" />}
-                        <span className="text-sm font-medium">{node.name} {!node.isLeaf && `(${node.servers.length})`}</span>
+                        {node.isLeaf ? <FileIcon className="w-5 h-5 text-gray-500 dark:text-gray-400 flex-shrink-0" /> : <FolderIcon className="w-5 h-5 text-yellow-500 flex-shrink-0" />}
+                        <span className="text-sm font-medium text-gray-800 dark:text-gray-200">{node.name} {!node.isLeaf && `(${node.servers.length})`}</span>
                     </button>
                 </div>
             </div>
@@ -1134,14 +1174,14 @@ const DendogramView = () => {
     return (
         <div className="max-w-7xl mx-auto">
             <div className="text-center mb-4">
-                <h2 className="text-2xl font-bold">Server Similarity Dendogram</h2>
-                <p className="text-gray-600">Hierarchical clustering based on your selected attributes</p>
+                <h2 className="text-2xl font-bold dark:text-gray-200">Server Similarity Dendogram</h2>
+                <p className="text-gray-600 dark:text-gray-400">Hierarchical clustering based on your selected attributes</p>
             </div>
 
             <div className="max-w-5xl mx-auto">
-                <div className="bg-white p-4 rounded-lg shadow-md mb-6 border">
-                    <h3 className="text-lg font-semibold mb-3">Clustering Options</h3>
-                    <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+                <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md mb-6 border dark:border-gray-700">
+                    <h3 className="text-lg font-semibold mb-3 dark:text-gray-200">Clustering Options</h3>
+                    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 dark:text-gray-300">
                         <div className="font-medium">Cluster By:</div>
                         {Object.keys(clusterFeatures).map(feature => (
                             <label key={feature} className="flex items-center space-x-2 cursor-pointer">
@@ -1149,18 +1189,18 @@ const DendogramView = () => {
                                     type="checkbox"
                                     checked={clusterFeatures[feature]}
                                     onChange={() => handleFeatureChange(feature)}
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-gray-800 dark:bg-gray-700"
                                 />
                                 <span className="text-sm">{feature}</span>
                             </label>
                         ))}
-                        <div className="border-l pl-6 flex items-center gap-x-6">
+                        <div className="border-l dark:border-gray-700 pl-6 flex items-center gap-x-6">
                              <label className="flex items-center space-x-2 cursor-pointer">
                                 <input
                                     type="checkbox"
                                     checked={includeScore}
                                     onChange={() => setIncludeScore(prev => !prev)}
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    className="h-4 w-4 rounded border-gray-300 dark:border-gray-600 text-indigo-600 dark:text-indigo-500 focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-gray-800 dark:bg-gray-700"
                                 />
                                 <span className="text-sm font-medium">Sort by Score</span>
                             </label>
@@ -1178,18 +1218,18 @@ const DendogramView = () => {
             <div className="flex flex-col md:flex-row gap-6">
                 <div className="w-full md:w-1/3">
                     <div>
-                        <p className="text-sm text-gray-500">Click {'>'} to expand clusters.</p>
-                        <p className="text-sm text-gray-500 mb-2">Click a folder or file name to view details on the right.</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">Click {'>'} to expand clusters.</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Click a folder or file name to view details on the right.</p>
                     </div>
-                    <h3 className="text-lg font-semibold mb-2 mt-2">Server Clusters</h3>
-                    <div className="border rounded-lg p-2 bg-white shadow-sm overflow-auto">
+                    <h3 className="text-lg font-semibold mb-2 mt-2 dark:text-gray-200">Server Clusters</h3>
+                    <div className="border dark:border-gray-700 rounded-lg p-2 bg-white dark:bg-gray-800 shadow-sm overflow-auto">
                         {dendogramData && <Folder node={dendogramData} depth={0} />}
                     </div>
                 </div>
                 <div className="w-full md:w-2/3">
-                    <h3 className="text-lg font-semibold mb-2 mt-10">Servers in: <span className="font-normal text-indigo-600">{selectedNode?.name}</span></h3>
+                    <h3 className="text-lg font-semibold mb-2 mt-10 dark:text-gray-200">Servers in: <span className="font-normal text-indigo-600 dark:text-indigo-400">{selectedNode?.name}</span></h3>
                     <div className="space-y-2">
-                        <div className="p-2 flex items-center border-b font-bold text-sm text-gray-600 bg-gray-50 rounded-t-lg">
+                        <div className="p-2 flex items-center border-b dark:border-gray-700 font-bold text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-700/50 rounded-t-lg">
                             <div className="w-1/6">Score</div>
                             <div className="w-2/6">Name</div>
                             <div className="w-2/6">Type</div>
@@ -1197,26 +1237,26 @@ const DendogramView = () => {
                             <div className="w-10"></div>
                         </div>
                         {serversToShow?.map(server => (
-                            <div key={server.name} className="border rounded-md bg-white">
+                            <div key={server.name} className="border dark:border-gray-700 rounded-md bg-white dark:bg-gray-800">
                                 <div className="p-2 flex items-center">
-                                    <div className="w-1/6 font-medium text-sm">{server.rating}</div>
-                                    <div className="w-2/6 font-medium text-sm">{server.name}</div>
-                                    <div className="w-2/6 text-sm">{server.tag}</div>
-                                    <div className="w-1/6 text-sm"><a href="#" className="text-indigo-600 hover:underline">link</a></div>
+                                    <div className="w-1/6 font-medium text-sm dark:text-gray-300">{server.rating}</div>
+                                    <div className="w-2/6 font-medium text-sm dark:text-gray-300">{server.name}</div>
+                                    <div className="w-2/6 text-sm dark:text-gray-300">{server.tag}</div>
+                                    <div className="w-1/6 text-sm"><a href="#" className="text-indigo-600 dark:text-indigo-400 hover:underline">link</a></div>
                                     <div className="w-10 flex justify-center">
                                         <button onClick={() => setExpandedServer(expandedServer === server.name ? null : server.name)}>
-                                            {expandedServer === server.name ? <MinusIcon className="w-5 h-5 text-gray-500" /> : <PlusIcon className="w-5 h-5 text-gray-500" />}
+                                            {expandedServer === server.name ? <MinusIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" /> : <PlusIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />}
                                         </button>
                                     </div>
                                 </div>
                                 {expandedServer === server.name && (
-                                    <div className="p-4 border-t bg-gray-50 space-y-4">
+                                    <div className="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50 space-y-4">
                                         <div className="flex">
-                                            <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600">Description:</p>
-                                            <p className="text-sm text-gray-600">{server.description}</p>
+                                            <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600 dark:text-gray-300">Description:</p>
+                                            <p className="text-sm text-gray-600 dark:text-gray-400">{server.description}</p>
                                         </div>
                                         <div className="flex">
-                                            <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600">Features:</p>
+                                            <p className="w-24 flex-shrink-0 text-sm font-semibold text-gray-600 dark:text-gray-300">Features:</p>
                                             <div className="flex flex-wrap gap-2">
                                                 {server.features.map(tag => <FilterTag key={tag} tag={tag} isSelected={false} onClick={() => {}} />)}
                                             </div>
@@ -1271,30 +1311,30 @@ const PinnedServerCard = ({ data, onClose, chartRef }) => {
     if (!data) return null;
     
     const { server } = data;
-    const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800';
+    const activityClass = activityLevelStyles[server.activityLevel] || 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
 
     return (
         <div 
             ref={cardRef}
             style={style} 
-            className="w-72 bg-white rounded-xl shadow-2xl border border-gray-200"
+            className="w-72 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700"
             onClick={(e) => e.stopPropagation()}
         >
             <div className="p-4">
                 <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-bold text-gray-800">{server.name}</h3>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">{server.name}</h3>
+                    <button onClick={onClose} className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
                         <CloseIcon className="w-5 h-5" />
                     </button>
                 </div>
                 <div className="flex items-center flex-wrap gap-x-3 text-xs mb-3">
-                    <span className="flex items-center font-bold"><StarIcon className="w-4 h-4 mr-1" />{server.rating}</span>
-                    <span className="px-2 py-0.5 border border-gray-300 rounded-full font-semibold">{server.tag}</span>
+                    <span className="flex items-center font-bold dark:text-gray-300"><StarIcon className="w-4 h-4 mr-1" />{server.rating}</span>
+                    <span className="px-2 py-0.5 border border-gray-300 dark:border-gray-600 rounded-full font-semibold dark:text-gray-300">{server.tag}</span>
                     <span className={`px-2 py-0.5 ${activityClass} rounded-full font-semibold`}>
                         {server.activityLevel}
                     </span>
                 </div>
-                <p className="text-sm text-gray-600 mb-3">{server.description}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">{server.description}</p>
                 <div className="flex flex-wrap gap-2">
                     {server.features.map(feature => {
                         const style = featureTagStyles[feature];
@@ -1308,7 +1348,7 @@ const PinnedServerCard = ({ data, onClose, chartRef }) => {
                     })}
                 </div>
             </div>
-            <div className="bg-gray-50 p-3 rounded-b-xl">
+            <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-b-xl">
                  <button className="w-full inline-flex items-center justify-center gap-2 px-3 py-1.5 bg-indigo-600 text-white rounded-md text-sm font-semibold hover:bg-indigo-700 transition-colors">
                     Join Server
                     <ExternalLinkIcon className="w-4 h-4" />
@@ -1527,21 +1567,21 @@ const UMAPView = () => {
             
             const legendContainer = d3.select(container).append("div")
                 .attr("id", "legend-container")
-                .attr("class", "absolute top-4 left-4 bg-white/30 backdrop-blur-sm p-3 rounded-lg shadow-lg");
+                .attr("class", "absolute top-4 left-4 bg-white/30 dark:bg-gray-900/30 backdrop-blur-sm p-3 rounded-lg shadow-lg");
 
-            legendContainer.append("h3").attr("class", "text-sm font-semibold mb-2 text-gray-700").text("Cluster Legend");
+            legendContainer.append("h3").attr("class", "text-sm font-semibold mb-2 text-gray-700 dark:text-gray-200").text("Cluster Legend");
             const legendItems = legendContainer.append("div").attr("class", "flex flex-col space-y-1");
             const sortedClusters = Object.entries(clusters).sort((a, b) => a[0] - b[0]);
 
             for (const [clusterId, info] of sortedClusters) {
-                const item = legendItems.append("div").attr("class", "flex items-center text-xs");
+                const item = legendItems.append("div").attr("class", "flex items-center text-xs text-gray-700 dark:text-gray-300");
                 item.append("div")
                     .attr("class", "w-3 h-3 rounded-sm mr-2 flex-shrink-0")
                     .style("background-color", getColor(clusterId));
                 item.append("span").text(info.label);
             }
             
-            const outlierItem = legendItems.append("div").attr("class", "flex items-center text-xs");
+            const outlierItem = legendItems.append("div").attr("class", "flex items-center text-xs text-gray-700 dark:text-gray-300");
             outlierItem.append("div")
                 .attr("class", "w-3 h-3 rounded-sm mr-2 flex-shrink-0")
                 .style("background-color", OUTLIER_COLOR);
@@ -1582,8 +1622,8 @@ const UMAPView = () => {
 
 
     return (
-        <div className="w-full h-full p-4 bg-gray-50 relative overflow-hidden">
-            <div className="w-full h-full border rounded-lg bg-white shadow-sm relative" ref={chartRef}>
+        <div className="w-full h-full p-4 bg-gray-50 dark:bg-gray-800 relative overflow-hidden">
+            <div className="w-full h-full border dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 shadow-sm relative" ref={chartRef}>
                  <div 
                     ref={tooltipRef} 
                     className="absolute invisible bg-gray-900 text-white text-xs rounded-md px-3 py-1.5 pointer-events-none transition-opacity opacity-0 whitespace-nowrap z-50"
@@ -1600,19 +1640,19 @@ const UMAPView = () => {
             <div className="absolute bottom-8 left-8 z-20">
                 <button 
                     onClick={() => setIsInfoVisible(prev => !prev)}
-                    className="p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors"
+                    className="p-2 bg-white dark:bg-gray-700 rounded-full shadow-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                 >
-                    <InfoIcon className="w-6 h-6 text-gray-600" />
+                    <InfoIcon className="w-6 h-6 text-gray-600 dark:text-gray-300" />
                 </button>
                 {isInfoVisible && (
-                    <div ref={infoBoxRef} className="absolute bottom-full mb-2 w-80 bg-white rounded-lg shadow-xl border p-4">
+                    <div ref={infoBoxRef} className="absolute bottom-full mb-2 w-80 bg-white dark:bg-gray-800 rounded-lg shadow-xl border dark:border-gray-700 p-4">
                         <div className="flex justify-between items-center mb-2">
-                            <h4 className="font-semibold text-gray-800">How It Works</h4>
-                            <button onClick={() => setIsInfoVisible(false)} className="text-gray-400 hover:text-gray-600">
+                            <h4 className="font-semibold text-gray-800 dark:text-gray-100">How It Works</h4>
+                            <button onClick={() => setIsInfoVisible(false)} className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
                                 <CloseIcon className="w-5 h-5" />
                             </button>
                         </div>
-                        <p className="text-xs text-gray-600 space-y-2">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 space-y-2">
                             <span>
                                 Servers are plotted based on their characteristics using <strong>UMAP</strong> for dimensionality reduction. Dense groups are then identified using the <strong>HDBSCAN</strong> clustering algorithm.
                             </span>
@@ -1649,27 +1689,27 @@ const SubmitServerView = () => {
     };
 
     return (
-        <div className="bg-gray-50 py-12">
+        <div className="bg-gray-50 dark:bg-gray-800 py-12">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
                 <div className="text-center mb-12">
-                    <h2 className="text-4xl font-extrabold text-gray-900">List Your AI Discord Server</h2>
-                    <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+                    <h2 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100">List Your AI Server</h2>
+                    <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
                         Join our directory and connect your AI research community with researchers worldwide. Get your server discovered by the right audience.
                     </p>
                 </div>
 
                 <div className="space-y-8">
                     {/* Application Form */}
-                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+                    <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex items-start space-x-3 mb-6">
                             <div className="bg-indigo-100 p-2 rounded-full">
                                 <FileIcon className="w-6 h-6 text-indigo-600" />
                             </div>
                             <div>
-                                <h3 className="text-xl font-bold text-gray-800">Server Application</h3>
-                                <p className="text-sm text-gray-500">
-                                    Fill out this form to get your Discord server listed in our directory. All submissions are manually reviewed to ensure quality.
+                                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">Server Application</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                    Fill out this form to get your server listed in our directory. All submissions are manually reviewed to ensure quality.
                                 </p>
                             </div>
                         </div>
@@ -1677,24 +1717,24 @@ const SubmitServerView = () => {
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label htmlFor="org-name" className="block text-sm font-medium text-gray-700 mb-1">Organization Name (Optional)</label>
-                                    <input type="text" id="org-name" placeholder="e.g., Stanford AI Lab" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                    <label htmlFor="org-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Organization Name (Optional)</label>
+                                    <input type="text" id="org-name" placeholder="e.g., Stanford AI Lab" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
                                 </div>
                                 <div>
-                                    <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-1">Website (Optional)</label>
-                                    <input type="url" id="website" placeholder="https://your-organization.com" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                    <label htmlFor="website" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Website (Optional)</label>
+                                    <input type="url" id="website" placeholder="https://your-organization.com" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
                                 </div>
                                 <div>
-                                    <label htmlFor="server-name" className="block text-sm font-medium text-gray-700 mb-1">Discord Server Name *</label>
-                                    <input type="text" id="server-name" placeholder="e.g., AI Research Hub" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                    <label htmlFor="server-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Server Name *</label>
+                                    <input type="text" id="server-name" placeholder="e.g., AI Research Hub" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
                                 </div>
                                 <div>
-                                    <label htmlFor="member-count" className="block text-sm font-medium text-gray-700 mb-1">Current Member Count *</label>
-                                    <input type="number" id="member-count" placeholder="e.g., 1500" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                    <label htmlFor="member-count" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Member Count *</label>
+                                    <input type="number" id="member-count" placeholder="e.g., 1500" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
                                 </div>
                             </div>
                             <div>
-                                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">Server Description *</label>
+                                <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Server Description *</label>
                                 <textarea 
                                     id="description" 
                                     rows="4" 
@@ -1704,29 +1744,29 @@ const SubmitServerView = () => {
                                     maxLength="500"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200"
                                 ></textarea>
-                                <p className="text-right text-xs text-gray-500 mt-1">{description.length}/500 characters</p>
+                                <p className="text-right text-xs text-gray-500 dark:text-gray-400 mt-1">{description.length}/500 characters</p>
                             </div>
                             <div>
-                                <label htmlFor="invite-link" className="block text-sm font-medium text-gray-700 mb-1">Discord Invite Link *</label>
-                                <input type="url" id="invite-link" placeholder="https://discord.gg/your-server" required pattern="https?://discord\.gg/.*" className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-                                <p className="text-xs text-gray-500 mt-1">Must be a valid Discord invite link (https://discord.gg/...)</p>
+                                <label htmlFor="invite-link" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Invite Link *</label>
+                                <input type="url" id="invite-link" placeholder="https://discord.gg/your-server" required type="url" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
+                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Must be a valid URL invite link (e.g., https://discord.gg/...)</p>
                             </div>
                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Contact Email *</label>
-                                     <input type="email" id="email" placeholder="your.email@example.com" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                     <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact Email *</label>
+                                     <input type="email" id="email" placeholder="your.email@example.com" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
                                 </div>
                                 <div>
-                                    <label htmlFor="language" className="block text-sm font-medium text-gray-700 mb-1">Language *</label>
-                                    <input type="text" id="language" placeholder="e.g., English" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                                    <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Language *</label>
+                                    <input type="text" id="language" placeholder="e.g., English" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
                                 </div>
                             </div>
                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
-                                    <label htmlFor="activity-level" className="block text-sm font-medium text-gray-700 mb-1">Activity Level *</label>
-                                    <select id="activity-level" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <label htmlFor="activity-level" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Activity Level *</label>
+                                    <select id="activity-level" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200">
                                         <option value="">Select activity level</option>
                                         <option>Very Active</option>
                                         <option>Active</option>
@@ -1734,8 +1774,8 @@ const SubmitServerView = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label htmlFor="difficulty-level" className="block text-sm font-medium text-gray-700 mb-1">Target Difficulty Level *</label>
-                                    <select id="difficulty-level" required className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    <label htmlFor="difficulty-level" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Difficulty Level *</label>
+                                    <select id="difficulty-level" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200">
                                         <option value="">Select difficulty level</option>
                                         <option>Beginner</option>
                                         <option>Intermediate</option>
@@ -1745,7 +1785,7 @@ const SubmitServerView = () => {
                                 </div>
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Features & Tags * <span className="text-gray-500">(Select at least one)</span></label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Features & Tags * <span className="text-gray-500 dark:text-gray-400">(Select at least one)</span></label>
                                 <div className="flex flex-wrap gap-2">
                                     {allSelectableTags.map(tag => (
                                         <button
@@ -1755,7 +1795,7 @@ const SubmitServerView = () => {
                                             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                                                 selectedTags.includes(tag) 
                                                 ? 'bg-indigo-600 text-white' 
-                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
                                             }`}
                                         >
                                             {tag}
@@ -1773,23 +1813,23 @@ const SubmitServerView = () => {
                     </div>
 
                     {/* Review Process */}
-                    <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
-                        <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">Review Process</h3>
+                    <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center">Review Process</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                             <div className="flex flex-col items-center">
-                                <div className="text-4xl font-bold text-indigo-500 mb-2">1</div>
-                                <h4 className="font-bold text-gray-800">Application Review</h4>
-                                <p className="text-sm text-gray-500 mt-1">We review your server for quality, relevance, and activity level.</p>
+                                <div className="text-4xl font-bold text-indigo-500 dark:text-indigo-400 mb-2">1</div>
+                                <h4 className="font-bold text-gray-800 dark:text-gray-200">Application Review</h4>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">We review your server for quality, relevance, and activity level.</p>
                             </div>
                             <div className="flex flex-col items-center">
-                                <div className="text-4xl font-bold text-indigo-500 mb-2">2</div>
-                                <h4 className="font-bold text-gray-800">Verification</h4>
-                                <p className="text-sm text-gray-500 mt-1">We verify your Discord server and ensure it meets our community standards.</p>
+                                <div className="text-4xl font-bold text-indigo-500 dark:text-indigo-400 mb-2">2</div>
+                                <h4 className="font-bold text-gray-800 dark:text-gray-200">Verification</h4>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">We verify your server and ensure it meets our community standards.</p>
                             </div>
                             <div className="flex flex-col items-center">
-                                <div className="text-4xl font-bold text-indigo-500 mb-2">3</div>
-                                <h4 className="font-bold text-gray-800">Go Live</h4>
-                                <p className="text-sm text-gray-500 mt-1">Once approved, your server goes live in our directory.</p>
+                                <div className="text-4xl font-bold text-indigo-500 dark:text-indigo-400 mb-2">3</div>
+                                <h4 className="font-bold text-gray-800 dark:text-gray-200">Go Live</h4>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Once approved, your server goes live in our directory.</p>
                             </div>
                         </div>
                     </div>
@@ -1809,6 +1849,21 @@ export default function App() {
       }
   });
   const [activeChatId, setActiveChatId] = useState('initial-chat');
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
 
   const renderActiveTab = () => {
     switch (activeTab) {
@@ -1830,17 +1885,16 @@ export default function App() {
   }
 
   return (
-    <div className="h-screen bg-gray-100 font-sans flex flex-col">
-      <Header setActiveTab={setActiveTab} />
+    <div className="h-screen bg-gray-100 dark:bg-gray-900 font-sans flex flex-col">
+      <Header setActiveTab={setActiveTab} theme={theme} toggleTheme={toggleTheme} />
       <main className="flex-1 flex flex-col">
-        {/* Conditional rendering for tabs vs. full-page views */}
-        {activeTab === 'Submit Server' ? (
+        {activeTab === 'Submit Server' || activeTab === 'About' ? (
             <div className="flex-1 overflow-y-auto">
                 {renderActiveTab()}
             </div>
         ) : (
             <>
-                <div className="px-4 sm:px-6 lg:px-8 pt-6 border-b border-gray-200">
+                <div className="px-4 sm:px-6 lg:px-8 pt-6 border-b border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
                   <nav className="-mb-px flex space-x-2" aria-label="Tabs">
                     <Tab label="Server Explorer" isActive={activeTab === 'Server Explorer'} onClick={() => setActiveTab('Server Explorer')} />
                     <Tab label="Folder Dendogram" isActive={activeTab === 'Folder Dendogram'} onClick={() => setActiveTab('Folder Dendogram')} />
@@ -1848,7 +1902,7 @@ export default function App() {
                     <Tab label="Assistant" isActive={activeTab === 'Assistant'} onClick={() => setActiveTab('Assistant')} />
                   </nav>
                 </div>
-                <div className={activeTab === 'UMAP Cluster' ? 'flex-1 relative' : 'mt-4 bg-gray-50 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner flex-1'}>
+                <div className={activeTab === 'UMAP Cluster' ? 'flex-1 relative bg-gray-50 dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner flex-1'}>
                    {renderActiveTab()}
                 </div>
             </>
@@ -1857,4 +1911,5 @@ export default function App() {
     </div>
   );
 }
+
 
