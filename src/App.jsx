@@ -1591,7 +1591,7 @@ const UMAPView = () => {
 
 
     return (
-        <div className="w-full h-full p-4 bg-gray-50 dark:bg-gray-800 relative overflow-hidden">
+        <div className="w-full h-full p-4 bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
             <div className="w-full h-full border dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 shadow-sm relative" ref={chartRef}>
                  <div 
                     ref={tooltipRef} 
@@ -1658,7 +1658,7 @@ const SubmitServerView = () => {
     };
 
     return (
-        <div className="bg-gray-50 dark:bg-gray-800 py-12">
+        <div className="bg-gray-50 dark:bg-gray-900 py-12">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header Section */}
                 <div className="text-center mb-12">
@@ -1670,7 +1670,7 @@ const SubmitServerView = () => {
 
                 <div className="space-y-8">
                     {/* Application Form */}
-                    <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex items-start space-x-3 mb-6">
                             <div className="bg-indigo-100 p-2 rounded-full">
                                 <FileIcon className="w-6 h-6 text-indigo-600" />
@@ -1782,7 +1782,7 @@ const SubmitServerView = () => {
                     </div>
 
                     {/* Review Process */}
-                    <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
+                    <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
                         <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center">Review Process</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
                             <div className="flex flex-col items-center">
@@ -1871,7 +1871,7 @@ export default function App() {
                     <Tab label="Assistant" isActive={activeTab === 'Assistant'} onClick={() => setActiveTab('Assistant')} />
                   </nav>
                 </div>
-                <div className={activeTab === 'UMAP Cluster' ? 'flex-1 relative bg-gray-50 dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-800 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner flex-1'}>
+                <div className={activeTab === 'UMAP Cluster' ? 'flex-1 relative bg-gray-50 dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 lg:p-8 rounded-lg shadow-inner flex-1'}>
                    {renderActiveTab()}
                 </div>
             </>
