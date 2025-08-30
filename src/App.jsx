@@ -1,6 +1,57 @@
 import React, { useState, useMemo, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
 import * as d3 from 'd3';
-import { servers } from './data/servers'
+
+const servers = [
+    {"name": "EleutherAI", "rating": 8.1, "tag": "Research", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Lots of resources; community projects to do and very active community.", "features": ["Reading Group", "Paper Channel", "VC events/Office Hours", "Jobs Board"], "x": 10.370316505432129, "y": 5.420857906341553, "cluster_id": 3},
+    {"name": "Cohere for AI", "rating": 8.1, "tag": "Research", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Pretty good. Lots of stuff to do for various skill levels.", "features": ["Reading Group", "Paper Channel", "VC events/Office Hours"], "x": 10.428757667541504, "y": 5.405788421630859, "cluster_id": 3},
+    {"name": "AI Safety Camp", "rating": 7.8, "tag": "Alignment", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Focused on AI safety research and education with regular workshops.", "features": ["Reading Group", "Paper Channel", "VC events/Office Hours", "Jobs Board"], "x": 10.398018836975098, "y": 5.419445037841797, "cluster_id": 3},
+    {"name": "GPU Collective", "rating": 7.2, "tag": "GPU", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Community for sharing GPU resources and optimization techniques.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.4111328125, "y": 7.152174949645996, "cluster_id": 0},
+    {"name": "Seoul AI Hub", "rating": 6.9, "tag": "General", "activityLevel": "Active", "language": "Korean", "location": "Discord", "description": "Korean-speaking AI community with regular paper discussions.", "features": ["Reading Group", "Paper Channel", "Jobs Board"], "x": 11.238466262817383, "y": 4.1088666915893555, "cluster_id": -1},
+    {"name": "Prompt Engineering Masters", "rating": 7.5, "tag": "Prompting", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Advanced techniques and strategies for prompt engineering.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "Robotics Research Group", "rating": 7.4, "tag": "Robotics", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Connect with AI entrepreneurs and find co-founders.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.16782283782959, "y": 6.136894226074219, "cluster_id": 0},
+    {"name": "Neural AI 9", "rating": 7.0, "tag": "Research", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "A place for all things related to neural networks.", "features": ["Paper Channel"], "x": 10.428731918334961, "y": 5.253073215484619, "cluster_id": 3},
+    {"name": "Deep AI 10", "rating": 8.7, "tag": "Hackathons", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Weekly hackathons and coding challenges.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.441052436828613, "y": 7.151704788208008, "cluster_id": 0},
+    {"name": "AI Startup Incubator", "rating": 8.0, "tag": "Entrepreneurship", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Connect with AI entrepreneurs and find co-founders.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.42398452758789, "y": 7.147983551025391, "cluster_id": 0},
+    {"name": "Casual Coders", "rating": 6.5, "tag": "Casual", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A friendly place to chat about code and projects.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "LLM Builders", "rating": 9.1, "tag": "LLM", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "For developers and researchers working on Large Language Models.", "features": ["Paper Channel", "Jobs Board"], "x": 9.182415962219238, "y": 5.093539237976074, "cluster_id": 2},
+    {"name": "Bug Bounty Hunters", "rating": 7.9, "tag": "Bug bounties", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Find and report vulnerabilities in AI systems.", "features": [], "x": 7.730303764343262, "y": 8.428784370422363, "cluster_id": -1},
+    {"name": "AI Conference Hub", "rating": 8.3, "tag": "Conference", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Discuss upcoming AI conferences and share insights.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "Crypto & AI", "rating": 6.8, "tag": "Crypto", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Exploring the intersection of cryptocurrency and artificial intelligence.", "features": [], "x": 6.702220439910889, "y": 8.169151306152344, "cluster_id": -1},
+    {"name": "Puzzle Solvers AI", "rating": 7.1, "tag": "Puzzle", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Using AI to solve complex puzzles and games.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "Generative Art Gallery", "rating": 8.5, "tag": "Generation", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Showcase and discuss AI-generated art.", "features": ["Paper Channel"], "x": 9.123537063598633, "y": 4.96541690826416, "cluster_id": 2},
+    {"name": "AI for Education", "rating": 7.7, "tag": "Education", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Developing and using AI tools for learning.", "features": ["Reading Group", "Jobs Board"], "x": 9.432653427124023, "y": 3.8617305755615234, "cluster_id": 1},
+    {"name": "Open Source AI Tools", "rating": 8.4, "tag": "Tool", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Contribute to and discuss open-source AI projects.", "features": ["Jobs Board"], "x": 8.243552207946777, "y": 5.923832893371582, "cluster_id": 0},
+    {"name": "Korean AI Tech", "rating": 7.3, "tag": "General", "activityLevel": "Active", "language": "Korean", "location": "Discord", "description": "A Korean-speaking community for all AI topics.", "features": ["Reading Group", "Paper Channel"], "x": 11.238466262817383, "y": 4.1088666915893555, "cluster_id": -1},
+    {"name": "Slack AI Innovators", "rating": 7.0, "tag": "Tool", "activityLevel": "Semi-active", "language": "English", "location": "Slack", "description": "A Slack community for AI developers.", "features": [], "x": 8.16782283782959, "y": 6.136894226074219, "cluster_id": 0},
+    {"name": "IRL AI Meetup Group", "rating": 8.8, "tag": "Conference", "activityLevel": "Active", "language": "English", "location": "Irl", "description": "Organizing in-person AI meetups and events.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "The Alignment Problem", "rating": 9.2, "tag": "Alignment", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Dedicated to solving the AI alignment problem.", "features": ["Reading Group", "Paper Channel"], "x": 10.398018836975098, "y": 5.419445037841797, "cluster_id": 3},
+    {"name": "Hackathon Heroes", "rating": 8.6, "tag": "Hackathons", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Team up for AI hackathons and competitions.", "features": ["Jobs Board"], "x": 8.441052436828613, "y": 7.151704788208008, "cluster_id": 0},
+    {"name": "GPU Traders", "rating": 6.7, "tag": "GPU", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "A community for buying, selling, and trading GPUs.", "features": [], "x": 6.702220439910889, "y": 8.169151306152344, "cluster_id": -1},
+    {"name": "AI Ethics Discussion", "rating": 8.2, "tag": "Alignment", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Debating the ethical implications of AI.", "features": ["Reading Group"], "x": 10.428731918334961, "y": 5.253073215484619, "cluster_id": 3},
+    {"name": "Machine Learning Cafe", "rating": 7.4, "tag": "Casual", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A relaxed space for ML enthusiasts.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "Prompt Perfect", "rating": 7.9, "tag": "Prompting", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Master the art of prompt engineering.", "features": ["Paper Channel"], "x": 9.123537063598633, "y": 4.96541690826416, "cluster_id": 2},
+    {"name": "Code Generation Guild", "rating": 8.1, "tag": "Generation", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Exploring AI-powered code generation.", "features": ["Jobs Board"], "x": 9.182415962219238, "y": 5.093539237976074, "cluster_id": 2},
+    {"name": "Robotics & Automation", "rating": 8.5, "tag": "Robotics", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Building and programming intelligent robots.", "features": ["Jobs Board"], "x": 8.243552207946777, "y": 5.923832893371582, "cluster_id": 0},
+    {"name": "AI Company Connect", "rating": 8.9, "tag": "Company", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A network for professionals at AI companies.", "features": ["VC events/Office Hours", "Jobs Board"], "x": 8.42398452758789, "y": 7.147983551025391, "cluster_id": 0},
+    {"name": "The Puzzle Box", "rating": 7.6, "tag": "Puzzle", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A community for AI-based puzzle solving.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "LLM Fine-Tuning", "rating": 8.8, "tag": "LLM", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Techniques and best practices for fine-tuning LLMs.", "features": ["Paper Channel"], "x": 9.123537063598633, "y": 4.96541690826416, "cluster_id": 2},
+    {"name": "AI in Finance", "rating": 7.8, "tag": "Crypto", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Applying AI to financial markets and cryptocurrency.", "features": ["Jobs Board"], "x": 6.702220439910889, "y": 8.169151306152344, "cluster_id": -1},
+    {"name": "EdTech AI", "rating": 7.5, "tag": "Education", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Innovating in education with AI.", "features": ["Reading Group"], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "The Turing Test", "rating": 7.2, "tag": "Casual", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Casual chats about AI and consciousness.", "features": [], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "AI Hardware Hub", "rating": 8.0, "tag": "GPU", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Discussions on hardware for AI, including GPUs and TPUs.", "features": ["Jobs Board"], "x": 8.4111328125, "y": 7.152174949645996, "cluster_id": 0},
+    {"name": "Startup Founders AI", "rating": 8.7, "tag": "Entrepreneurship", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "A community for founders of AI startups.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "AI Art Prompters", "rating": 8.3, "tag": "Prompting", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Sharing prompts and creations for AI art generation.", "features": [], "x": 7.730303764343262, "y": 8.428784370422363, "cluster_id": -1},
+    {"name": "Research Paper Club", "rating": 8.6, "tag": "Research", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Weekly discussions of new AI research papers.", "features": ["Reading Group", "Paper Channel"], "x": 10.428731918334961, "y": 5.253073215484619, "cluster_id": 3},
+    {"name": "Autonomous Agents", "rating": 9.0, "tag": "Robotics", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Developing autonomous AI agents.", "features": ["Jobs Board"], "x": 8.243552207946777, "y": 5.923832893371582, "cluster_id": 0},
+    {"name": "AI for Good", "rating": 8.9, "tag": "Alignment", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Using AI to solve social and environmental problems.", "features": ["VC events/Office Hours"], "x": 10.428757667541504, "y": 5.405788421630859, "cluster_id": 3},
+    {"name": "The Generative Lounge", "rating": 7.9, "tag": "Generation", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "A place to share and discuss generative models.", "features": ["Paper Channel"], "x": 9.123537063598633, "y": 4.96541690826416, "cluster_id": 2},
+    {"name": "AI Toolmakers", "rating": 8.2, "tag": "Tool", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Building the next generation of AI tools.", "features": ["Jobs Board"], "x": 8.243552207946777, "y": 5.923832893371582, "cluster_id": 0},
+    {"name": "Global AI Conference", "rating": 8.5, "tag": "Conference", "activityLevel": "Active", "language": "English", "location": "Irl", "description": "The official server for the Global AI Conference.", "features": ["VC events/Office Hours"], "x": 7.411604881286621, "y": 7.350849151611328, "cluster_id": 0},
+    {"name": "Data Science Dojo", "rating": 7.7, "tag": "Education", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Learn and practice data science with a supportive community.", "features": ["Reading Group", "Jobs Board"], "x": 9.432653427124023, "y": 3.8617305755615234, "cluster_id": 1},
+    {"name": "The Logic Puzzle", "rating": 7.3, "tag": "Puzzle", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Solving logic puzzles with and without AI.", "features": [], "x": 9.42111587524414, "y": 3.792558431625366, "cluster_id": 1},
+    {"name": "Corporate AI Solutions", "rating": 8.4, "tag": "Company", "activityLevel": "Active", "language": "English", "location": "Slack", "description": "Discussing the implementation of AI in large companies.", "features": ["Jobs Board"], "x": 8.42398452758789, "y": 7.147983551025391, "cluster_id": 0},
+    {"name": "Web3 & AI Nexus", "rating": 7.1, "tag": "Crypto", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Exploring the synergy between Web3 and AI.", "features": [], "x": 6.702220439910889, "y": 8.169151306152344, "cluster_id": -1}
+  ];
 
 // Helper component for SVG icons
 const Icon = ({ path, className = 'w-6 h-6' }) => (
@@ -33,7 +84,8 @@ const MoreIcon = ({ className = 'w-5 h-5' }) => <Icon path="M12 8c1.1 0 2-.9 2-2
 const FolderIcon = ({ className = 'w-5 h-5' }) => <Icon path="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" className={className} />;
 const FileIcon = ({ className = 'w-5 h-5' }) => <Icon path="M6 2c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6H6zm7 7V3.5L18.5 9H13z" className={className} />;
 const InfoIcon = ({ className = 'w-6 h-6' }) => <Icon path="M11 7h2v2h-2V7zm0 4h2v6h-2v-6zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" className={className} />;
-
+const CheckCircleIcon = ({ className = 'w-6 h-6' }) => <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg> 
+const MenuIcon = ({ className = 'w-6 h-6' }) => <Icon path="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" className={className} />;
 // --- New Theme Icons ---
 const SunIcon = ({ className = 'w-5 h-5' }) => (
      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -66,42 +118,75 @@ const PersonLocationIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBo
 const SortIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" className="size-4"><path fillRule="evenodd" d="M11.47 4.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1-1.06 1.06L12 6.31 8.78 9.53a.75.75 0 0 1-1.06-1.06l3.75-3.75Zm-3.75 9.75a.75.75 0 0 1 1.06 0L12 17.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-3.75 3.75a.75.75 0 0 1-1.06 0l-3.75-3.75a.75.75 0 0 1 0-1.06Z" clipRule="evenodd"></path></svg>);
 
 // Header component for the top navigation bar
-const Header = ({ setActiveTab, theme, toggleTheme }) => (
-  <header className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
-    <div className="px-4 sm:px-6 lg:px-8">
-      <div className="flex items-center justify-between h-16">
-        <div className="flex items-center">
-            <div className="flex-shrink-0">
-                <h1 className="text-2xl font-bold cursor-pointer" onClick={() => setActiveTab('Server Explorer')}>AI Discord Directory</h1>
-            </div>
-            <nav className="hidden md:block">
-                <div className="ml-10 flex items-baseline space-x-4">
-                    <button onClick={() => setActiveTab('Server Explorer')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Home</button>
-                    <button onClick={() => setActiveTab('About')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">About</button>
-                    <button onClick={() => setActiveTab('Submit Server')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Submit Server</button>
-                </div>
-            </nav>
-        </div>
-        <div className="flex items-center">
-            <a href="https://x.com/SeonGunness" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
-                <TwitterIcon />
-            </a>
-            <a href="https://discord.gg/buBqNytqx3" target="_blank" rel="noopener noreferrer" className="ml-6 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white relative" style={{ top: '-1px' }}>
-                <DiscordIcon />
-            </a>
-            <button
-                onClick={toggleTheme}
-                className="ml-6 p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
-                aria-label="Toggle dark mode"
-            >
-                {theme === 'light' ? <MoonIcon /> : <SunIcon />}
-            </button>
-        </div>
-      </div>
-    </div>
-  </header>
-);
+const Header = ({ setActiveTab, theme, toggleTheme }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+    return (
+        <header className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700 relative z-50">
+            <div className="px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    <div className="flex items-center">
+                        <div className="flex-shrink-0">
+                            <h1 className="text-2xl font-bold cursor-pointer" onClick={() => setActiveTab('Server Explorer')}>AI Discord Directory</h1>
+                        </div>
+                        <nav className="hidden md:block">
+                            <div className="ml-10 flex items-baseline space-x-4">
+                                <button onClick={() => setActiveTab('Server Explorer')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Home</button>
+                                <button onClick={() => setActiveTab('About')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">About</button>
+                                <button onClick={() => setActiveTab('Submit Server')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Submit Server</button>
+                            </div>
+                        </nav>
+                    </div>
+                    <div className="hidden md:flex items-center">
+                        <a href="https://x.com/SeonGunness" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                            <TwitterIcon />
+                        </a>
+                        <a href="https://discord.gg/buBqNytqx3" target="_blank" rel="noopener noreferrer" className="ml-6 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white relative" style={{ top: '-1px' }}>
+                            <DiscordIcon />
+                        </a>
+                        <button
+                            onClick={toggleTheme}
+                            className="ml-6 p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
+                            aria-label="Toggle dark mode"
+                        >
+                            {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+                        </button>
+                    </div>
+                    <div className="md:hidden">
+                        <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                           {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {isMenuOpen && (
+                 <div className="md:hidden absolute top-16 left-0 right-0 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
+                    <nav className="flex flex-col items-center space-y-4">
+                        <button onClick={() => { setActiveTab('Server Explorer'); setIsMenuOpen(false); }} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-lg font-semibold">Home</button>
+                        <button onClick={() => { setActiveTab('About'); setIsMenuOpen(false); }} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-lg font-semibold">About</button>
+                        <button onClick={() => { setActiveTab('Submit Server'); setIsMenuOpen(false); }} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-lg font-semibold">Submit Server</button>
+                    
+                        <div className="flex items-center space-x-6 pt-4">
+                            <a href="https://x.com/SeonGunness" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                                <TwitterIcon />
+                            </a>
+                            <a href="https://discord.gg/buBqNytqx3" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white relative" style={{ top: '-1px' }}>
+                                <DiscordIcon />
+                            </a>
+                            <button
+                                onClick={toggleTheme}
+                                className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
+                                aria-label="Toggle dark mode"
+                            >
+                                {theme === 'light' ? <MoonIcon /> : <SunIcon />}
+                            </button>
+                        </div>
+                    </nav>
+                </div>
+            )}
+        </header>
+    );
+};
 // Tab component for view switching
 const Tab = ({ label, isActive, onClick }) => (
   <button
@@ -294,8 +379,8 @@ const ServerCard = ({ server, onViewClick }) => {
                         <LanguageIcon className="w-4 h-4 text-gray-500 dark:text-gray-400" />
                         <span>{server.language}</span>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-300 mt-4 text-sm line-clamp-3">{server.description}</p>
-                </div>
+                    <p className="text-gray-600 dark:text-gray-300 mt-4 text-sm line-clamp">{server.description}</p>
+              </div>
 
                 <div className="mt-5">
                     <div className="flex flex-wrap gap-2">
@@ -359,8 +444,8 @@ const ServerModal = ({ server, onClose }) => {
                         <span>{server.language}</span>
                     </div>
                     <div>
-                        <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-2">Description</h4>
-                        <p className="text-gray-600 dark:text-gray-300 text-sm">{server.description}</p>
+                        <h4 className="font-semibold text-gray-700 dark:text-gray-0 mb-2">Description</h4>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm">{server.description}</p>
                     </div>
                      <div>
                         <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-2">Features</h4>
@@ -404,7 +489,7 @@ const TableView = ({ servers, onViewClick }) => (
             </thead>
             <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                 {servers.map(server => (
-                    <tr key={server.name} onClick={() => onViewClick(server)} className="hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                    <tr key={server.name} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{server.name}</td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{server.rating}</td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -418,11 +503,21 @@ const TableView = ({ servers, onViewClick }) => (
                             </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">{server.location} • {server.language}</td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex flex-wrap gap-1">
                                 {server.features.map(feature => {
                                     const style = featureTagStyles[feature];
-                                    return style ? <span key={feature} className={`inline-flex items-center p-1 ${style.color} rounded-md`}>{style.icon}</span> : null;
+                                    if (!style) return null;
+                                    return (
+                                        <div key={feature} className="relative group flex items-center">
+                                            <span className={`inline-flex items-center p-1 ${style.color} rounded-md`}>
+                                                {style.icon}
+                                            </span>
+                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max px-2 py-1 bg-gray-700 text-white text-xs rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                                                {feature}
+                                            </div>
+                                        </div>
+                                    );
                                 })}
                             </div>
                         </td>
@@ -478,6 +573,7 @@ const SortDropDown = ({
     const primaryOptions = ['Score', 'Name', 'Activity', 'Server Type', 'Language', 'Location', 'Others'];
 
     const getSecondaryOptions = (primaryOption) => {
+        if (!primaryOption) return ['descending', 'ascending'];
         switch (primaryOption) {
             case 'Score':
             case 'Name':
@@ -541,27 +637,31 @@ const SortDropDown = ({
                         ))}
                     </div>
                 </div>
-                <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
-                <div>
-                    <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
-                        {['Score', 'Name', 'Activity'].includes(sorting.primary) ? 'Order' : 'Prioritize'}
-                    </div>
-                    <div className="grid grid-cols-2 gap-1 max-h-40 overflow-y-auto">
-                        {secondaryOptions.map((option) => (
-                            <button
-                                key={option}
-                                onClick={() => handleSecondaryChange(option)}
-                                className={`text-xs px-2 py-1 rounded text-left ${
-                                    sorting.secondary === option
-                                        ? 'bg-indigo-600 text-white dark:bg-indigo-500'
-                                        : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300'
-                                }`}
-                            >
-                                {option}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                {sorting.primary && (
+                    <>
+                        <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+                        <div>
+                            <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                {['Score', 'Name', 'Activity'].includes(sorting.primary) ? 'Order' : 'Prioritize'}
+                            </div>
+                            <div className="grid grid-cols-2 gap-1 max-h-40 overflow-y-auto">
+                                {secondaryOptions.map((option) => (
+                                    <button
+                                        key={option}
+                                        onClick={() => handleSecondaryChange(option)}
+                                        className={`text-xs px-2 py-1 rounded text-left ${
+                                            sorting.secondary === option
+                                                ? 'bg-indigo-600 text-white dark:bg-indigo-500'
+                                                : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-300'
+                                        }`}
+                                    >
+                                        {option}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
@@ -578,8 +678,7 @@ const ListView = () => {
     const [showSortDropdown, setShowSortDropdown] = useState(false);
     
     const toggleSortDropdown = (state) => setShowSortDropdown(prevState => typeof state === 'boolean' ? state : !prevState);
-    const resetSorting = () => setSorting({ primary: 'Score', secondary: 'descending' });
-    const isSortingApplied = sorting.primary !== 'Score' || sorting.secondary !== 'descending';
+    const resetSorting = () => setSorting({ primary: null, secondary: null });
 
     const handleViewClick = (server) => {
         setSelectedServer(server);
@@ -613,6 +712,8 @@ const ListView = () => {
         
         const sorted = [...filtered].sort((a, b) => {
             const { primary, secondary } = sorting;
+            if (!primary) return 0;
+            
             const isAscending = secondary === 'ascending';
             
             switch (primary) {
@@ -673,7 +774,7 @@ const ListView = () => {
                                     onClick={toggleSortDropdown}
                                     className="flex items-center space-x-2 p-2 border dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-sm dark:text-gray-300"
                                 >
-                                    <span>{isSortingApplied ? `${sorting.primary}: ${sorting.secondary}` : 'Sort By'}</span>
+                                    <span>{sorting.primary ? `${sorting.primary}: ${sorting.secondary}` : 'Sort By'}</span>
                                     <SortIcon />
                                 </button>
                                 {showSortDropdown && (
@@ -683,7 +784,7 @@ const ListView = () => {
                                         showSortDropdown={showSortDropdown}
                                         toggleSortDropdown={toggleSortDropdown}
                                         resetSorting={resetSorting}
-                                        isSortingApplied={isSortingApplied}
+                                        isSortingApplied={sorting.primary !== null}
                                     />
                                 )}
                             </div>
@@ -704,16 +805,16 @@ const ListView = () => {
 
 // --- About Page View ---
 const AboutView = () => (
-    <div className="mt-10 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+    <div className="mt-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8 rounded-lg shadow-md max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">About the AI Discord Directory</h2>
         <div className="space-y-4 text-gray-600 dark:text-gray-300">
             <p>
                 Welcome to the AI Discord Directory, your central hub for discovering and exploring communities focused on Artificial Intelligence. In the rapidly expanding world of AI, finding the right community to learn, collaborate, and stay up-to-date can be a challenge. Our mission is to simplify that process.
             </p>
             <p>
-                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large language models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll find a community that fits your interests.
+                This directory is a curated collection of Discord servers and other online groups dedicated to a wide range of AI topics—from cutting-edge research and large language models (LLMs) to AI safety, robotics, and casual coding discussions. Whether you're a seasoned researcher, a student just starting your journey, or a hobbyist passionate about AI, you'll nd a community that fits your interests.
             </p>
-            <h3 className="text-2xl font-semibold xt-gray-700 dark:text-gray-200 pt-4">Our Goal</h3>
+            <h3 className="text-2xl font-semibold -gray-700 dark:text-gray-200 pt-4">Our Goal</h3>
             <p>
             Our primary goal is to fost a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
             </p>
@@ -728,12 +829,83 @@ const AboutView = () => (
                 We gather information on various AI-focused communities and organize it in a structured way. Each server is evaluated based on several factors, including activity level, primary focus, and available resources like paper channels or job boards. Our unique scoring system helps you quickly identify high-quality and active communities.
             </p>
             <p>
-                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram and t-SNE Cluster views—to explore the relathips between different communities and find the perfect one for you.
+                You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram and t-SNE Cluster views—to explore the relathipsween different communities and find the perfect one for you.
         </p>
     </div>
     </div>
 );
 
+const SidebarContent = ({
+    chats,
+    activeChatId,
+    editingChatId,
+    editingTitle,
+    menuOpen,
+    handleNewChat,
+    setActiveChatId,
+    setMenuOpen,
+    handleDeleteChat,
+    setEditingChatId,
+    setEditingTitle,
+    handleRename,
+    menuRef
+}) => (
+    <>
+        <div className="p-2">
+            <button
+                onClick={handleNewChat}
+                className="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors border dark:border-gray-600"
+            >
+                + New Chat
+            </button>
+        </div>
+        <div className="flex-grow overflow-y-auto p-2 space-y-1">
+            {Object.keys(chats).reverse().map(chatId => (
+                <div key={chatId} className={`relative group ${menuOpen === chatId ? 'z-20' : 'z-0'}`}>
+                    <button
+                        onClick={() => setActiveChatId(chatId)}
+                        className={`w-full text-left px-3 py-2 rounded-md text-sm truncate ${activeChatId === chatId ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300' : 'hover:bg-gray-200 dark:hover:bg-gray-700 dark:text-gray-300'}`}
+                    >
+                        {editingChatId === chatId ? (
+                            <input
+                                type="text"
+                                value={editingTitle}
+                                onChange={(e) => setEditingTitle(e.target.value)}
+                                onBlur={() => handleRename(chatId, editingTitle)}
+                                onKeyPress={(e) => e.key === 'Enter' && handleRename(chatId, editingTitle)}
+                                className="bg-transparent w-full focus:outline-none"
+                                autoFocus
+                            />
+                        ) : (
+                            chats[chatId].title
+                        )}
+                    </button>
+                    <div className={`absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity ${menuOpen === chatId ? '!opacity-100' : ''}`}>
+                        <button onClick={() => setMenuOpen(menuOpen === chatId ? null : chatId)}>
+                            <MoreIcon className="w-5 h-5 text-gray-500 dark:text-gray-400"/>
+                        </button>
+                        {menuOpen === chatId && (
+                            <div ref={menuRef} className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-900 rounded-md shadow-lg z-10 border dark:border-gray-700">
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); setEditingChatId(chatId); setEditingTitle(chats[chatId].title); setMenuOpen(null); }}
+                                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                >
+                                    Rename
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); handleDeleteChat(chatId); }}
+                                    className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            ))}
+        </div>
+    </>
+);
 
 // --- Assnt View Component ---
 const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
@@ -743,6 +915,7 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
     const [menuOpen, setMenuOpen] = useState(null);
     const messagesEndRef = useRef(null);
     const menuRef = useRef(null);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -818,68 +991,48 @@ const AssistantView = ({ chats, setChats, activeChatId, setActiveChatId }) => {
     };
 
     const activeChat = activeChatId ? chats[activeChatId] : null;
-
+    
     return (
-        <div className="flex h-[calc(100vh-12rem)]">
-            {/* Sidebar */}
-            <div className="w-1/4 bg-gray-100 dark:bg-gray-800 border-r dark:border-gray-700 rounded-l-lg flex flex-col">
-                <div className="p-2">
-                    <button
-                        onClick={handleNewChat}
-                        className="w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm font-semibold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors border dark:border-gray-600"
-                    >
-                        + New Chat
-                    </button>
-                </div>
-                <div className="flex-grow overflow-y-auto p-2 space-y-1">
-                    {Object.keys(chats).reverse().map(chatId => (
-                        <div key={chatId} className="relative group">
-                            <button
-                                onClick={() => setActiveChatId(chatId)}
-                                className={`w-full text-left px-3 py-2 rounded-md text-sm truncate ${activeChatId === chatId ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/50 dark:text-indigo-300' : 'hover:bg-gray-200 dark:hover:bg-gray-700 dark:text-gray-300'}`}
-                            >
-                                {editingChatId === chatId ? (
-                                    <input
-                                        type="text"
-                                        value={editingTitle}
-                                        onChange={(e) => setEditingTitle(e.target.value)}
-                                        onBlur={() => handleRename(chatId, editingTitle)}
-                                        onKeyPress={(e) => e.key === 'Enter' && handleRename(chatId, editingTitle)}
-                                        className="bg-transparent w-full focus:outline-none"
-                                        autoFocus
-                                    />
-                                ) : (
-                                    chats[chatId].title
-                                )}
-                            </button>
-                            <div className="absolute right-2 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button onClick={() => setMenuOpen(menuOpen === chatId ? null : chatId)}>
-                                    <MoreIcon className="w-5 h-5 text-gray-500 dark:text-gray-400"/>
-                                </button>
-                                {menuOpen === chatId && (
-                                    <div ref={menuRef} className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-900 rounded-md shadow-lg z-10 border dark:border-gray-700">
-                                        <button 
-                                            onClick={() => { setEditingChatId(chatId); setEditingTitle(chats[chatId].title); setMenuOpen(null); }}
-                                            className="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                                        >
-                                            Rename
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteChat(chatId)}
-                                            className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-800"
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    ))}
-                </div>
+        <div className="flex h-full relative">
+            {/* Responsive Sidebar */}
+            <div className={`
+                fixed top-16 left-0 h-[calc(100vh-4rem)] z-40 w-3/4 max-w-sm
+                md:static md:top-0 md:h-full md:w-1/4 md:max-w-none md:z-0
+                bg-gray-100 dark:bg-gray-800 border-r dark:border-gray-700
+                flex flex-col transform transition-transform duration-300 ease-in-out
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                md:translate-x-0
+                md:rounded-l-lg
+            `}>
+                 <SidebarContent
+                    chats={chats}
+                    activeChatId={activeChatId}
+                    editingChatId={editingChatId}
+                    editingTitle={editingTitle}
+                    menuOpen={menuOpen}
+                    handleNewChat={handleNewChat}
+                    setActiveChatId={(chatId) => {
+                        setActiveChatId(chatId);
+                        // Close the sidebar automatically on mobile after selection
+                        if (window.innerWidth < 768) { // 768px is the default 'md' breakpoint in Tailwind
+                            setIsSidebarOpen(false);
+                        }
+                    }}
+                    setMenuOpen={setMenuOpen}
+                    handleDeleteChat={handleDeleteChat}
+                    setEditingChatId={setEditingChatId}
+                    setEditingTitle={setEditingTitle}
+                    handleRename={handleRename}
+                    menuRef={menuRef}
+                 />
             </div>
+            {isSidebarOpen && <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setIsSidebarOpen(false)}></div>}
 
             {/* Chat Window */}
-            <div className="w-3/4 bg-white dark:bg-gray-900 rounded-r-lg flex flex-col relative">
+            <div className="w-full md:w-3/4 bg-white dark:bg-gray-900 rounded-r-lg flex flex-col relative">
+                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="md:hidden absolute top-4 left-4 z-10 text-gray-600 dark:text-gray-300">
+                    <MenuIcon />
+                </button>
                  {activeChat && activeChat.messages.length > 0 ? (
                     <>
                         <div className="flex-grow overflow-y-auto p-6">
@@ -1638,29 +1791,94 @@ const UMAPView = () => {
 
 // --- New Submit Server View Component ---
 const SubmitServerView = () => {
+    const formRef = useRef(null);
     const [selectedTags, setSelectedTags] = useState([]);
     const [description, setDescription] = useState('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [tagError, setTagError] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const serverTypeTags = filterData.find(f => f.title === 'Server Type')?.tags || [];
-    const otherTags = filterData.find(f => f.title === 'Others')?.tags || [];
-    const allSelectableTags = [...serverTypeTags, ...otherTags];
+    const serverTypeTags = ['Research', 'Hackathons', 'Alignment', 'GPU', 'Casual', 'LLM', 'Prompting', 'Bug bounties', 'Conference', 'Crypto', 'Entreprenurship', 'Company', 'Robotics', 'Puzzle', 'Generation'];
+    const otherTags = ['Reading Group', 'Paper Channel', 'VC Events/Office Hours', 'Jobs Board'];
 
+    const handleTagClick = (tag, isServerType) => {
+        if (isServerType) {
+            setTagError(false);
+        }
 
-    const handleTagClick = (tag) => {
-        setSelectedTags(prev =>
-            prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
-        );
+        setSelectedTags(prev => {
+            if (isServerType) {
+                const isAlreadySelected = prev.includes(tag);
+                const otherSelectedTags = prev.filter(t => !serverTypeTags.includes(t));
+                return isAlreadySelected ? otherSelectedTags : [...otherSelectedTags, tag];
+            } else {
+                const isAlreadySelected = prev.includes(tag);
+                return isAlreadySelected ? prev.filter(t => t !== tag) : [...prev, tag];
+            }
+        });
     };
+
+    const resetForm = useCallback(() => {
+        setSelectedTags([]);
+        setDescription('');
+        setTagError(false);
+        if (formRef.current) {
+            formRef.current.reset();
+        }
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert('Thank you for your submission! It will be reviewed shortly.');
+        const isServerTypeSelected = selectedTags.some(tag => serverTypeTags.includes(tag));
+        if (!isServerTypeSelected) {
+            setTagError(true);
+            return;
+        }
+        
+        setIsSubmitting(true);
+
+        setTimeout(() => {
+            setIsSubmitted(true);
+            setIsSubmitting(false);
+        }, 3000);
     };
+
+    const handleAnotherSubmission = () => {
+        resetForm();
+        setIsSubmitted(false);
+    };
+
+    if (isSubmitted) {
+        return (
+            <div className="bg-gray-50 dark:bg-gray-900 py-12">
+                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h2 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100">List Your AI Server</h2>
+                    <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+                        Join our directory and connect your AI research community with researchers worldwide. Get your server discovered by the right audience.
+                    </p>
+                    <div className="mt-12 bg-white dark:bg-gray-800 p-12 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 flex flex-col items-center">
+                        <div className="bg-green-100 dark:bg-green-900/50 p-4 rounded-full mb-6">
+                            <CheckCircleIcon className="w-12 h-12 text-green-500 dark:text-green-400" />
+                        </div>
+                        <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Application Submitted Successfully!</h3>
+                        <p className="mt-2 text-gray-600 dark:text-gray-400">
+                            Thank you for submitting your server. We'll review your application and get back to you soon.
+                        </p>
+                        <button
+                            onClick={handleAnotherSubmission}
+                            className="mt-8 px-8 py-3 bg-indigo-600 text-white rounded-lg text-base font-semibold hover:bg-indigo-700 transition-colors shadow-md"
+                        >
+                            Submit Another Server
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="bg-gray-50 dark:bg-gray-900 py-12">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                {/* Header Section */}
                 <div className="text-center mb-12">
                     <h2 className="text-4xl font-extrabold text-gray-900 dark:text-gray-100">List Your AI Server</h2>
                     <p className="mt-4 text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
@@ -1669,11 +1887,10 @@ const SubmitServerView = () => {
                 </div>
 
                 <div className="space-y-8">
-                    {/* Application Form */}
                     <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex items-start space-x-3 mb-6">
-                            <div className="bg-indigo-100 p-2 rounded-full">
-                                <FileIcon className="w-6 h-6 text-indigo-600" />
+                            <div className="bg-indigo-100 dark:bg-indigo-900/40 p-2 rounded-full">
+                                <FileIcon className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                             </div>
                             <div>
                                 <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">Server Application</h3>
@@ -1683,23 +1900,23 @@ const SubmitServerView = () => {
                             </div>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
+                        <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label htmlFor="org-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Organization Name (Optional)</label>
-                                    <input type="text" id="org-name" placeholder="e.g., Stanford AI Lab" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
+                                    <input type="text" id="org-name" placeholder="e.g., Stanford AI Lab" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200" />
                                 </div>
                                 <div>
                                     <label htmlFor="website" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Website (Optional)</label>
-                                    <input type="url" id="website" placeholder="https://your-organization.com" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
+                                    <input type="url" id="website" placeholder="https://your-organization.com" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200" />
                                 </div>
                                 <div>
                                     <label htmlFor="server-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Server Name *</label>
-                                    <input type="text" id="server-name" placeholder="e.g., AI Research Hub" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
+                                    <input type="text" id="server-name" placeholder="e.g., AI Research Hub" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200" />
                                 </div>
                                 <div>
                                     <label htmlFor="member-count" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current Member Count *</label>
-                                    <input type="number" id="member-count" placeholder="e.g., 1500" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
+                                    <input type="number" id="member-count" placeholder="e.g., 1500" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200" />
                                 </div>
                             </div>
                             <div>
@@ -1713,29 +1930,29 @@ const SubmitServerView = () => {
                                     maxLength="500"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
-                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200"
+                                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200"
                                 ></textarea>
                                 <p className="text-right text-xs text-gray-500 dark:text-gray-400 mt-1">{description.length}/500 characters</p>
                             </div>
                             <div>
                                 <label htmlFor="invite-link" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Invite Link *</label>
-                                <input type="url" id="invite-link" placeholder="https://discord.gg/your-server" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
+                                <input type="url" id="invite-link" placeholder="https://discord.gg/your-server" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200" />
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Must be a valid URL invite link (e.g., https://discord.gg/...)</p>
                             </div>
                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Contact Email *</label>
-                                     <input type="email" id="email" placeholder="your.email@example.com" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
+                                     <input type="email" id="email" placeholder="your.email@example.com" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200" />
                                 </div>
                                 <div>
                                     <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Language *</label>
-                                    <input type="text" id="language" placeholder="e.g., English" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
+                                    <input type="text" id="language" placeholder="e.g., English" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200" />
                                 </div>
                             </div>
                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label htmlFor="activity-level" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Activity Level *</label>
-                                    <select id="activity-level" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200">
+                                    <select id="activity-level" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200">
                                         <option value="">Select activity level</option>
                                         <option>Very Active</option>
                                         <option>Active</option>
@@ -1744,7 +1961,7 @@ const SubmitServerView = () => {
                                 </div>
                                 <div>
                                     <label htmlFor="difficulty-level" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Target Difficulty Level *</label>
-                                    <select id="difficulty-level" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200">
+                                    <select id="difficulty-level" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-700 dark:text-gray-200">
                                         <option value="">Select difficulty level</option>
                                         <option>Beginner</option>
                                         <option>Intermediate</option>
@@ -1753,35 +1970,61 @@ const SubmitServerView = () => {
                                     </select>
                                 </div>
                             </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Features & Tags * <span className="text-gray-500 dark:text-gray-400">(Select at least one)</span></label>
-                                <div className="flex flex-wrap gap-2">
-                                    {allSelectableTags.map(tag => (
-                                        <button
-                                            key={tag}
-                                            type="button"
-                                            onClick={() => handleTagClick(tag)}
-                                            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                                                selectedTags.includes(tag) 
-                                                ? 'bg-indigo-600 text-white' 
-                                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
-                                            }`}
-                                        >
-                                            {tag}
-                                        </button>
-                                    ))}
+                            
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Server Type * <span className="font-normal text-gray-500 dark:text-gray-400">(Select one)</span></label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {serverTypeTags.map(tag => (
+                                            <button
+                                                key={tag}
+                                                type="button"
+                                                onClick={() => handleTagClick(tag, true)}
+                                                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                                                    selectedTags.includes(tag) 
+                                                    ? 'bg-indigo-600 text-white' 
+                                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+                                                }`}
+                                            >
+                                                {tag}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    {tagError && <p className="text-red-500 text-xs mt-2">Please select a Server Type.</p>}
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Others <span className="font-normal text-gray-500 dark:text-gray-400">(Optional, select all that apply)</span></label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {otherTags.map(tag => (
+                                            <button
+                                                key={tag}
+                                                type="button"
+                                                onClick={() => handleTagClick(tag, false)}
+                                                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                                                    selectedTags.includes(tag) 
+                                                    ? 'bg-indigo-600 text-white' 
+                                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600'
+                                                }`}
+                                            >
+                                                {tag}
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
+
                             <div className="pt-4 flex justify-end">
-                                <button type="submit" className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg text-base font-semibold hover:bg-indigo-700 transition-colors shadow-md">
-                                    Submit Application
+                                <button 
+                                    type="submit" 
+                                    disabled={isSubmitting}
+                                    className={`inline-flex items-center justify-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg text-base font-semibold hover:bg-indigo-700 transition-colors shadow-md ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                    {isSubmitting ? 'Submitting...' : 'Submit Application'}
                                     <SendIcon className="w-5 h-5" />
                                 </button>
                             </div>
                         </form>
                     </div>
 
-                    {/* Review Process */}
                     <div className="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
                         <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-6 text-center">Review Process</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
@@ -1858,7 +2101,7 @@ export default function App() {
       <Header setActiveTab={setActiveTab} theme={theme} toggleTheme={toggleTheme} />
       <main className="flex-1 flex flex-col">
         {activeTab === 'Submit Server' || activeTab === 'About' ? (
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-900">
                 {renderActiveTab()}
             </div>
         ) : (
@@ -1880,6 +2123,3 @@ export default function App() {
     </div>
   );
 }
-
-
-
