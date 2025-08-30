@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
-import { servers } from "./data/servers";
 import * as d3 from 'd3';
+import { servers } from './data/servers'
 
 // Helper component for SVG icons
 const Icon = ({ path, className = 'w-6 h-6' }) => (
@@ -47,6 +47,18 @@ const MoonIcon = ({ className = 'w-5 h-5' }) => (
     </svg>
 );
 
+const TwitterIcon = ({ className = 'w-5 h-5' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="currentColor" className={className}>
+        <path d="M523.4 215.7C523.7 220.2 523.7 224.8 523.7 229.3C523.7 368 418.1 527.9 225.1 527.9C165.6 527.9 110.4 510.7 64 480.8C72.4 481.8 80.6 482.1 89.3 482.1C138.4 482.1 183.5 465.5 219.6 437.3C173.5 436.3 134.8 406.1 121.5 364.5C128 365.5 134.5 366.1 141.3 366.1C150.7 366.1 160.1 364.8 168.9 362.5C120.8 352.8 84.8 310.5 84.8 259.5L84.8 258.2C98.8 266 115 270.9 132.2 271.5C103.9 252.7 85.4 220.5 85.4 184.1C85.4 164.6 90.6 146.7 99.7 131.1C151.4 194.8 229 236.4 316.1 240.9C314.5 233.1 313.5 225 313.5 216.9C313.5 159.1 360.3 112 418.4 112C448.6 112 475.9 124.7 495.1 145.1C518.8 140.6 541.6 131.8 561.7 119.8C553.9 144.2 537.3 164.6 515.6 177.6C536.7 175.3 557.2 169.5 576 161.4C561.7 182.2 543.8 200.7 523.4 215.7z"/>
+    </svg>
+);
+
+const DiscordIcon = ({ className = 'w-5 h-5' }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" fill="currentColor" className={className}>
+        <path d="M524.5 133.8C524.3 133.5 524.1 133.2 523.7 133.1C485.6 115.6 445.3 103.1 404 96C403.6 95.9 403.2 96 402.9 96.1C402.6 96.2 402.3 96.5 402.1 96.9C396.6 106.8 391.6 117.1 387.2 127.5C342.6 120.7 297.3 120.7 252.8 127.5C248.3 117 243.3 106.8 237.7 96.9C237.5 96.6 237.2 96.3 236.9 96.1C236.6 95.9 236.2 95.9 235.8 95.9C194.5 103 154.2 115.5 116.1 133C115.8 133.1 115.5 133.4 115.3 133.7C39.1 247.5 18.2 358.6 28.4 468.2C28.4 468.5 28.5 468.7 28.6 469C28.7 469.3 28.9 469.4 29.1 469.6C73.5 502.5 123.1 527.6 175.9 543.8C176.3 543.9 176.7 543.9 177 543.8C177.3 543.7 177.7 543.4 177.9 543.1C189.2 527.7 199.3 511.3 207.9 494.3C208 494.1 208.1 493.8 208.1 493.5C208.1 493.2 208.1 493 208 492.7C207.9 492.4 207.8 492.2 207.6 492.1C207.4 492 207.2 491.8 206.9 491.7C191.1 485.6 175.7 478.3 161 469.8C160.7 469.6 160.5 469.4 160.3 469.2C160.1 469 160 468.6 160 468.3C160 468 160 467.7 160.2 467.4C160.4 467.1 160.5 466.9 160.8 466.7C163.9 464.4 167 462 169.9 459.6C170.2 459.4 170.5 459.2 170.8 459.2C171.1 459.2 171.5 459.2 171.8 459.3C268 503.2 372.2 503.2 467.3 459.3C467.6 459.2 468 459.1 468.3 459.1C468.6 459.1 469 459.3 469.2 459.5C472.1 461.9 475.2 464.4 478.3 466.7C478.5 466.9 478.7 467.1 478.9 467.4C479.1 467.7 479.1 468 479.1 468.3C479.1 468.6 479 468.9 478.8 469.2C478.6 469.5 478.4 469.7 478.2 469.8C463.5 478.4 448.2 485.7 432.3 491.6C432.1 491.7 431.8 491.8 431.6 492C431.4 492.2 431.3 492.4 431.2 492.7C431.1 493 431.1 493.2 431.1 493.5C431.1 493.8 431.2 494 431.3 494.3C440.1 511.3 450.1 527.6 461.3 543.1C461.5 543.4 461.9 543.7 462.2 543.8C462.5 543.9 463 543.9 463.3 543.8C516.2 527.6 565.9 502.5 610.4 469.6C610.6 469.4 610.8 469.2 610.9 469C611 468.8 611.1 468.5 611.1 468.2C623.4 341.4 590.6 231.3 524.2 133.7zM222.5 401.5C193.5 401.5 169.7 374.9 169.7 342.3C169.7 309.7 193.1 283.1 222.5 283.1C252.2 283.1 275.8 309.9 275.3 342.3C275.3 375 251.9 401.5 222.5 401.5zM417.9 401.5C388.9 401.5 365.1 374.9 365.1 342.3C365.1 309.7 388.5 283.1 417.9 283.1C447.6 283.1 471.2 309.9 470.7 342.3C470.7 375 447.5 401.5 417.9 401.5z" />
+    </svg>
+);
+
 // --- Location & Sort Icons ---
 const DiscordLocationIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -20 640 640" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path fill="currentColor" d="M524.5 133.8C524.3 133.5 524.1 133.2 523.7 133.1C485.6 115.6 445.3 103.1 404 96C403.6 95.9 403.2 96 402.9 96.1C402.6 96.2 402.3 96.5 402.1 96.9C396.6 106.8 391.6 117.1 387.2 127.5C342.6 120.7 297.3 120.7 252.8 127.5C248.3 117 243.3 106.8 237.7 96.9C237.5 96.6 237.2 96.3 236.9 96.1C236.6 95.9 236.2 95.9 235.8 95.9C194.5 103 154.2 115.5 116.1 133C115.8 133.1 115.5 133.4 115.3 133.7C39.1 247.5 18.2 358.6 28.4 468.2C28.4 468.5 28.5 468.7 28.6 469C28.7 469.3 28.9 469.4 29.1 469.6C73.5 502.5 123.1 527.6 175.9 543.8C176.3 543.9 176.7 543.9 177 543.8C177.3 543.7 177.7 543.4 177.9 543.1C189.2 527.7 199.3 511.3 207.9 494.3C208 494.1 208.1 493.8 208.1 493.5C208.1 493.2 208.1 493 208 492.7C207.9 492.4 207.8 492.2 207.6 492.1C207.4 492 207.2 491.8 206.9 491.7C191.1 485.6 175.7 478.3 161 469.8C160.7 469.6 160.5 469.4 160.3 469.2C160.1 469 160 468.6 160 468.3C160 468 160 467.7 160.2 467.4C160.4 467.1 160.5 466.9 160.8 466.7C163.9 464.4 167 462 169.9 459.6C170.2 459.4 170.5 459.2 170.8 459.2C171.1 459.2 171.5 459.2 171.8 459.3C268 503.2 372.2 503.2 467.3 459.3C467.6 459.2 468 459.1 468.3 459.1C468.6 459.1 469 459.3 469.2 459.5C472.1 461.9 475.2 464.4 478.3 466.7C478.5 466.9 478.7 467.1 478.9 467.4C479.1 467.7 479.1 468 479.1 468.3C479.1 468.6 479 468.9 478.8 469.2C478.6 469.5 478.4 469.7 478.2 469.8C463.5 478.4 448.2 485.7 432.3 491.6C432.1 491.7 431.8 491.8 431.6 492C431.4 492.2 431.3 492.4 431.2 492.7C431.1 493 431.1 493.2 431.1 493.5C431.1 493.8 431.2 494 431.3 494.3C440.1 511.3 450.1 527.6 461.3 543.1C461.5 543.4 461.9 543.7 462.2 543.8C462.5 543.9 463 543.9 463.3 543.8C516.2 527.6 565.9 502.5 610.4 469.6C610.6 469.4 610.8 469.2 610.9 469C611 468.8 611.1 468.5 611.1 468.2C623.4 341.4 590.6 231.3 524.2 133.7zM222.5 401.5C193.5 401.5 169.7 374.9 169.7 342.3C169.7 309.7 193.1 283.1 222.5 283.1C252.2 283.1 275.8 309.9 275.3 342.3C275.3 375 251.9 401.5 222.5 401.5zM417.9 401.5C388.9 401.5 365.1 374.9 365.1 342.3C365.1 309.7 388.5 283.1 417.9 283.1C447.6 283.1 471.2 309.9 470.7 342.3C470.7 375 447.5 401.5 417.9 401.5z"/></svg>);
 const SlackLocationIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -20 640 640" className="w-4 h-4 text-gray-500 dark:text-gray-400"><path fill="currentColor" d="M190.1 379.1C190.1 405 168.9 426.2 143 426.2C117.1 426.2 96 405 96 379.1C96 353.2 117.2 332 143.1 332L190.2 332L190.2 379.1zM213.8 379.1C213.8 353.2 235 332 260.9 332C286.8 332 308 353.2 308 379.1L308 496.9C308 522.8 286.8 544 260.9 544C235 544 213.8 522.8 213.8 496.9L213.8 379.1zM260.9 190.1C235 190.1 213.8 168.9 213.8 143C213.8 117.1 235 96 260.9 96C286.8 96 308 117.2 308 143.1L308 190.2L260.9 190.2zM260.9 213.8C286.8 213.8 308 235 308 260.9C308 286.8 286.8 308 260.9 308L143.1 308C117.2 308 96 286.8 96 260.9C96 235 117.2 213.8 143.1 213.8L260.9 213.8zM449.9 260.9C449.9 235 471.1 213.8 497 213.8C522.9 213.8 544 235 544 260.9C544 286.8 522.8 308 496.9 308L449.8 308L449.8 260.9zM426.2 260.9C426.2 286.8 405 308 379.1 308C353.2 308 332 286.8 332 260.9L332 143.1C332 117.2 353.2 96 379.1 96C405 96 426.2 117.2 426.2 143.1L426.2 260.9zM379.1 449.9C405 449.9 426.2 471.1 426.2 497C426.2 522.9 405 544 379.1 544C353.2 544 332 522.8 332 496.9L332 449.8L379.1 449.8zM379.1 426.2C353.2 426.2 332 405 332 379.1C332 353.2 353.2 332 379.1 332L496.9 332C522.8 332 544 353.2 544 379.1C544 405 522.8 426.2 496.9 426.2L379.1 426.2z"/></svg>);
@@ -58,20 +70,28 @@ const Header = ({ setActiveTab, theme, toggleTheme }) => (
   <header className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between h-16">
-        <div className="flex-shrink-0">
-          <h1 className="text-2xl font-bold cursor-pointer" onClick={() => setActiveTab('Server Explorer')}>AI Discord Directory</h1>
+        <div className="flex items-center">
+            <div className="flex-shrink-0">
+                <h1 className="text-2xl font-bold cursor-pointer" onClick={() => setActiveTab('Server Explorer')}>AI Discord Directory</h1>
+            </div>
+            <nav className="hidden md:block">
+                <div className="ml-10 flex items-baseline space-x-4">
+                    <button onClick={() => setActiveTab('Server Explorer')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Home</button>
+                    <button onClick={() => setActiveTab('About')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">About</button>
+                    <button onClick={() => setActiveTab('Submit Server')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Submit Server</button>
+                </div>
+            </nav>
         </div>
         <div className="flex items-center">
-          <nav className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
-              <button onClick={() => setActiveTab('Server Explorer')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">Home</button>
-              <button onClick={() => setActiveTab('About')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">About</button>
-              <button onClick={() => setActiveTab('Submit Server')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">Submit Server</button>
-            </div>
-          </nav>
-            <button 
+            <a href="https://x.com/SeonGunness" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                <TwitterIcon />
+            </a>
+            <a href="https://discord.gg/buBqNytqx3" target="_blank" rel="noopener noreferrer" className="ml-6 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white relative" style={{ top: '-1px' }}>
+                <DiscordIcon />
+            </a>
+            <button
                 onClick={toggleTheme}
-                className="ml-4 p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
+                className="ml-6 p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none"
                 aria-label="Toggle dark mode"
             >
                 {theme === 'light' ? <MoonIcon /> : <SunIcon />}
@@ -144,7 +164,7 @@ const Filters = ({ searchQuery, setSearchQuery, minScore, setMinScore, selectedT
 
     return (
         <div className="w-full lg:w-80 xl:w-96 lg:flex-shrink-0 lg:sticky lg:top-6">
-            <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md lg:max-h-[calc(100vh-3rem)] overflow-y-auto">
+            <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md lg:max-h-[calc(100vh-3rem)] overflow-y-auto dark:border dark:border-gray-700">
                 <div className="flex justify-between items-center mb-4">
                     <h2 className="text-lg font-semibold dark:text-gray-200">Filters</h2>
                     <button 
@@ -418,10 +438,10 @@ const TableView = ({ servers, onViewClick }) => (
 
 const ViewSwitcher = ({ view, setView }) => (
     <div className="flex items-center p-1 bg-gray-200 dark:bg-gray-700 rounded-lg">
-        <button onClick={() => setView('grid')} className={`p-2 rounded-md ${view === 'grid' ? 'bg-white dark:bg-gray-800 shadow' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
+        <button onClick={() => setView('grid')} className={`p-2 rounded-md transition-colors duration-150 ${view === 'grid' ? 'bg-white dark:bg-gray-100 shadow text-gray-800 dark:text-gray-900' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
             <GridIcon />
         </button>
-        <button onClick={() => setView('table')} className={`p-2 rounded-md ${view === 'table' ? 'bg-white dark:bg-gray-800 shadow' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
+        <button onClick={() => setView('table')} className={`p-2 rounded-md transition-colors duration-150 ${view === 'table' ? 'bg-white dark:bg-gray-100 shadow text-gray-800 dark:text-gray-900' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
             <ListIcon />
         </button>
     </div>
@@ -684,7 +704,7 @@ const ListView = () => {
 
 // --- About Page View ---
 const AboutView = () => (
-    <div className="mt-4 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+    <div className="mt-10 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">About the AI Discord Directory</h2>
         <div className="space-y-4 text-gray-600 dark:text-gray-300">
             <p>
@@ -695,7 +715,7 @@ const AboutView = () => (
             </p>
             <h3 className="text-2xl font-semibold xt-gray-700 dark:text-gray-200 pt-4">Our Goal</h3>
             <p>
-              Our primary goal is to fost a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
+            Our primary goal is to fost a more connected and accessible AI ecosystem. We believe that collaboration and knowledge sharing are key to driving innovation. By providing a comprehensive and easy-to-navigate directory, we hope to:
             </p>
             <ul className="list-disc list-inside space-y-2 pl-4">
                 <li>Help individuals find relevant communities to enhance their learning and career growth.</li>
@@ -709,7 +729,7 @@ const AboutView = () => (
             </p>
             <p>
                 You can use our advanced filtering, sorting, and visualization tools—like the Folder Dendogram and t-SNE Cluster views—to explore the relathips between different communities and find the perfect one for you.
-            </p>
+        </p>
     </div>
     </div>
 );
@@ -934,7 +954,7 @@ const DendogramView = () => {
     const [appliedIncludeScore, setAppliedIncludeScore] = useState(includeScore);
 
 
-    const servers = useMemo(() => [
+    const dendogramServers = useMemo(() => [
         { name: 'EleutherAI', rating: 8.1, tag: 'Research', activityLevel: 'Very Active', language: 'English', location: 'Discord', description: 'Community for large-scale AI research.', features: ['Reading Group', 'Paper Channel'] },
         { name: 'Cohere for AI', rating: 8.1, tag: 'Research', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'Non-profit research lab from Cohere.', features: ['Paper Channel', 'Jobs Board'] },
         { name: 'AI Safety Camp', rating: 7.8, tag: 'Alignment', activityLevel: 'Active', language: 'English', location: 'Discord', description: 'AI safety research and workshops.', features: ['Reading Group', 'Paper Channel'] },
@@ -1029,11 +1049,11 @@ const DendogramView = () => {
     }, []);
 
     useEffect(() => {
-        const data = generateDendogram(servers, appliedClusterFeatures, appliedIncludeScore);
+        const data = generateDendogram(dendogramServers, appliedClusterFeatures, appliedIncludeScore);
         setDendogramData(data);
         setSelectedNode(data);
         setExpandedFolders({root: true});
-    }, [servers, generateDendogram, appliedClusterFeatures, appliedIncludeScore]);
+    }, [dendogramServers, generateDendogram, appliedClusterFeatures, appliedIncludeScore]);
 
     const handleUpdateClusters = () => {
         setAppliedClusterFeatures(clusterFeatures);
@@ -1699,7 +1719,7 @@ const SubmitServerView = () => {
                             </div>
                             <div>
                                 <label htmlFor="invite-link" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Invite Link *</label>
-                                <input type="url" id="invite-link" placeholder="https://discord.gg/your-server" required type="url" className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
+                                <input type="url" id="invite-link" placeholder="https://discord.gg/your-server" required className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-200" />
                                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Must be a valid URL invite link (e.g., https://discord.gg/...)</p>
                             </div>
                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1860,5 +1880,6 @@ export default function App() {
     </div>
   );
 }
+
 
 
