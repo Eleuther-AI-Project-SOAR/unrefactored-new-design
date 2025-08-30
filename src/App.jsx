@@ -684,7 +684,7 @@ const ListView = () => {
 
 // --- About Page View ---
 const AboutView = () => (
-    <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+    <div className="mt-4 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">About the AI Discord Directory</h2>
         <div className="space-y-4 text-gray-600 dark:text-gray-300">
             <p>
