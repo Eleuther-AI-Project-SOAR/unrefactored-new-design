@@ -805,7 +805,7 @@ const ListView = () => {
 
 // --- About Page View ---
 const AboutView = () => (
-    <div className="mt-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+    <div className="mt-10 bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md max-w-4xl mx-auto">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">About the AI Discord Directory</h2>
         <div className="space-y-4 text-gray-600 dark:text-gray-300">
             <p>
@@ -2101,7 +2101,7 @@ export default function App() {
       <Header setActiveTab={setActiveTab} theme={theme} toggleTheme={toggleTheme} />
       <main className="flex-1 flex flex-col">
         {activeTab === 'Submit Server' || activeTab === 'About' ? (
-            <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-900">
+            <div className="flex-1 overflow-y-auto">
                 {renderActiveTab()}
             </div>
         ) : (
