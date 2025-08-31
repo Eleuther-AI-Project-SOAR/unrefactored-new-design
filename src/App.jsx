@@ -1,6 +1,9 @@
 import React, { useState, useMemo, useRef, useEffect, useCallback, useLayoutEffect } from 'react';
 import * as d3 from 'd3';
+import { servers } from './data/servers.js'
 
+/* 
+// Dummy data
 const servers = [
     {"name": "EleutherAI", "rating": 8.1, "tag": "Research", "activityLevel": "Very Active", "language": "English", "location": "Discord", "description": "Lots of resources; community projects to do and very active community.", "features": ["Reading Group", "Paper Channel", "VC events/Office Hours", "Jobs Board"], "x": 10.370316505432129, "y": 5.420857906341553, "cluster_id": 3},
     {"name": "Cohere for AI", "rating": 8.1, "tag": "Research", "activityLevel": "Active", "language": "English", "location": "Discord", "description": "Pretty good. Lots of stuff to do for various skill levels.", "features": ["Reading Group", "Paper Channel", "VC events/Office Hours"], "x": 10.428757667541504, "y": 5.405788421630859, "cluster_id": 3},
@@ -52,6 +55,7 @@ const servers = [
     {"name": "Corporate AI Solutions", "rating": 8.4, "tag": "Company", "activityLevel": "Active", "language": "English", "location": "Slack", "description": "Discussing the implementation of AI in large companies.", "features": ["Jobs Board"], "x": 8.42398452758789, "y": 7.147983551025391, "cluster_id": 0},
     {"name": "Web3 & AI Nexus", "rating": 7.1, "tag": "Crypto", "activityLevel": "Semi-active", "language": "English", "location": "Discord", "description": "Exploring the synergy between Web3 and AI.", "features": [], "x": 6.702220439910889, "y": 8.169151306152344, "cluster_id": -1}
   ];
+  */
 
 // Helper component for SVG icons
 const Icon = ({ path, className = 'w-6 h-6' }) => (
@@ -118,7 +122,7 @@ const PersonLocationIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBo
 const SortIcon = () => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" data-slot="icon" className="size-4"><path fillRule="evenodd" d="M11.47 4.72a.75.75 0 0 1 1.06 0l3.75 3.75a.75.75 0 0 1-1.06 1.06L12 6.31 8.78 9.53a.75.75 0 0 1-1.06-1.06l3.75-3.75Zm-3.75 9.75a.75.75 0 0 1 1.06 0L12 17.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-3.75 3.75a.75.75 0 0 1-1.06 0l-3.75-3.75a.75.75 0 0 1 0-1.06Z" clipRule="evenodd"></path></svg>);
 
 // Header component for the top navigation bar
-const Header = ({ setActiveTab, theme, toggleTheme }) => {
+const Header = ({ onNavigate, theme, toggleTheme }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
@@ -127,13 +131,13 @@ const Header = ({ setActiveTab, theme, toggleTheme }) => {
                 <div className="flex items-center justify-between h-16">
                     <div className="flex items-center">
                         <div className="flex-shrink-0">
-                            <h1 className="text-2xl font-bold cursor-pointer" onClick={() => setActiveTab('Server Explorer')}>AI Discord Directory</h1>
+                            <h1 className="text-2xl font-bold cursor-pointer" onClick={() => onNavigate('Server Explorer')}>AI Discord Directory</h1>
                         </div>
                         <nav className="hidden md:block">
                             <div className="ml-10 flex items-baseline space-x-4">
-                                <button onClick={() => setActiveTab('Server Explorer')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Home</button>
-                                <button onClick={() => setActiveTab('About')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">About</button>
-                                <button onClick={() => setActiveTab('Submit Server')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Submit Server</button>
+                                <button onClick={() => onNavigate('Server Explorer')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Home</button>
+                                <button onClick={() => onNavigate('About')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">About</button>
+                                <button onClick={() => onNavigate('Submit Server')} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-semibold">Submit Server</button>
                             </div>
                         </nav>
                     </div>
@@ -162,9 +166,9 @@ const Header = ({ setActiveTab, theme, toggleTheme }) => {
             {isMenuOpen && (
                  <div className="md:hidden absolute top-16 left-0 right-0 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
                     <nav className="flex flex-col items-center space-y-4">
-                        <button onClick={() => { setActiveTab('Server Explorer'); setIsMenuOpen(false); }} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-lg font-semibold">Home</button>
-                        <button onClick={() => { setActiveTab('About'); setIsMenuOpen(false); }} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-lg font-semibold">About</button>
-                        <button onClick={() => { setActiveTab('Submit Server'); setIsMenuOpen(false); }} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-lg font-semibold">Submit Server</button>
+                        <button onClick={() => { onNavigate('Server Explorer'); setIsMenuOpen(false); }} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-lg font-semibold">Home</button>
+                        <button onClick={() => { onNavigate('About'); setIsMenuOpen(false); }} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-lg font-semibold">About</button>
+                        <button onClick={() => { onNavigate('Submit Server'); setIsMenuOpen(false); }} className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-lg font-semibold">Submit Server</button>
                     
                         <div className="flex items-center space-x-6 pt-4">
                             <a href="https://x.com/SeonGunness" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
@@ -2051,9 +2055,33 @@ const SubmitServerView = () => {
     );
 };
 
+// --- Routing Helper Functions ---
+const getTabFromPath = (path) => {
+    switch (path) {
+        case '/about':
+            return 'About';
+        case '/submit':
+            return 'Submit Server';
+        default:
+            return 'Server Explorer';
+    }
+};
+
+const getPathFromTab = (tab) => {
+    switch (tab) {
+        case 'About':
+            return '/about';
+        case 'Submit Server':
+            return '/submit';
+        default:
+            return '/';
+    }
+};
+
+
 // Main App component
 export default function App() {
-  const [activeTab, setActiveTab] = useState('Server Explorer');
+  const [activeTab, setActiveTab] = useState(getTabFromPath(window.location.pathname));
   const [chats, setChats] = useState({
       'initial-chat': {
           title: 'New Chat',
@@ -2062,6 +2090,19 @@ export default function App() {
   });
   const [activeChatId, setActiveChatId] = useState('initial-chat');
   const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    // Handles browser back/forward button clicks
+    const handlePopState = (event) => {
+      setActiveTab(getTabFromPath(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
 
   useEffect(() => {
     if (theme === 'dark') {
@@ -2075,6 +2116,13 @@ export default function App() {
 
   const toggleTheme = () => {
     setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+  };
+
+  const handleNavigation = (tab) => {
+      if (activeTab === tab) return;
+      const path = getPathFromTab(tab);
+      window.history.pushState({ path }, '', path);
+      setActiveTab(tab);
   };
 
   const renderActiveTab = () => {
@@ -2098,7 +2146,7 @@ export default function App() {
 
   return (
     <div className="h-screen bg-gray-100 dark:bg-gray-900 font-sans flex flex-col">
-      <Header setActiveTab={setActiveTab} theme={theme} toggleTheme={toggleTheme} />
+      <Header onNavigate={handleNavigation} theme={theme} toggleTheme={toggleTheme} />
       <main className="flex-1 flex flex-col">
         {activeTab === 'Submit Server' || activeTab === 'About' ? (
             <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-900">
